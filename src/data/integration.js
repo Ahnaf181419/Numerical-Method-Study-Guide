@@ -2,6 +2,30 @@
 // Every number in `examples` was checked against src/lib/solvers.js.
 
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "Why does numerical integration exist at all?",
+    options: ["Integration by parts is forbidden", "Many important integrals, like $\\int e^{-x^2}dx$, have no elementary antiderivative", "Computers cannot differentiate", "Areas are always infinite"],
+    answer: 1,
+    explain: "No formula exists for many real integrands, but the area can still be measured with strips — quadrature never needs an antiderivative.",
+  },
+  "Start here: the core idea": {
+    q: "Simpson's one-third rule needs the number of strips to be…",
+    options: ["odd", "even", "divisible by three", "exactly six"],
+    answer: 1,
+    explain: "Parabolas span strips in pairs, so the one-third rule needs an even strip count; triples go to the three-eighths rule, sixes to Weddle.",
+  },
+  "Start here: reading the symbols": {
+    q: "'Seven ordinates' means how many strips?",
+    options: ["Seven", "Six", "Eight", "Three"],
+    answer: 1,
+    explain: "Strips = ordinates minus one: seven ordinates span six strips — exactly Weddle's requirement.",
+  },
+  "Start here: your first walk-through": {
+    q: "The trapezoid gave 3 against the true 2.6667 for $\\int_0^2 x^2 dx$. Why the overshoot?",
+    options: ["Rounding of the ordinates", "The chords lie above the upward-bending curve", "Two strips are always exact", "The rule forgot the end ordinates"],
+    answer: 1,
+    explain: "$x^2$ is convex, so straight tops ride above it; the bend is the error, and it shrinks as strips narrow ($O(h^2)$).",
+  },
   'Why we integrate numerically': {
     q: 'Numerical integration is used because …',
     options: [
@@ -109,6 +133,53 @@ export default {
   wave: 'integ',
   sources: ['Shanker Rao Ch 9', 'Past papers'],
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "Ask a mathematician for $\\int e^{-x^2}\\,dx$ — the curve behind the bell shape, statistics, heat flow — and the honest answer is: **no formula exists**. The area under that curve can never be written with elementary functions. Yet engineers need it constantly." },
+        { type: "p", text: "An integral is an **area**, and areas can be measured without any antiderivative: chop the region into thin vertical strips, approximate each strip's area with a shape you can compute, and add them up. That is numerical integration (quadrature) — the most reliably accurate tool in the whole course." },
+        { type: "p", text: "The exam's versions differ only in what tops the strips: flat tops (rectangle sums), straight tops (trapezoidal rule), parabolic tops (Simpson's rules), and the six-strip Weddle pattern." },
+        { type: "list", items: [
+          "Turn an integral into ordinates $y_0, y_1, \\ldots, y_n$ spaced $h$ apart.",
+          "Apply the trapezoidal and Simpson rules with their weight patterns.",
+          "Know which rule needs how many strips (even, triple, six).",
+          "State the error behaviour and compare with the exact value when it exists.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "Sample the integrand at equally spaced points — the **ordinates** — and replace the true curve between them with something simple. Straight lines give the **trapezoidal rule**; parabolas through each pair of strips give **Simpson's one-third rule**, whose weights alternate $1, 4, 2, 4, \\ldots, 4, 1$:" },
+        { type: "math", tex: "T = \\frac{h}{2}\\left[y_0 + 2(y_1 + \\cdots + y_{n-1}) + y_n\\right], \\qquad S_{1/3} = \\frac{h}{3}\\left[y_0 + 4y_1 + 2y_2 + 4y_3 + \\cdots + y_n\\right]" },
+        { type: "p", text: "Both are 'multiply each ordinate by its weight and add'. The art is remembering the weights — and the rule's strip requirement: Simpson's one-third needs an **even** number of strips, the three-eighths rule handles triples, Weddle wants six." },
+        { type: "note", text: "Accuracy ladder: trapezoid error is $O(h^2)$, Simpson's is $O(h^4)$ — halve the strip width and Simpson's error drops sixteen-fold. Simpson is exact for cubics despite fitting parabolas: the odd-order error terms cancel." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$y_0, y_1, \\ldots, y_n$", "the ordinates: integrand values at equally spaced $x$'s", "the sampled heights"],
+          ["$h$", "strip width $= \\frac{b - a}{n}$", "step size"],
+          ["$n$", "number of strips (one less than the number of ordinates)", "strips, not points"],
+          ["$1, 4, 2, 4, \\ldots, 1$", "Simpson's one-third weights", "ends 1, odd 4, even 2"],
+          ["$\\frac{3h}{8}[\\ldots]$", "Simpson's three-eighths rule", "for strip counts divisible by 3"],
+          ["$O(h^4)$", "Simpson's error order", "halve $h$, error $\\times \\frac{1}{16}$"],
+        ] },
+        { type: "p", text: "Classic trap: $n$ strips means $n+1$ ordinates — 'seven ordinates' is **six** strips, exactly what Weddle's rule wants." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Measure $\\int_0^2 x^2\\,dx$ with the trapezoidal rule and two strips — the exact answer $\\frac{x^3}{3}\\Big|_0^2 = \\frac{8}{3} = 2.6667$ is waiting to grade us." },
+        { type: "p", text: "Two strips of width $h = 1$ need three ordinates: $y_0 = 0$, $y_1 = 1$, $y_2 = 4$. Trapezoid with straight tops between them:" },
+        { type: "math", tex: "T = \\frac{1}{2}\\left[\\,0 + 2(1) + 4\\,\\right] = \\frac{6}{2} = 3" },
+        { type: "p", text: "The estimate 3 overshoots the truth 2.6667 — exactly as expected, because $x^2$ bends upward and every straight chord rides **above** the curve. That bend is the whole error story: more strips (or Simpson's curved tops) shrink it, and the $O(h^2)$ tag says how fast." },
+        { type: "exam", text: "Exam shape: a small table of $x$ and $y$ with $h$ stated, the rule's weight pattern shown substituted, then the total — and if the exact value exists, one comparison line with the error, as this walk-through does." },
+      ],
+    },
     {
       heading: 'Why we integrate numerically',
       blocks: [

@@ -272,3 +272,10 @@ test('differentiation walk-through numbers match the engine', () => {
   assert.ok(t.includes('9 - 4'), 'forward estimate shown');
   assert.ok(t.includes('9 - 1'), 'central estimate shown');
 });
+
+test('integration walk-through numbers match the engine', () => {
+  const t = sectionText('integration', 'Start here: your first walk-through');
+  const r = s.integrate({ xs: [0, 1, 2], ys: [0, 1, 4], method: 'trapezoid' });
+  close(r.result.value, 3, 1e-9);
+  assert.ok(t.includes('2.6667'), 'exact value for comparison');
+});
