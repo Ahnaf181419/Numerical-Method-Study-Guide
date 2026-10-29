@@ -152,6 +152,8 @@ Extracted text lives in `docs/sources/` (the slides and the class notes — comm
 
 ## 8. Content rules
 
+- Every chapter opens with four `Start here` sections (problem -> idea -> symbols -> walk-through); keep them beginner-level, notation-accurate, and lock walk-through numbers to the engine in `src/lib/audit.test.js`.
+
 1. **Content comes only from the student's material** — the slides, the notes, the books above
    and the past papers. Check every formula and number against `docs/sources/`.
 2. If a past paper asks something the material does not cover, it may be taught with the

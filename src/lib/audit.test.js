@@ -306,3 +306,13 @@ test('pca walk-through numbers match the engine', () => {
   assert.ok(t.includes('100%'), 'all variance on one axis');
   assert.ok(t.includes('4'), 'largest eigenvalue');
 });
+
+test('every module opens with the four Start-here sections', () => {
+  const H = ['Start here: the problem this chapter solves', 'Start here: the core idea',
+             'Start here: reading the symbols', 'Start here: your first walk-through'];
+  for (const m of modules) {
+    assert.deepEqual(m.sections.slice(0, 4).map((x) => x.heading), H, m.id);
+    const heads = m.sections.map((x) => x.heading);
+    assert.equal(new Set(heads).size, heads.length, `${m.id}: duplicate headings`);
+  }
+});
