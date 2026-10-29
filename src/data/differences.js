@@ -3,6 +3,30 @@
 // the teacher's typed interpolation notes and the handwritten "13 proofs" board page.
 
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "What raw material does the finite-difference calculus work on?",
+    options: ["Closed-form formulas only", "Equally spaced tables of values", "Random samples with no order", "Matrix coefficients"],
+    answer: 1,
+    explain: "It is an algebra performed on the table itself; unequal spacing is the divided-difference chapter's job.",
+  },
+  "Start here: the core idea": {
+    q: "For a polynomial table, the differences going constant tells you…",
+    options: ["The table has an error", "The degree of the polynomial", "The spacing $h$", "The base row $y_0$"],
+    answer: 1,
+    explain: "If the $k$-th differences are constant, the underlying polynomial has degree $k$ — constant second differences mean quadratic.",
+  },
+  "Start here: reading the symbols": {
+    q: "The averaging operator $\\mu$ does what to $y_{i+1/2}$ and $y_{i-1/2}$?",
+    options: ["Subtracts them", "Takes their mean", "Shifts them up a row", "Differences them twice"],
+    answer: 1,
+    explain: "$\\mu$ is the mean of the two half-step neighbours — the smoothing half of the $2\\mu\\delta \\equiv \\Delta + \\nabla$ identity.",
+  },
+  "Start here: your first walk-through": {
+    q: "In the $y = x^2$ table, the second differences read…",
+    options: ["$1, 3, 5$", "$2, 2$ — constant", "$0, 0$", "$4, 9$"],
+    answer: 1,
+    explain: "First differences are the odd numbers 1, 3, 5; differencing again gives the constant 2 — the quadratic's fingerprint.",
+  },
   'The forward difference operator and the difference table': {
     q: 'In the forward difference table of $y = f(x)$ taken at equal intervals, where does the entry $\\Delta^2 y_1$ sit?',
     options: [
@@ -78,6 +102,60 @@ export default {
   wave: 'diff',
   sources: ['Shanker Rao Ch 3', 'Chapra Ch 2'],
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "A census every year, a temperature reading every hour, a rocket's altitude sampled every 25 seconds — the world hands over **tables of numbers, not formulas**. Yet the questions are the same as ever: what is the underlying pattern? What is the value between two rows? How fast is it changing?" },
+        { type: "p", text: "Calculus answers such questions for formulas. For tables, the finite-difference calculus is the replacement toolkit: an algebra performed **on the table itself** — subtract neighbours, average neighbours, shift the frame — that reveals the degree of the pattern and powers every interpolation formula in the next chapter." },
+        { type: "p", text: "This chapter also carries the course's favourite proof questions: operator identities like $\\Delta - \\nabla \\equiv \\delta^2$ and $2\\mu\\delta \\equiv \\Delta + \\nabla$, proved by expanding both sides on plain ordinates $y_{-1}, y_0, y_1$." },
+        { type: "list", items: [
+          "Build a forward-difference table for any data.",
+          "Read the degree of the underlying polynomial off the table.",
+          "Speak the operator language: $\\Delta$, $\\nabla$, $\\delta$, $\\mu$, $E$.",
+          "Prove operator identities by expansion on ordinates.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "One move starts everything: **subtract each number from its next-door neighbour.** For data at equal spacing $h$, the first differences $\\Delta y_i = y_{i+1} - y_i$ expose the trend; differencing again exposes the trend of the trend; and for a polynomial, some depth of differencing goes **constant** — that depth is the degree." },
+        { type: "math", tex: "\\Delta y_i = y_{i+1} - y_i, \\qquad \\Delta^2 y_i = \\Delta y_{i+1} - \\Delta y_i, \\qquad \\ldots" },
+        { type: "p", text: "The five operators are five points of view on the same table: $\\Delta$ looks **forward**, $\\nabla$ looks **backward**, $\\delta$ straddles the middle, $\\mu$ **averages** two neighbours, and $E$ just **shifts** the index. Identities among them are proved by one honest method: expand both sides into combinations of ordinates and compare." },
+        { type: "note", text: "Everything assumes **equal spacing** $h$. If the $x$-values are uneven, this whole toolkit is off and the divided-difference (Lagrange) world of the next chapter takes over." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "p", text: "Operator notation looks like a new language; it is really five one-line definitions plus a subscript convention." },
+        { type: "table", head: ["Symbol", "Definition", "In words"], rows: [
+          ["$y_0$", "the chosen starting row", "any row can be the base — the subscripts are relative"],
+          ["$h$", "the equal spacing between $x$-values", "step size"],
+          ["$\\Delta y_i = y_{i+1} - y_i$", "forward difference", "next minus me"],
+          ["$\\nabla y_i = y_i - y_{i-1}$", "backward difference", "me minus previous"],
+          ["$\\delta y_{i+1/2} = y_{i+1} - y_i$", "central difference", "straddles the gap"],
+          ["$\\mu y_i = \\tfrac{1}{2}(y_{i+1/2} + y_{i-1/2})$", "averaging operator", "the mean of neighbours"],
+          ["$E y_i = y_{i+1}$", "shift operator", "move one row down"],
+        ] },
+        { type: "p", text: "A subscript counts rows from the base: $y_4$ is four steps from $y_0$, whatever $x$-value that happens to be." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Take the humblest interesting table — $y = x^2$ at $x = 0, 1, 2, 3$ — and difference it by hand." },
+        { type: "table", head: ["$x$", "$y$", "$\\Delta y$", "$\\Delta^2 y$"], rows: [
+          ["0", "0", "1", "2"],
+          ["1", "1", "3", "2"],
+          ["2", "4", "5", ""],
+          ["3", "9", "", ""],
+        ] },
+        { type: "p", text: "First differences: $1, 3, 5$ — the odd numbers, growing by 2 each step. Second differences: $2, 2$ — **constant**. That flat row is the fingerprint: a polynomial whose $k$-th differences are constant has degree $k$, and here the second differences flattening at 2 say 'quadratic' without any guessing." },
+        { type: "p", text: "Same table, backward view: $\\nabla y_2 = 4 - 1 = 3$, $\\nabla y_1 = 1 - 0 = 1$ — the same numbers as $\\Delta$, one row lower. Forward and backward are the same ladder seen from opposite sides, which is exactly why identities like $\\Delta - \\nabla \\equiv \\delta^2$ hold." },
+        { type: "exam", text: "Layout habit: the diagonal difference table above is the expected format — top-left to bottom-right diagonals, one column per difference order, blanks below the staircase. The proof identities then just manipulate these columns." },
+      ],
+    },
     {
       heading: 'The forward difference operator and the difference table',
       blocks: [

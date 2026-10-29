@@ -246,3 +246,14 @@ test('lu walk-through numbers match the engine', () => {
   assert.ok(t.includes('x = 2'), 'x value');
   assert.ok(t.includes('y = -1'), 'y value');
 });
+
+test('differences walk-through numbers are self-consistent', () => {
+  const t = sectionText('differences', 'Start here: your first walk-through');
+  const ys = [0, 1, 4, 9]; // y = x^2 at x = 0..3
+  const d1 = ys.slice(0, -1).map((_, i) => ys[i + 1] - ys[i]);
+  const d2 = d1.slice(0, -1).map((_, i) => d1[i + 1] - d1[i]);
+  assert.deepEqual(d1, [1, 3, 5]);
+  assert.ok(d2.every((v) => v === 2));
+  assert.ok(t.includes('1, 3, 5'), 'first differences');
+  assert.ok(t.includes('2, 2'), 'constant second differences');
+});
