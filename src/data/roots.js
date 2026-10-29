@@ -6,6 +6,30 @@
 // extracted text — they are taught here with the standard textbook method and flagged.
 
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "Why do numerical root-finding methods exist?",
+    options: ["Because algebra is always faster", "Because many equations have no formula that isolates the unknown", "Because graphs cannot be drawn", "Because calculators are inaccurate"],
+    answer: 1,
+    explain: "Equations like the tank cubic cannot be solved by rearranging, so the root must be hunted numerically.",
+  },
+  "Start here: the core idea": {
+    q: "For continuous $f$, what does $f(a) f(b) < 0$ guarantee?",
+    options: ["Both $f(a)$ and $f(b)$ are negative", "A root lies between $a$ and $b$", "The function is a straight line", "There are exactly two roots"],
+    answer: 1,
+    explain: "Opposite signs mean the graph crossed zero inside the interval — the intermediate value theorem.",
+  },
+  "Start here: reading the symbols": {
+    q: "In bisection, what is $c$?",
+    options: ["The previous guess", "The midpoint $\\\\frac{a+b}{2}$", "The tolerance", "The derivative"],
+    answer: 1,
+    explain: "Each iteration tests the midpoint of the current bracket and keeps the half with the sign change.",
+  },
+  "Start here: your first walk-through": {
+    q: "After each bisection iteration, the interval trapping the root…",
+    options: ["doubles in width", "halves in width", "stays the same", "moves to the origin"],
+    answer: 1,
+    explain: "You keep one half of the bracket, so the uncertainty halves every iteration — guaranteed, linear convergence.",
+  },
   'What a root is and why we approximate it': {
     q: 'By Theorem 2.1, if $f$ is continuous on $(a,b)$ and $f(a)f(b) < 0$, then',
     options: [
@@ -94,6 +118,60 @@ export default {
   sources: ['Shanker Rao Ch 2', 'Past papers'],
   flagged: true,
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "Some equations cannot be undone. $x^2 - 10 = 0$ has the tidy answer $\\sqrt{10}$, but a cubic like the tank-depth problem in the past papers has **no formula at all** — no amount of algebra will isolate $h$. When algebra is a dead end, you need a machine-friendly way to corner the answer." },
+        { type: "p", text: "That is root finding: the equation $f(x) = 0$ is re-read as the question 'where does the graph of $f$ cross the $x$-axis?', and the crossing point is hunted by a sequence of improving guesses." },
+        { type: "p", text: "This chapter builds the four workhorses the exam chooses among — **bisection**, **fixed-point iteration**, **Newton-Raphson** and the **secant method** — plus the vocabulary (bracket, iteration, tolerance, convergence) every question is written in." },
+        { type: "list", items: [
+          "Decide which method a question is asking for.",
+          "Run a bisection table without losing track of the bracket.",
+          "Turn any equation into a fixed-point iteration $x = \\phi(x)$.",
+          "Apply Newton-Raphson and know why it is fast.",
+          "Talk about convergence and error the way the papers do.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "Every method in this chapter is a different way of asking **'where does $f$ change sign?'** If $f$ is continuous and $f(a)$ and $f(b)$ have opposite signs, the graph must cross zero somewhere between $a$ and $b$ — the root is trapped." },
+        { type: "math", tex: "f(a)\\, f(b) < 0 \\quad \\Longrightarrow \\quad \\text{a root lies in } (a, b)" },
+        { type: "p", text: "**Bisection** plays the classic guessing game: test the midpoint, keep the half where the sign change lives, repeat. Each step halves the trap, so the root cannot escape. **Newton-Raphson** is smarter: stand at your guess, follow the tangent line down to where it crosses the axis, and move there — usually arriving in far fewer steps." },
+        { type: "note", text: "Trade-off worth knowing for the 'which method is best' theory question: bisection is slow but **unconditionally convergent**; Newton-Raphson is fast (quadratic) but a bad starting guess can throw it off the track." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "p", text: "Root-finding questions are short once the symbols are familiar. This table covers every letter used in the chapter." },
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$f(x)$", "the function whose root is sought", "solve $f(x) = 0$"],
+          ["$a,\\\\ b$", "the ends of a bracket", "the root is between them"],
+          ["$c = \\\\frac{a+b}{2}$", "the bisection midpoint", "the next guess"],
+          ["$x_0$", "the starting guess", "'x nought'"],
+          ["$x_{n+1}$", "the next, improved guess", "produced from $x_n$"],
+          ["$\\\\phi(x)$", "the rearranged form in $x = \\\\phi(x)$", "say 'phi of x'"],
+          ["$\\\\varepsilon$", "tolerance: how close is close enough", "stop when the change is this small"],
+        ] },
+        { type: "p", text: "'Iteration' is one round of guess-and-improve. 'Convergence' means the guesses settle down; 'divergence' means they run away instead." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Compute $\\\\sqrt{10}$ with no square-root key, using bisection on $f(x) = x^2 - 10$." },
+        { type: "math", tex: "f(3) = -1 < 0, \\qquad f(4) = 6 > 0 \\quad \\Longrightarrow \\quad \\text{the root lies in } (3, 4)" },
+        { type: "table", head: ["It", "$c$ (midpoint)", "$f(c)$", "Keep the half where the sign changes"], rows: [
+          ["1", "$3.5$", "$2.25$", "$(3, 3.5)$"],
+          ["2", "$3.25$", "$0.5625$", "$(3, 3.25)$"],
+          ["3", "$3.125$", "$-0.2344$", "$(3.125, 3.25)$"],
+        ] },
+        { type: "p", text: "After three halvings the root is trapped in $(3.125, 3.25)$, and the true value $\\\\sqrt{10} = 3.1623$ indeed sits inside. The trap width went $1 \\\\to 0.5 \\\\to 0.25 \\\\to 0.125$: halved every step, which is exactly why bisection always converges — slowly, but surely." },
+        { type: "exam", text: "Layout for the exam: verify the sign change first (one line), then a neat iteration table with columns $c$ and $f(c)$, and close by naming the final bracket and the root it pins down." },
+      ],
+    },
     {
       heading: 'What a root is and why we approximate it',
       blocks: [

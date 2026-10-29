@@ -215,3 +215,10 @@ test('errors walk-through numbers match the math', () => {
   assert.ok(t.includes('0.0012645'), 'absolute error');
   assert.ok(t.includes('0.0004025'), 'relative error');
 });
+
+test('roots walk-through numbers match the engine', () => {
+  const t = sectionText('roots', 'Start here: your first walk-through');
+  const r = s.bisection({ expr: 'x^2 - 10', a: 3, b: 4, tol: 1e-4 });
+  close(r.result.root, 3.1623, 1e-3);
+  ['3.5', '3.25', '3.125', '3.1623'].forEach((n) => assert.ok(t.includes(n), `roots walk-through missing ${n}`));
+});
