@@ -389,6 +389,7 @@ export default {
   examples: [
     {
       title: 'Construct the forward difference table of $f(x) = x^4$ for $x = -2$ to $4$',
+      type: 'Numerical — Difference table',
       question: 'Construct the forward difference table for the function $f(x) = x^4$ for $x = -2$ to $x = 4$ at an interval of $1$, and state what the table tells you about the function.',
       source: 'Chapra & Canale Ch.2, Example 1',
       marks: 6,
@@ -408,6 +409,7 @@ export default {
     },
     {
       title: 'Prove that $\\Delta - \\nabla \\equiv \\delta^2$',
+      type: 'Theory — Prove',
       question: 'Prove that the forward difference operator minus the backward difference operator is identically equal to the square of the central difference operator, $\\Delta - \\nabla \\equiv \\delta^2$.',
       source: 'Fall 2023 & Spring 2023 papers; teacher\'s proof 9',
       marks: 6,
@@ -428,6 +430,7 @@ export default {
     },
     {
       title: 'Prove that $\\mu^2 \\equiv 1 + \\tfrac{1}{4}\\delta^2$',
+      type: 'Theory — Prove',
       question: 'Prove that the square of the averaging operator equals one plus one quarter of the square of the central difference operator: $\\mu^2 \\equiv 1 + \\tfrac{1}{4}\\delta^2$.',
       source: 'Fall 2023 paper; teacher\'s proof 8',
       marks: 6,
@@ -446,6 +449,7 @@ export default {
     },
     {
       title: 'Prove that $\\Delta \\equiv \\nabla E \\equiv E\\nabla \\equiv \\delta E^{1/2}$',
+      type: 'Theory — Prove',
       question: 'Show that the forward difference operator satisfies $\\Delta = \\nabla E = E\\nabla = \\delta E^{1/2}$.',
       source: 'Spring 2023 paper',
       marks: 6,
@@ -464,6 +468,7 @@ export default {
     },
     {
       title: 'Find the sixth term of the series 8, 12, 19, 29, 42',
+      type: 'Numerical — Difference table',
       question: 'By constructing a difference table and taking the second order differences as constant, find the sixth term of the series 8, 12, 19, 29, 42.',
       source: 'Shanker Rao Ch.3, Example 3.4',
       marks: 4,
@@ -481,6 +486,7 @@ export default {
     },
     {
       title: 'Find $\\Delta^5 u_0$ for $u_0 = 3, u_1 = 12, u_2 = 81, u_3 = 200, u_4 = 100, u_5 = 8$',
+      type: 'Numerical — Difference table',
       question: 'Given $u_0 = 3,\\ u_1 = 12,\\ u_2 = 81,\\ u_3 = 200,\\ u_4 = 100$ and $u_5 = 8$, find $\\Delta^5 u_0$.',
       source: 'Shanker Rao Ch.3, Example 3.13',
       marks: 5,
@@ -499,6 +505,7 @@ export default {
     },
     {
       title: 'Locate and correct the error in a table of values',
+      type: 'Numerical — Error correction',
       question: 'The following table contains an incorrect value of $f(x)$. Locate the error, suggest a possible cause and give a suitable correction: $x = 1,2,\\dots,10$, $f(x) = 37, 74, 135, 226, 353, 531, 739, 1010, 1341, 1738$.',
       source: 'Chapra & Canale Ch.2, Example 3',
       marks: 6,

@@ -318,6 +318,7 @@ export default {
   examples: [
     {
       title: 'Gauss elimination with no pivoting needed',
+      type: 'Numerical — Gauss elimination',
       question: 'Solve the system of linear equations using Gauss elimination: $x + y + z = 6$, $2x + 3y + z = 13$, $3x + 4y + 5z = 18$.',
       source: 'Class board notes — Elimination Methods',
       marks: 6,
@@ -338,6 +339,7 @@ export default {
     },
     {
       title: 'Gauss elimination with partial pivoting',
+      type: 'Numerical — Gauss elimination (partial pivoting)',
       question: 'Solve the following system of linear equation using Gauss Elimination with Partial Pivoting (show all necessary steps of the computation): $x + 2y - 3z = -4$, $-9x + 8y + 7z = 28$, $4x + 5y + 6z = 32$.',
       source: 'Fall 2024 Q2(b)',
       marks: 6,
@@ -359,6 +361,7 @@ export default {
     },
     {
       title: 'The pivot exchange that happens at the second pivot row',
+      type: 'Numerical — Gauss elimination (pivot exchange)',
       question: 'Solve $2x + y + z = 5$, $2x + 3y + 4z = 7$, $2x - 4y + 2z = 8$ by Gauss elimination. After removing $0$ from the $x$-column the equations are $0 + 2y + 3z = 2$ and $0 - 5y + z = 3$.',
       source: 'Teacher\'s rule 1 (the pivot check at every pivot row)',
       marks: 6,
@@ -380,6 +383,7 @@ export default {
     },
     {
       title: 'Gauss-Jordan on the same system',
+      type: 'Numerical — Gauss-Jordan',
       question: 'Solve $x + y + z = 6$, $2x + 3y + z = 13$, $3x + 4y + 5z = 18$ by Gauss-Jordan elimination.',
       source: 'Class board notes',
       marks: 6,

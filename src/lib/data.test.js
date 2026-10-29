@@ -103,3 +103,9 @@ test('every past-paper question carries a Theory/Numerical type', () => {
       for (const it of set.items)
         assert.ok(typeof it.type === 'string' && /^(Theory|Numerical) — /.test(it.type), `${p.title} ${it.id}: missing type`);
 });
+
+test('every worked example carries a Theory/Numerical type', () => {
+  for (const m of modules)
+    for (const e of m.examples)
+      assert.ok(typeof e.type === 'string' && /^(Theory|Numerical) — /.test(e.type), `${m.id}: ${e.title} needs a type`);
+});

@@ -341,6 +341,7 @@ export default {
   examples: [
     {
       title: "Jacobi's method on the slide's system",
+      type: 'Numerical — Jacobi',
       question: "Solve the following system of linear equations by Jacobi's method: $5x + 2y + z = 12$, $x + 4y + 2z = 15$, $x + 2y + 5z = 20$.",
       source: 'Iterative Solution slides — worked example',
       marks: 6,
@@ -361,6 +362,7 @@ export default {
     },
     {
       title: "Gauss-Seidel on the slide's system",
+      type: 'Numerical — Gauss-Seidel',
       question: "Obtain the solution of the following system using the Gauss-Seidel iteration method: $2x + y + z = 5$, $3x + 5y + 2z = 15$, $2x + y + 4z = 8$.",
       source: 'Iterative Solution slides — worked example',
       marks: 6,
@@ -381,6 +383,7 @@ export default {
     },
     {
       title: 'When the iteration diverges, and how to fix it',
+      type: 'Numerical — Jacobi (divergence)',
       question: 'Solve by Jacobi iteration: $x + 6y + 2z = 19$, $2x + y + 6z = 22$, $6x + 2y + z = 13$. The first iterations are $19, 22, 13$ then $-139, -94, -145$ — the values are exploding. What is wrong and what do you do?',
       source: "Teacher's rule 5 (rearrange to make the system diagonally dominant)",
       marks: 6,

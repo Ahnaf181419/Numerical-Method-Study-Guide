@@ -522,6 +522,7 @@ export default {
   examples: [
     {
       title: 'Deriving Simpson’s one-third rule from the general quadrature formula',
+      type: 'Theory — Derive',
       question:
         'Derive Simpson’s one-third rule from the general quadrature formula for numerical integration with equidistant ordinates.',
       source: 'Fall 2024 Q1(c) · Spring 2024 Q1(f)',
@@ -554,6 +555,7 @@ export default {
 
     {
       title: 'Velocity gained by an aircraft during take-off',
+      type: 'Numerical — Simpson & Trapezoid',
       question:
         'During take-off, an aircraft’s acceleration is $a(t) = 3.2 + 12t - 28t^2 + 32t^3 - 16t^4 + 3t^5$ m/s$^2$. Determine the velocity gained from $t = 0$ to $t = 1.75$ seconds during the take-off roll. Use 7 intervals and choose the most appropriate numerical integration technique(s).',
       source: 'Fall 2024 Q2(e)',
@@ -590,6 +592,7 @@ export default {
 
     {
       title: 'Romberg integration of (2x² + x)e⁻ˣ from 1 to 3',
+      type: 'Numerical — Romberg',
       question:
         'Use Romberg’s integration to calculate $\\int_1^3 (2x^2 + x)e^{-x}dx$ correct up to 4 decimal places. Compare the result with the true value 2.5226.',
       source: 'Fall 2024 Q2(f)',
@@ -626,6 +629,7 @@ export default {
 
     {
       title: 'Romberg integration of e⁻ˣ² from 0 to 1',
+      type: 'Numerical — Romberg',
       question:
         'Find the value of $\\int_0^1 e^{-x^2}dx$ correct up to 4 decimal places using Romberg integration method.',
       source: 'Spring 2023 Q2(d)',
@@ -662,6 +666,7 @@ export default {
 
     {
       title: 'Composite trapezoidal and Simpson’s one-third rule for ∫₀¹ dx/(1+x²)',
+      type: 'Numerical — Trapezoid & Simpson',
       question:
         'Implement composite trapezoidal and Simpson’s 1/3 rule to find the value of $\\int_0^1 \\frac{1}{1+x^2}dx$ by taking five subintervals.',
       source: 'Fall 2023 Q2(d)',
@@ -698,6 +703,7 @@ export default {
 
     {
       title: "Weddle's rule for $\\int_0^2 (2x - x^2)\\,dx$",
+      type: 'Numerical — Weddle',
       question: "Evaluate $\\int_0^2 (2x - x^2)\\,dx$ by using Weddle's rule, taking seven ordinates. Also, compare the result with the exact value and determine the error.",
       source: 'Spring 2024 Q2(h)',
       marks: 6,
@@ -722,6 +728,7 @@ export default {
 
     {
       title: "Simpson's three-eighths rule for ∫₀¹ dx/(1+x²)",
+      type: 'Numerical — Simpson 3/8',
       question:
         'Evaluate $\\int_0^1 \\frac{dx}{1+x^2}$ by Simpson’s three-eighths rule, taking seven ordinates, and compare with the exact value.',
       source: 'Shanker Rao Ch 9, Ex 9.7',
@@ -762,6 +769,7 @@ export default {
 
     {
       title: "Simpson's one-third rule for ∫₀^0.6 eˣ dx",
+      type: 'Numerical — Simpson 1/3',
       question:
         'Find the value of $\\int_0^{0.6} e^x dx$, taking $n = 6$, correct to five significant figures by Simpson’s one-third rule.',
       source: 'Shanker Rao Ch 9, Ex 9.4',

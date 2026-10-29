@@ -476,6 +476,7 @@ export default {
   examples: [
     {
       title: 'Least-squares line through the surface-area table',
+      type: 'Numerical — Least squares',
       question:
         'The surface area $A$ of human beings is related to weight $W$ and height $H$. Measurements on individuals of height 180 cm give $W = 70, 75, 77, 80, 82, 84, 87, 90$ kg and $A = 2.10, 2.12, 2.15, 2.20, 2.22, 2.23, 2.26, 2.30$ m$^2$. Justify that $A = a + bW$ fits the data and evaluate $a$ and $b$.',
       source: 'Fall 2023 Q3(c)',
@@ -503,6 +504,7 @@ export default {
     },
     {
       title: 'Power-law fit $A = aW^b$ for the surface-area table',
+      type: 'Numerical — Power-law fit',
       question:
         'For the same surface-area data ($W = 70, 75, 77, 80, 82, 84, 87, 90$ kg, $A = 2.10, 2.12, 2.15, 2.20, 2.22, 2.23, 2.26, 2.30$ m$^2$) justify that $A = aW^b$ is a suitable relation, and evaluate $a$ and $b$.',
       source: 'Fall 2023 / Spring 2023 power-law fit',
@@ -539,6 +541,7 @@ export default {
     },
     {
       title: 'The two regression lines for a table of paired observations',
+      type: 'Numerical — Least squares',
       question:
         'For the data $x = 5, 10, 15, 20, 25$ and $y = 20, 40, 30, 60, 50$, find the regression of $y$ on $x$ and the regression of $x$ on $y$ by the method of least squares.',
       source: 'Shanker Rao Ch 14, Example 14.1',
@@ -562,6 +565,7 @@ export default {
     },
     {
       title: 'Difference between interpolation and regression (short question)',
+      type: 'Theory — Explain',
       question:
         'What is the difference between interpolation and regression? State how many data points each one needs.',
       source: 'Spring 2024 short question',

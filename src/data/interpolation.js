@@ -460,6 +460,7 @@ export default {
   examples: [
     {
       title: 'Newton forward interpolation of the cubic through $(0,-1), (1,1), (2,1), (3,-2)$ at $x = 1.5$',
+      type: 'Numerical — Newton forward',
       question: 'A third-degree polynomial passes through the points $(0,-1)$, $(1,1)$, $(2,1)$ and $(3,-2)$. Find the polynomial by Newton\'s forward interpolation formula and its value at $x = 1.5$.',
       source: 'Fall 2024 Part B(b)',
       marks: 6,
@@ -479,6 +480,7 @@ export default {
     },
     {
       title: "Newton's divided difference interpolation for $f(9)$",
+      type: 'Numerical — Divided differences',
       question: 'Using Newton\'s divided difference formula, evaluate $f(9)$ from the table $x = 5, 7, 11, 13, 17$ with $f(x) = 150, 392, 1452, 2366, 5202$.',
       source: 'Fall 2024 Part B(c)',
       marks: 6,
@@ -499,6 +501,7 @@ export default {
     },
     {
       title: "Lagrange's interpolation formula for unequal intervals, and $f(2)$",
+      type: 'Numerical — Lagrange',
       question: 'Derive Lagrange\'s interpolation formula for unequally spaced points $x_0, x_1, \\dots, x_n$, and use it to find $f(2)$ from $x = 0, 1, 3, 4$ with $f(x) = 5, 6, 50, 105$.',
       source: 'Shanker Rao Ch.5, §5.3 and Exercise 5.1',
       marks: 6,
@@ -519,6 +522,7 @@ export default {
     },
     {
       title: 'Missing values in an interpolation table',
+      type: 'Numerical — Difference table',
       question: 'Find the missing entries in the table $x = 0, 2, 4, 6, 8, 10$ with $f(x) = 2, \\cdot, 10, 17, \\cdot, 37$.',
       source: 'Spring 2024 (missing values in an interpolation table)',
       marks: 6,
@@ -538,6 +542,7 @@ export default {
     },
     {
       title: "Newton's backward interpolation: $f(7.5)$ from $f(x) = x^3$",
+      type: 'Numerical — Newton backward',
       question: 'Calculate $f(7.5)$ for the table $x = 1, 2, 3, 4, 5, 6, 7, 8$ with $f(x) = 1, 8, 27, 64, 125, 216, 343, 512$.',
       source: 'Shanker Rao Ch.4, Example 4.10',
       marks: 6,
@@ -558,6 +563,7 @@ export default {
     },
     {
       title: "Bessel's formula: $Y(25)$ from four equally spaced values",
+      type: 'Numerical — Bessel',
       question: 'Apply Bessel\'s formula to obtain $Y_{25}$ given $Y_{20} = 2854$, $Y_{24} = 3162$, $Y_{28} = 3544$ and $Y_{32} = 3992$.',
       source: 'Shanker Rao Ch.6, Example 6.6',
       marks: 6,
@@ -578,6 +584,7 @@ export default {
     },
     {
       title: "Stirling's formula: $Y(28)$ from five equally spaced values",
+      type: 'Numerical — Stirling',
       question: 'Use Stirling\'s formula to find $Y_{28}$, given $Y_{20} = 49225$, $Y_{25} = 48316$, $Y_{30} = 47236$, $Y_{35} = 45926$, $Y_{40} = 44306$.',
       source: 'Shanker Rao Ch.6, Example 6.8',
       marks: 6,
@@ -598,6 +605,7 @@ export default {
     },
     {
       title: 'Error in the forward interpolation formula',
+      type: 'Numerical — Interpolation error',
       question: 'Use Newton\'s forward interpolation formula to find $\\sin 52^\\circ$ from the table $x = 45^\\circ, 50^\\circ, 55^\\circ, 60^\\circ$ with $y = \\sin x = 0.7071, 0.7660, 0.8192, 0.8660$, and estimate the error.',
       source: 'Shanker Rao Ch.4, Example 4.11',
       marks: 6,
@@ -618,6 +626,7 @@ export default {
     },
     {
       title: 'Inverse interpolation: find $x$ for a given $y$',
+      type: 'Numerical — Inverse interpolation',
       question: 'The values of the probability integral $y = \\int_0^x e^{-t^2/2}\\,dt$ are tabulated below. For what value of $x$ is this integral equal to $0.5$? $x = 0.46, 0.47, 0.48, 0.49$ with $y = 0.484655, 0.4937452, 0.5027498, 0.5116683$.',
       source: 'Shanker Rao Ch.5, Example 5.9',
       marks: 6,

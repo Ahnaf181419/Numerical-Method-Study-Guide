@@ -694,6 +694,7 @@ export default {
   examples: [
     {
       title: 'Velocity and acceleration of the rocket at t = 0 s and t = 50 s',
+      type: 'Numerical — Differentiation (tabulated)',
       question:
         'The following table provides the distance travelled by a rocket at various time intervals: $t$ (s) $= 0,\\ 25,\\ 50,\\ 75,\\ 100,\\ 125$ and $s$ (km) $= 0,\\ 32,\\ 58,\\ 78,\\ 92,\\ 100$. Use appropriate numerical differentiation methods for tabular functions to estimate both velocity and acceleration at $t = 0$ s and $t = 50$ s.',
       source: 'Fall 2024 Q2(c)',
@@ -731,6 +732,7 @@ export default {
 
     {
       title: 'Velocity and acceleration of a vehicle at t = 5 s and t = 13 s',
+      type: 'Numerical — Differentiation (tabulated)',
       question:
         'The following table provides the distance travelled by a vehicle at various time intervals: $t$ (s) $= 3,\\ 5,\\ 7,\\ 9,\\ 11,\\ 13$ and $s$ (km) $= 7,\\ 8,\\ 12,\\ 19,\\ 32,\\ 50$. Estimate both velocity and acceleration at $t = 5$ s and $t = 13$ s.',
       source: 'Spring 2024 Q2(g)',
@@ -768,6 +770,7 @@ export default {
 
     {
       title: 'Velocity and acceleration of a car at t = 5 s, 7 s and 9 s',
+      type: 'Numerical — Differentiation (tabulated)',
       question:
         'The table gives the distance travelled by a car at various time intervals: $t$ (s) $= 5,\\ 6,\\ 7,\\ 8,\\ 9$ and $s$ (km) $= 10.0,\\ 14.5,\\ 19.5,\\ 25.5,\\ 32.0$. Estimate the velocity at $t = 5$, $t = 7$ and $t = 9$, and the acceleration at $t = 7$.',
       source: 'Balagurusamy Ch 11, Ex 11.5–11.6',
@@ -805,6 +808,7 @@ export default {
 
     {
       title: 'Second derivative of f(x) = 1/(1 + x²) at x = 0.5',
+      type: 'Numerical — Differentiation (central)',
       question:
         'Use the three-point central difference formula to estimate the second derivative of $f(x) = \\frac{1}{1+x^2}$ at $x = 0.5$, with step size $h = 0.01$. Compare the result with the true value.',
       source: 'Fall 2023 Q2(e)',
@@ -842,6 +846,7 @@ export default {
 
     {
       title: 'Deriving the three-point forward difference formula',
+      type: 'Theory — Derive',
       question:
         'Derive the three-point forward difference formula for a tabulated function in the context of numerical differentiation.',
       source: 'Fall 2023 Q1(e)',
@@ -874,6 +879,7 @@ export default {
 
     {
       title: 'Proving the truncation error of the second-order central difference is O(h²)',
+      type: 'Theory — Prove',
       question:
         'Prove that the truncation error of the second-order central difference formula is $O(h^2)$.',
       source: 'Fall 2024 Q1(e)',
@@ -902,6 +908,7 @@ export default {
 
     {
       title: 'Deriving the Richardson extrapolation formula',
+      type: 'Theory — Derive',
       question:
         'Derive the Richardson extrapolation formula using the three-point central difference formula for numerical differentiation.',
       source: 'Fall 2024 Q1(b)',
@@ -930,6 +937,7 @@ export default {
 
     {
       title: 'Why Richardson extrapolation beats the three-point forward difference',
+      type: 'Theory — Justify',
       question:
         'Justify why the Richardson extrapolation method outperforms the three-point forward difference formula in generating accurate estimates of derivatives.',
       source: 'Fall 2023 Q3(a) · Spring 2023 Q3(a)',
@@ -962,6 +970,7 @@ export default {
 
     {
       title: "Heun's method for dy/dx = x³ + y",
+      type: 'Numerical — Heun',
       question:
         'Analyze the underlying principle of Heun\'s method in order to improve the accuracy of the solution for ordinary differential equations. Illustrate with $dy/dx = x^3 + y$, $x = 0$, $y = 1$, step size $h = 0.01$, up to $x = 0.04$.',
       source: 'Spring 2023 Q2(d) · Spring 2023 Q2(h)',

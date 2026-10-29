@@ -279,6 +279,7 @@ export default {
   examples: [
     {
       title: 'Do-Little factorisation of the slide\'s matrix',
+      type: 'Numerical — Doolittle LU',
       question: 'Find the LU factorisation of $A = \\begin{bmatrix} 1 & 2 & 4 \\\\ 3 & 8 & 14 \\\\ 2 & 6 & 13 \\end{bmatrix}$ using the Do-Little method.',
       source: 'LU Decomposition slides',
       marks: 6,
@@ -300,6 +301,7 @@ export default {
     },
     {
       title: 'Solving a system with Do-Little LU',
+      type: 'Numerical — Doolittle LU',
       question: 'Solve the following system of linear equation using Do-Little LU Decomposition Method (show all necessary steps of the computation): $2x + y + z = 9$, $-4x + 3y + 2z = 20$, $6x + 5y + 7z = 35$.',
       source: 'Fall 2024 Q2(d)',
       marks: 6,

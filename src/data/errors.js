@@ -547,6 +547,7 @@ export default {
   examples: [
     {
       title: 'Relative maximum error in $u = \\dfrac{5xy^2}{z^3}$ at $x = y = z = 1$',
+      type: 'Numerical — Error propagation',
       question: 'Given that $u = \\dfrac{5xy^2}{z^3}$, $x = y = z = 1$ and $\\Delta x = \\Delta y = \\Delta z = 0.001$, find the relative maximum error in $u$.',
       source: 'Shanker Rao Ch 1, Ex. 1.13 (also a past-paper question)',
       marks: 5,
@@ -566,6 +567,7 @@ export default {
     },
     {
       title: 'Absolute and relative error when $X = 2.536$ is rounded off and when it is chopped',
+      type: 'Numerical — Error computation',
       question: 'If $X = 2.536$, find the absolute error and the relative error when (i) $X$ is rounded off, and (ii) $X$ is truncated, to two decimal digits.',
       source: 'Shanker Rao Ch 1, Ex. 1.14',
       marks: 5,
@@ -585,6 +587,7 @@ export default {
     },
     {
       title: 'Rounding off with the even-digit rule',
+      type: 'Numerical — Error computation',
       question: 'Round off 52.275, 2.375, 2.385 and 81.255 each to two decimal places, stating in each case which part of the rounding-off rule you used.',
       source: 'Shanker Rao Ch 1, Ex. 1.1(1) with the rounding-off rule of §1.3',
       marks: 5,
@@ -605,6 +608,7 @@ export default {
     },
     {
       title: 'Product $349.1 \\times 863.4$ and how many figures are trustworthy',
+      type: 'Numerical — Error propagation',
       question: 'Find the product 349.1 × 863.4 and state how many figures of the result are trustworthy, assuming that each number is correct to the last digit shown.',
       source: 'Shanker Rao Ch 1, Ex. 1.10',
       marks: 6,
@@ -625,6 +629,7 @@ export default {
     },
     {
       title: 'How many digits to take in computing $\\sqrt{20}$',
+      type: 'Numerical — Error computation',
       question: 'How many digits are to be taken in computing $\\sqrt{20}$ so that the error does not exceed 0.1%?',
       source: 'Shanker Rao Ch 1, Ex. 1.4',
       marks: 5,
@@ -644,6 +649,7 @@ export default {
     },
     {
       title: 'Condition number of $f(x) = \\dfrac{1}{x-1}$',
+      type: 'Numerical — Condition number',
       question: 'Using the condition number $\\dfrac{x f\'(x)}{f(x)}$, show that $f(x) = \\dfrac{1}{x-1}$ is ill conditioned near $x = 1$ but well conditioned at $x = 5$.',
       source: 'Medha\'s class notes (marked as a likely question) with Balagurusamy Ch 4',
       marks: 5,
@@ -663,6 +669,7 @@ export default {
     },
     {
       title: 'Relative error in $x + y$',
+      type: 'Numerical — Error propagation',
       question: 'If $\\Delta x = 0.005$ and $\\Delta y = 0.001$ are the absolute errors in $x = 2.11$ and $y = 4.15$, find the relative error in the computation of $x + y$.',
       source: 'Shanker Rao Ch 1, Ex. 1.12',
       marks: 3,

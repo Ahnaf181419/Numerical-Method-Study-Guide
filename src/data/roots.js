@@ -478,6 +478,7 @@ export default {
   examples: [
     {
       title: 'Bisection: the root of $x^3 - 9x + 1$ between 2 and 3',
+      type: 'Numerical — Bisection',
       question: 'Solve $x^3 - 9x + 1 = 0$ for the root lying between 2 and 3, correct to three significant figures, using the bisection method.',
       source: 'Shanker Rao Ch 2, Ex. 2.2 (also a past-paper question)',
       marks: 6,
@@ -498,6 +499,7 @@ export default {
     },
     {
       title: 'Bisection: the root of $x^2 - 4x - 10$',
+      type: 'Numerical — Bisection',
       question: 'Find the positive root of $x^2 - 4x - 10 = 0$ by the bisection method, correct to four decimal places.',
       source: 'Past-paper question (bisection)',
       marks: 5,
@@ -517,6 +519,7 @@ export default {
     },
     {
       title: 'Fixed-point iteration: $\\cos x = 3x - 1$',
+      type: 'Numerical — Fixed-point iteration',
       question: 'Find a real root of $\\cos x = 3x - 1$ correct to three decimal places using the iteration method.',
       source: 'Shanker Rao Ch 2, Ex. 2.6 (also a past-paper question)',
       marks: 4,
@@ -536,6 +539,7 @@ export default {
     },
     {
       title: 'Newton-Raphson: $x^3 - 4x^2 + x + 6 = 0$',
+      type: 'Numerical — Newton-Raphson',
       question: 'Find the root of $x^3 - 4x^2 + x + 6 = 0$ that lies between $-2$ and $0$, by the Newton-Raphson method, correct to four decimal places.',
       source: 'Past-paper question (Newton-Raphson)',
       marks: 6,
@@ -556,6 +560,7 @@ export default {
     },
     {
       title: 'Newton-Raphson: depth of water in a spherical tank',
+      type: 'Numerical — Newton-Raphson',
       question: "You are designing a spherical tank to hold water for a small village. The volume is computed as $V = \\frac{\\pi h^2(3R - h)}{3}$, where $h$ is the depth of the water and $R$ the tank radius. If $R = 3$ m, to what depth must the tank be filled so that it holds 30 m$^3$? Use the Newton-Raphson method.",
       source: "Fall 2023 Q3(b) — not in the slides/notes, the standard textbook version",
       marks: 6,
@@ -580,6 +585,7 @@ export default {
     },
     {
       title: 'Secant method: $x^3 - 8x - 4 = 0$',
+      type: 'Numerical — Secant',
       question: 'Find the root of $x^3 - 8x - 4 = 0$ which lies between 3 and 4, by the secant method, correct to four decimal places.',
       source: 'Shanker Rao Ch 2, Ex. 2.4(4) — also a past-paper question',
       marks: 5,
@@ -599,6 +605,7 @@ export default {
     },
     {
       title: "Horner's rule: $x^4 + 7x^3 + 5x^2 - 31x - 30$ with the root $-3$",
+      type: 'Numerical — Horner',
       question: 'Using Horner’s method (synthetic division), divide $x^4 + 7x^3 + 5x^2 - 31x - 30$ by $(x + 3)$ and show that $-3$ is a root.',
       source: 'Past-paper question (Horner + quotient polynomial)',
       marks: 5,
@@ -618,6 +625,7 @@ export default {
     },
     {
       title: "Horner's rule: evaluate $x^4 + 3x^2 - 2x$ at $x = 3$",
+      type: 'Numerical — Horner',
       question: 'Evaluate $p(x) = x^4 + 3x^2 - 2x$ at $x = 3$ using Horner’s method.',
       source: 'Past-paper question (Horner’s rule)',
       marks: 3,
@@ -636,6 +644,7 @@ export default {
     },
     {
       title: 'Finding all the roots of $x^4 + 7x^3 + 5x^2 - 31x - 30$ by deflation',
+      type: 'Numerical — Deflation',
       question: 'Show that $-3$ is a root of $x^4 + 7x^3 + 5x^2 - 31x - 30$ and find all four roots using synthetic division.',
       source: 'Past-paper question (deflation + synthetic division)',
       marks: 6,

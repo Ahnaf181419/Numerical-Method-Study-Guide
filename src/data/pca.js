@@ -366,6 +366,7 @@ export default {
   examples: [
     {
       title: 'Full PCA on the tutorial dataset, keeping 95% of the variance',
+      type: 'Numerical — PCA',
       question: 'Perform Principal Component Analysis on the data set $\\{(2.5, 2.4), (0.5, 0.7), (2.2, 2.9), (1.9, 2.2), (3.1, 3.0), (2.3, 2.7), (2.0, 1.6), (1.0, 1.1), (1.5, 1.6), (1.1, 0.9)\\}$ using (i) mean normalisation with no scaling, (ii) the principal components and the data variances along them, (iii) reduce the dimensionality keeping at least 95% of the variance, (iv) recast the data points along the principal component, (v) reconstruct the original points and find the MAE, SSE and RMSE.',
       source: 'PCA Tutorial Step by Step (Math) — Q1',
       marks: 7,
@@ -388,6 +389,7 @@ export default {
     },
     {
       title: 'The same data with mean normalisation and scaling',
+      type: 'Numerical — PCA',
       question: 'Repeat the analysis after preprocessing the data using both mean normalisation and feature/data scaling. How do the covariance matrix and the variance percentages change?',
       source: 'PCA Tutorial Step by Step (Math) — Q3',
       marks: 6,

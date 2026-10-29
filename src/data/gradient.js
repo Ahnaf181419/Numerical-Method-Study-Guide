@@ -448,6 +448,7 @@ export default {
   examples: [
     {
       title: 'Batch mode: the first epoch on the slides\' training set',
+      type: 'Numerical — Gradient descent (batch)',
       question:
         'The training set is $(x, y) = (1,1), (2,3), (4,3), (3,2), (5,5)$, so $m = 5$. Starting from $\\theta_0 = \\theta_1 = 0$ with learning rate $\\alpha = 0.01$, carry out one epoch of gradient descent in **batch** mode and update the parameters.',
       source: 'Gradient Descent slides (Batch)',
@@ -484,6 +485,7 @@ export default {
     },
     {
       title: 'Single mode: the first epoch on the same training set',
+      type: 'Numerical — Gradient descent (single)',
       question:
         'Using the same training set $(x, y) = (1,1), (2,3), (4,3), (3,2), (5,5)$, $\\theta_0 = \\theta_1 = 0$ and $\\alpha = 0.01$, carry out one epoch of gradient descent in **single** mode.',
       source: 'Gradient Descent slides (Single)',
@@ -520,6 +522,7 @@ export default {
     },
     {
       title: 'Degree-2 polynomial regression: one batch epoch',
+      type: 'Numerical — Gradient descent (batch)',
       question:
         'Fit a second-degree polynomial $H_\\theta(x) = \\theta_0 + \\theta_1 x + \\theta_2 x^2$ to the data $(x, y) = (0,0), (2,5), (3,6), (5,9), (4,7)$ by gradient descent in batch mode. Take $\\theta_0 = 2$, $\\theta_1 = 1$, $\\theta_2 = 3$ and learning rate $\\alpha = 0.2$, and carry out one epoch.',
       source: 'Spring 2024',
@@ -556,6 +559,7 @@ export default {
     },
     {
       title: 'Degree-4 polynomial: the update expression, and why it is simultaneous',
+      type: 'Theory — Derive',
       question:
         'Write the parameter-update expression for a polynomial regression of degree 4 carried out by gradient descent, and justify why the update of all five parameters must be simultaneous.',
       source: 'Spring 2024',
