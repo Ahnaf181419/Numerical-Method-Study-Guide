@@ -562,7 +562,7 @@ export default {
       marks: 6,
       steps: [
         {
-          t: 'Velocity gained $= \\int_0^{1.75} a(t)\\,dt$. With 7 subintervals, $h = \\frac{1.75}{7} = 0.25$ s. Simpson’s one-third rule needs an even count, so apply it to the first 6 subintervals and the trapezoidal rule to the last one.',
+          t: 'Velocity gained $= \\int_0^{1.75} a(t)\\,dt$. With 7 subintervals, $h = \\frac{1.75}{7} = 0.25$ s. 7 is odd, so Simpson’s one-third rule cannot cover the whole range, and it is not a multiple of 3 either. The most accurate split uses only Simpson rules: 7 = 4 + 3 — the one-third rule on the first 4 subintervals ($t = 0 \\to 1$) and the three-eighths rule on the last 3 ($t = 1 \\to 1.75$).',
           m: '1 mark',
         },
         {
@@ -570,23 +570,23 @@ export default {
           m: '1 mark',
         },
         {
-          t: "Simpson’s one-third rule on $t = 0 \\to 1.5$ (6 subintervals): $I_1 = \\frac{0.25}{3}\\left[3.2 + 4(4.89043 + 5.59941 + 7.04277) + 2(5.29375 + 6.2) + 7.98125\\right] = \\frac{0.25}{3}(104.29922) = 8.69160$.",
+          t: "Simpson’s one-third rule on $t = 0 \\to 1$ (4 subintervals): $I_1 = \\frac{0.25}{3}\\left[3.2 + 4(4.89043 + 5.59941) + 2(5.29375) + 6.2\\right] = \\frac{0.25}{3}(61.94686) = 5.16224$.",
           m: '2 marks',
         },
         {
-          t: 'Trapezoidal rule on the last subinterval: $I_2 = \\frac{0.25}{2}(7.98125 + 9.12676) = 2.13850$. Total velocity gained $= I_1 + I_2 = 10.83010$ m/s.',
+          t: 'Simpson’s three-eighths rule on $t = 1 \\to 1.75$ (3 subintervals): $I_2 = \\frac{3(0.25)}{8}\\left[6.2 + 3(7.04277 + 7.98125) + 9.12676\\right] = 0.09375(60.39882) = 5.66239$. Total velocity gained $= I_1 + I_2 = 10.82463$ m/s.',
           m: '1 mark',
         },
         {
-          t: 'Check by integrating the polynomial exactly: $\\int_0^{1.75} a(t)dt = \\left[3.2t + 6t^2 - \\frac{28}{3}t^3 + 8t^4 - \\frac{16}{5}t^5 + \\frac{1}{2}t^6\\right]_0^{1.75} = 10.82499$ m/s, so the numerical error is about $+0.0051$ m/s. $\\boxed{v(1.75) - v(0) \\approx 10.8301 \\text{ m/s}}$',
+          t: 'Check by integrating the polynomial exactly: $\\int_0^{1.75} a(t)dt = \\left[3.2t + 6t^2 - \\frac{28}{3}t^3 + 8t^4 - \\frac{16}{5}t^5 + \\frac{1}{2}t^6\\right]_0^{1.75} = 10.82499$ m/s, so the numerical error is only about $-0.00036$ m/s. $\\boxed{v(1.75) - v(0) \\approx 10.8246 \\text{ m/s}}$',
           m: '1 mark',
         },
       ],
-      answer: '$\\boxed{v(1.75) - v(0) \\approx 10.8301 \\text{ m/s}}$ (exact $10.8250$ m/s)',
-      note: 'Trap: "7 intervals" gives an odd number of subintervals, so Simpson’s one-third rule cannot be used over the whole range. Say which piece you used Simpson on and which piece you used the trapezoidal rule on.',
+      answer: '$\\boxed{v(1.75) - v(0) \\approx 10.8246 \\text{ m/s}}$ (exact $10.8250$ m/s)',
+      note: 'Trap: "7 intervals" is an odd number of subintervals, so Simpson’s one-third rule cannot be used over the whole range. Split 7 = 4 + 3 and say which piece gets the one-third rule and which the three-eighths rule. Patching the odd strip with the trapezoidal rule ($8.69160 + 2.13850 = 10.83010$) also earns method marks but is about 14 times less accurate (error $+0.0051$).',
       explanation: [
         'The integrand is a polynomial in $t$, so the ordinates are exact and the only error is the quadrature error. With 7 subintervals ($h = 0.25$) no single rule fits: the one-third rule needs an even count, the 3/8 rule needs a multiple of three, Weddle’s needs a multiple of six.',
-        'The standard exam answer is therefore to use Simpson’s one-third rule on the first six subintervals and the trapezoidal rule on the last one, and to say so. If the examiner meant **7 ordinates** (6 subintervals, $h = 1.75/6$), then Simpson’s one-third rule applies over the whole range and gives $10.8201$ m/s — and Weddle’s rule, which is exact for polynomials of degree 5, would give the exact $10.8250$ m/s.',
+        'Both Simpson rules are exact for cubics, while the trapezoidal rule is exact only for straight lines — one trapezoidal strip would dominate the error, which is why 4 + 3 is the "most appropriate" choice the question asks for. If the examiner meant **7 ordinates** (6 subintervals, $h = 1.75/6$), then Simpson’s one-third rule applies over the whole range and gives $10.8201$ m/s — and Weddle’s rule, which is exact for polynomials of degree 5, would give the exact $10.8250$ m/s.',
       ],
     },
 
@@ -702,26 +702,23 @@ export default {
     },
 
     {
-      title: "Weddle's rule for $\\int_0^2 (2x - x^2)\\,dx$",
+      title: "Weddle's rule for $\\int_0^3 (2x - x^2)\\,dx$",
       type: 'Numerical — Weddle',
-      question: "Evaluate $\\int_0^2 (2x - x^2)\\,dx$ by using Weddle's rule, taking seven ordinates. Also, compare the result with the exact value and determine the error.",
+      question: "Evaluate $\\int_0^3 (2x - x^2)\\,dx$ by using Weddle's rule, taking seven ordinates. Also, compare the result with the exact value and determine the error.",
       source: 'Spring 2024 Q2(h)',
       marks: 6,
       steps: [
-        { t: "Seven ordinates means six subintervals: $h = \\frac{2-0}{6} = \\frac{1}{3}$. Ordinates $y_i = 2x_i - x_i^2$ at $x = 0, \\frac{1}{3}, \\frac{2}{3}, 1, \\frac{4}{3}, \\frac{5}{3}, 2$: $0,\\; \\frac{5}{9},\\; \\frac{8}{9},\\; 1,\\; \\frac{8}{9},\\; \\frac{5}{9},\\; 0$.", m: '2 marks' },
+        { t: "Seven ordinates means six subintervals: $h = \\frac{3-0}{6} = 0.5$. Ordinates $y_i = 2x_i - x_i^2$ at $x = 0, 0.5, 1, 1.5, 2, 2.5, 3$: $y_0 = 0,\\ y_1 = 0.75,\\ y_2 = 1,\\ y_3 = 0.75,\\ y_4 = 0,\\ y_5 = -1.25,\\ y_6 = -3$.", m: '2 marks' },
         { t: "Weddle's rule: $I = \\frac{3h}{10}\\left[y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + y_6\\right]$.", m: '1 mark' },
-        { t: "$I = \\frac{3(1/3)}{10}\\left[0 + 5\\left(\\frac{5}{9}\\right) + \\frac{8}{9} + 6(1) + \\frac{8}{9} + 5\\left(\\frac{5}{9}\\right) + 0\\right] = 0.1\\left[\\frac{25+8+8+25}{9} + 6\\right] = 0.1\\left[\\frac{66}{9} + 6\\right]$.", m: '1 mark' },
-        { t: "$I = 0.1(7.3333 + 6) = 0.1(13.3333) = 1.3333$. Exact value: $\\left[x^2 - \\frac{x^3}{3}\\right]_0^2 = 4 - \\frac{8}{3} = \\frac{4}{3} = 1.3333$.", m: '1 mark' },
-        { t: 'Error $= 1.3333 - 1.3333 = 0$: the rule is **exact**, because Weddle\'s rule is exact for every polynomial of degree five or lower and $2x - x^2$ is only a quadratic.', m: '1 mark' },
+        { t: "$I = \\frac{3(0.5)}{10}\\left[0 + 5(0.75) + 1 + 6(0.75) + 0 + 5(-1.25) + (-3)\\right] = 0.15\\left[0 + 3.75 + 1 + 4.5 + 0 - 6.25 - 3\\right] = 0.15(0) = 0$.", m: '1 mark' },
+        { t: "Exact value: $\\left[x^2 - \\frac{x^3}{3}\\right]_0^3 = 9 - \\frac{27}{3} = 0$.", m: '1 mark' },
+        { t: 'Error $= 0 - 0 = 0$: the rule is **exact**, because Weddle\'s rule is exact for every polynomial of degree five or lower and $2x - x^2$ is only a quadratic.', m: '1 mark' },
       ],
-      answer: "$\\boxed{I = \\frac{4}{3} = 1.3333 \\;(\\text{exact value } \\tfrac{4}{3},\\; \\text{error } 0)}$",
+      answer: "$\\boxed{I = 0 \\ (\\text{exact value } 0,\\ \\text{error } 0)}$",
+      note: 'Trap: the ordinates go **negative** after $x = 2$ (the integrand $2x-x^2$ changes sign there), and the weighted sum cancels exactly. Do not “correct” a negative ordinate — and do not read the limit as 2: the paper integrates from 0 to 3.',
       explanation: [
-        "Weddle's rule fits a sixth-degree pattern through every six-subinterval block, so a quadratic is reproduced exactly and the error vanishes.",
-        "The rule needs a multiple of six subintervals, and seven ordinates is exactly six subintervals — which is why the paper says seven ordinates.",
-      ],
-      note: 'Trap: the ordinates go **negative** after $x = 2$ (the integrand $2x-x^2$ changes sign there), and the weighted sum cancels exactly. Do not “correct” a negative ordinate.',
-      explanation: [
-        'The weighted sum $\\left[0 + 3.75 + 1 + 4.5 + 0 - 6.25 - 3\\right]$ is exactly zero, and so is the integral of $2x - x^2$ over $[0,3]$. That is not luck: Weddle’s rule reproduces any polynomial of degree 5 or lower exactly, and $2x - x^2$ is a polynomial of degree 2.',
+        'The weighted sum $\\left[0 + 3.75 + 1 + 4.5 + 0 - 6.25 - 3\\right]$ is exactly zero, and so is the integral of $2x - x^2$ over $[0,3]$: the area above the axis on $[0, 2]$ ($\\tfrac{4}{3}$) cancels the area below it on $[2, 3]$ ($-\\tfrac{4}{3}$). That is not luck: Weddle’s rule reproduces any polynomial of degree 5 or lower exactly, and $2x - x^2$ is a polynomial of degree 2.',
+        'The rule needs a multiple of six subintervals, and seven ordinates is exactly six subintervals — which is why the paper says seven ordinates.',
         'The paper asks for the error precisely so that you can see this: quoting "error = 0" with the reason (exactness for low-degree polynomials) earns the mark; a numerical value alone does not.',
       ],
     },

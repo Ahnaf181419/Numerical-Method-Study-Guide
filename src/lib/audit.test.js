@@ -47,7 +47,9 @@ test('elimination examples match the engine', () => {
 
 test('iterative examples match the engine', () => {
   const t = exampleText('iterative', "Jacobi's method");
-  ['2.40', '3.75', '4.00', '1.084', '1.95', '3.164'].forEach((n) => has(t, n, 'jacobi'));
+  ['2.40', '3.75', '4.00', '0.93', '1.92', '2.93'].forEach((n) => has(t, n, 'jacobi'));
+  const j8 = s.jacobi({ A: [[5, 2, 1], [1, 4, 2], [1, 2, 5]], b: [12, 15, 20], x0: [0, 0, 0], tol: 1e-12, maxIter: 8 }).result.table[8].x;
+  [0.93, 1.92, 2.93].forEach((v, i) => close(j8[i], v, 0.005));
   const j = s.jacobi({ A: [[5, 2, 1], [1, 4, 2], [1, 2, 5]], b: [12, 15, 20], x0: [0, 0, 0] }).result.table[1].x;
   [2.4, 3.75, 4].forEach((v, i) => close(j[i], v));
   const g = exampleText('iterative', 'Gauss-Seidel');
@@ -59,10 +61,11 @@ test('iterative examples match the engine', () => {
 test('LU examples match the engine', () => {
   const t = exampleText('lu', "slide's matrix");
   ['8 - (3)(2) = 2', '13 - (2)(4) - (1)(2) = 3'].forEach((n) => has(t, n, 'LU slide'));
-  const r = s.luSolve({ A: [[2, 1, 1], [-4, 3, 2], [6, 5, 7]], b: [9, 20, 35] }).result;
-  [1, 10, -3].forEach((v, i) => close(r.x[i], v));
+  // Fall 2024 A2(d) as printed: +4x + 3y + 2z = 20
+  const r = s.luSolve({ A: [[2, 1, 1], [4, 3, 2], [6, 5, 7]], b: [9, 20, 35] }).result;
+  [3, 2, 1].forEach((v, i) => close(r.x[i], v));
   const tf = exampleText('lu', 'Solving a system');
-  ['38', '-7.2', '-3'].forEach((n) => has(tf, n, 'LU F24'));
+  ['u_{33} = 7 - (3)(1) - (2)(0) = 4', '35 - (3)(9) - (2)(2)', 'z = 1}'].forEach((n) => has(tf, n, 'LU F24'));
 });
 
 test('PCA examples match the engine', () => {
@@ -157,11 +160,18 @@ test('differentiation and integration examples match the engine', () => {
   const r2 = exampleText('integration', 'from 0 to 1');
   has(r2, '0.746824', 'romberg e^-x^2');
   const T = [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75].map((x2) => 3.2 + 12 * x2 - 28 * x2 ** 2 + 32 * x2 ** 3 - 16 * x2 ** 4 + 3 * x2 ** 5);
-  const I1 = (0.25 / 3) * (T[0] + 4 * (T[1] + T[3] + T[5]) + 2 * (T[2] + T[4]) + T[6]);
-  close(I1, 8.69160, 1e-4);
-  has(exampleText('integration', 'aircraft'), '10.83010', 'aircraft');
-  has(exampleText('integration', 'Weddle'), '1.3333', 'weddle');
-  close(s.integrate({ xs: [0, 1 / 3, 2 / 3, 1, 4 / 3, 5 / 3, 2], ys: [0, 5 / 9, 8 / 9, 1, 8 / 9, 5 / 9, 0], method: 'weddle' }).result.value, 4 / 3, 1e-9);
+  // Fall 2024 A2(e): Simpson 1/3 on 4 strips + Simpson 3/8 on 3 strips
+  const I1 = s.integrate({ xs: [0, 0.25, 0.5, 0.75, 1], ys: T.slice(0, 5), method: 'simpson13' }).result.value;
+  const I2 = s.integrate({ xs: [1, 1.25, 1.5, 1.75], ys: T.slice(4), method: 'simpson38' }).result.value;
+  close(I1, 5.16224, 1e-5);
+  close(I2, 5.66239, 1e-5);
+  close(I1 + I2, 10.82463, 1e-5);
+  ['5.16224', '5.66239', '10.82463', '10.8246'].forEach((n) => has(exampleText('integration', 'aircraft'), n, 'aircraft'));
+  // S24 Q2(h): the paper integrates over [0, 3]
+  const wx = [0, 0.5, 1, 1.5, 2, 2.5, 3];
+  close(s.integrate({ xs: wx, ys: wx.map((x) => 2 * x - x * x), method: 'weddle' }).result.value, 0, 1e-12);
+  ['-1.25', '0.15(0) = 0'].forEach((n) => has(exampleText('integration', 'Weddle'), n, 'weddle'));
+  ['\\int_0^3', '0.15(0) = 0'].forEach((n) => has(paperText('Spring 2024', 'Q2(h)'), n, 'S24 Q2(h)'));
   has(exampleText('integration', '0.6'), '0.82212', 'simpson e^x');
 });
 
@@ -180,7 +190,7 @@ test('errors and differences examples match the hand-verified numbers', () => {
 
 test('past-paper model answers match the engine', () => {
   has(paperText('Fall 2024', 'A2(b)'), '\\frac{77}{9}', 'F24 A2(b) second-column pivot');
-  has(paperText('Fall 2024', 'A2(e)'), '10.83010', 'F24 A2(e) aircraft');
+  ['5.16224', '5.66239', '10.82463'].forEach((n) => has(paperText('Fall 2024', 'A2(e)'), n, 'F24 A2(e) aircraft'));
   has(paperText('Fall 2024', 'A2(e)'), '9.12676', 'F24 A2(e) ordinates');
   has(paperText('Fall 2023', 'Q2(a)'), '-5.875', 'F23 Q2(a) f(2.5)');
   has(paperText('Fall 2023', 'Q2(a)'), '-1.1113', 'F23 Q2(a) f(2.875)');
@@ -202,7 +212,35 @@ test('past-paper model answers match the engine', () => {
   has(paperText('Spring 2023', 'Q2(e)'), '9.6980', 'S23 Q2(e) lagrange');
   has(paperText('Spring 2023', 'Q2(f)'), '6.1399', 'S23 Q2(f) tourist');
   has(paperText('Spring 2023', 'Q2(f)'), '3.7968', 'S23 Q2(f) tourist');
-  has(paperText('Spring 2023', 'Q2(h)'), '1.0409', 'S23 Q2(h) euler');
+  let y = 1;
+  for (let k = 0; k < 4; k++) y += 0.01 * ((0.01 * k) ** 3 + y);
+  close(y, 1.040604, 1e-6);
+  has(paperText('Spring 2023', 'Q2(h)'), 'y(0.04) \\approx 1.0406', 'S23 Q2(h) euler');
+});
+
+test('corrected past-paper answers are reproduced by the engine', () => {
+  // F23 / S23 Q1(d): maximum relative error of u = 5xy^2/z^3 with all deltas 1
+  close((5 + 10 + 15) / 5, 6);
+  ['Fall 2023', 'Spring 2023'].forEach((p) => has(paperText(p, 'Q1(d)'), 'e_r = 6', `${p} Q1(d)`));
+  // F24 A2(f) and S23 Q2(d): Romberg tables
+  const rf = s.romberg({ expr: '(2*x^2+x)*exp(-x)', a: 1, b: 3, n: 8 }).result.table;
+  close(rf[3][0], 2.516737, 1e-6);
+  close(rf[3][3], 2.522645, 1e-6);
+  ['2.516737', '2.522804', '2.522645'].forEach((n) => has(paperText('Fall 2024', 'A2(f)'), n, 'F24 A2(f)'));
+  const rs = s.romberg({ expr: 'exp(-x^2)', a: 0, b: 1, n: 8 }).result.table;
+  close(rs[1][1], 0.747180, 1e-6);
+  close(rs[2][2], 0.746834, 1e-6);
+  ['0.747180', '0.746834', '0.7468}'].forEach((n) => has(paperText('Spring 2023', 'Q2(d)'), n, 'S23 Q2(d)'));
+  // F23 Q3(d): Jacobi 17 iterations, Gauss-Seidel 7, to 0.005
+  const A = [[5, 2, 1], [1, 4, 2], [1, 2, 5]], b = [12, 15, 20], x0 = [0, 0, 0];
+  assert.equal(s.jacobi({ A, b, x0, tol: 0.005, maxIter: 50 }).result.table.length - 1, 17);
+  assert.equal(s.gaussSeidel({ A, b, x0, tol: 0.005, maxIter: 50 }).result.table.length - 1, 7);
+  has(paperText('Fall 2023', 'Q3(d)'), '**17**', 'F23 Q3(d) jacobi count');
+  // S23 Q2(g): divided-difference quadratic through (2.37, 261), (3.25, 271), (3.83, 273)
+  const a1 = 10 / 0.88, a2 = (2 / 0.58 - a1) / 1.46;
+  close(a1 + a2 * 0.88, 6.593, 1e-3);
+  close(2 * a2, -10.843, 1e-3);
+  ['6.593', '-10.843'].forEach((n) => has(paperText('Spring 2023', 'Q2(g)'), n, 'S23 Q2(g)'));
 });
 
 test('the S24 missing-values answer is the quadratic one', () => {
@@ -245,9 +283,9 @@ test('iterative walk-through uses the sourced slides system', () => {
 
 test('lu walk-through uses the sourced Fall 2024 A2(d) system', () => {
   const t = sectionText('lu', 'Start here: your first walk-through');
-  const r = s.luSolve({ A: [[2, 1, 1], [-4, 3, 2], [6, 5, 7]], b: [9, 20, 35] });
-  [1, 10, -3].forEach((v, i) => close(r.result.x[i], v, 1e-9));
-  ['Fall 2024 A2(d)', '38', '-7.2', 'z = -3', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `lu missing ${n}`));
+  const r = s.luSolve({ A: [[2, 1, 1], [4, 3, 2], [6, 5, 7]], b: [9, 20, 35] });
+  [3, 2, 1].forEach((v, i) => close(r.result.x[i], v, 1e-9));
+  ['Fall 2024 A2(d)', 'R_2 - 2R_1', 'z = 1', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `lu missing ${n}`));
 });
 
 test('differences walk-through uses the sourced Chapra x^4 table', () => {

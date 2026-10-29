@@ -166,6 +166,12 @@ test('simpson 1/3 on a parabola is exact', () => {
   close(result.value, 8 / 3, 1e-9);
 });
 
+test('simpson 3/8 is exact for a cubic, single and composite', () => {
+  close(s.integrate({ xs: [0, 1, 2, 3], ys: [0, 1, 8, 27], method: 'simpson38' }).result.value, 81 / 4, 1e-9);
+  const xs = [0, 1, 2, 3, 4, 5, 6];
+  close(s.integrate({ xs, ys: xs.map((x) => x ** 3), method: 'simpson38' }).result.value, 324, 1e-9);
+});
+
 test('weddle rule needs six subintervals', () => {
   assert.throws(() => s.integrate({ xs: [0, 1, 2], ys: [0, 1, 4], method: 'weddle' }), /six/);
 });

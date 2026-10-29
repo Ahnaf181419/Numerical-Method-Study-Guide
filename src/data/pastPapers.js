@@ -14,10 +14,10 @@ export default [
             id: 'A1(a)', type: 'Theory — Prove', marks: 3, module: 'errors',
             q: 'Prove that the symmetric round-off error is one-half the chopping error at worst case.',
             answer: [
-              'Chopping: the extra digits are simply discarded, so the error is always in one direction and at most one unit in the last place retained: $e_c = \\pm q$, $|e_c| \\le q$.',
-              'Rounding: the discarded part is kept when it is at least half of $q$, so $|e_r| \\le q/2$.',
-              'Rounding is therefore at most half the chopping error: $|e_r| \\le \\tfrac{1}{2}|e_c|$ in the worst case.',
-              'The same number is produced whether the machine chops or rounds — which is why the **symmetric** round-off error is called symmetric: it lies in $[-q/2, q/2]$ about the true value.',
+              'Write the true number in floating-point form with $d$ mantissa digits (Balagurusamy Ch. 4): $x = f_x \\times 10^{E} + g_x \\times 10^{E-d}$, where $f_x$ holds the $d$ retained digits and $0 \\le g_x < 1$ is the part that does not fit.',
+              '**Chopping** drops $g_x$: $x_c = f_x \\times 10^{E}$, so the error is $|x - x_c| = g_x \\times 10^{E-d}$. Since $0 \\le g_x < 1$, $\\;|E_c| \\le 10^{E-d}$.',
+              '**Symmetric rounding**: if $g_x < 0.5$ the last digit is left alone and the error is $g_x \\times 10^{E-d}$, with $g_x < 0.5$; if $g_x \\ge 0.5$ the last retained digit is raised by one, $x_r = (f_x + 10^{-d}) \\times 10^{E}$, and the error is $(g_x - 1) \\times 10^{E-d}$, with $|g_x - 1| \\le 0.5$. In both cases $|E_r| \\le 0.5 \\times 10^{E-d}$.',
+              'Comparing the two worst cases: $|E_r|_{\\max} = 0.5 \\times 10^{E-d} = \\tfrac{1}{2}|E_c|_{\\max}$. $\\boxed{\\text{symmetric round-off error} \\le \\tfrac{1}{2} \\times \\text{chopping error (worst case)}}$',
             ],
           },
           {
@@ -34,10 +34,10 @@ export default [
             id: 'A1(c)', type: 'Theory — Derive', marks: 3, module: 'integration',
             q: "Derive Simpson's one-third rule from the general quadrature formula for numerical integration with equidistant ordinates.",
             answer: [
-              'General quadrature with $n$ ordinates at spacing $h$: $\\int_a^b f(x)\\,dx \\approx \\sum_{i=0}^{n-1} w_i f(x_i)$, where the weights $w_i$ come from the Lagrange form of the interpolating polynomial.',
-              'For three consecutive ordinates at $x_0, x_1 = x_0 + h, x_2 = x_0 + 2h$, the Lagrange weights are $w_0 = h/3$, $w_1 = 4h/3$, $w_2 = h/3$.',
-              'Hence over one pair of intervals: $\\int_{x_0}^{x_2} f(x)\\,dx \\approx \\dfrac{h}{3}\\left[f(x_0) + 4f(x_1) + f(x_2)\\right]$ — Simpson\'s one-third rule.',
-              'The error term is $-\\dfrac{(b-a)h^4}{180}f^{(4)}(\\xi)$, and the rule needs an **even** number of subintervals.',
+              'Replace $y = f(x)$ by the Newton–Gregory forward series $y = y_0 + u\\Delta y_0 + \\frac{u(u-1)}{2!}\\Delta^2 y_0 + \\cdots$ with $u = \\frac{x - x_0}{h}$, so $dx = h\\,du$ and $u$ runs from $0$ to $n$.',
+              'Integrating term by term gives the general quadrature formula $I = h\\left[n y_0 + \\frac{n^2}{2}\\Delta y_0 + \\frac{1}{2}\\left(\\frac{n^3}{3} - \\frac{n^2}{2}\\right)\\Delta^2 y_0 + \\cdots\\right]$.',
+              'Put $n = 2$ and neglect the third and higher differences: $I = h\\left[2y_0 + 2\\Delta y_0 + \\frac{1}{3}\\Delta^2 y_0\\right]$; with $\\Delta y_0 = y_1 - y_0$ and $\\Delta^2 y_0 = y_2 - 2y_1 + y_0$ this is $\\boxed{\\int_{x_0}^{x_2} y\\,dx \\approx \\frac{h}{3}(y_0 + 4y_1 + y_2)}$ — Simpson\'s one-third rule.',
+              'Applied to successive pairs of strips it gives the composite rule $\\frac{h}{3}[y_0 + 4(y_1 + y_3 + \\cdots) + 2(y_2 + y_4 + \\cdots) + y_n]$, which needs an **even** number of subintervals.',
             ],
           },
           {
@@ -46,7 +46,7 @@ export default [
             answer: [
               '**Condition number**: a measure of how much the output of a function changes when the input changes. For $u = f(x)$, the relative condition number is $\\left|\\dfrac{x f\'(x)}{f(x)}\\right|$; a large value means the problem is ill-conditioned and the relative error in the answer is amplified.',
               '**Deflation**: the removal of a known root from a polynomial. Dividing $p(x)$ by $(x - r)$ leaves a polynomial of one degree less, so the remaining roots can be found by repeating the process.',
-              '**Accuracy**: how close a computed value is to the true value — the concern of **truncation** error (the model itself is inexact). It is the opposite of **precision**, which is how close repeated computations are to each other (the concern of round-off error).',
+              '**Accuracy** (Balagurusamy Ch. 4): the number of significant digits in a value — 57.396 is accurate to five significant digits. Contrast **precision**, the number of decimal positions (the order of magnitude of the last digit): 57.396 has precision $10^{-3}$.',
             ],
           },
           {
@@ -102,13 +102,13 @@ export default [
           },
           {
             id: 'A2(d)', type: 'Numerical — Doolittle LU', marks: 6, module: 'lu',
-            q: 'Solve the following system of linear equation using Do-Little LU Decomposition Method (show all necessary steps of the computation): $2x + y + z = 9$, $-4x + 3y + 2z = 20$, $6x + 5y + 7z = 35$.',
+            q: 'Solve the following system of linear equation using Do-Little LU Decomposition Method (show all necessary steps of the computation): $2x + y + z = 9$, $4x + 3y + 2z = 20$, $6x + 5y + 7z = 35$.',
             answer: [
-              'Factorise: $u_{11} = 2$, $u_{12} = 1$, $u_{13} = 1$; $l_{21} = -2$, $l_{31} = 3$; $u_{22} = 3 - (-2)(1) = 5$, $u_{23} = 2 - (-2)(1) = 4$; $l_{32} = \\frac{5 - (3)(1)}{5} = 0.4$; $u_{33} = 7 - (3)(1) - (0.4)(4) = 2.4$.',
-              '$L = \\begin{bmatrix} 1 & 0 & 0 \\\\ -2 & 1 & 0 \\\\ 3 & 0.4 & 1 \\end{bmatrix}$, $U = \\begin{bmatrix} 2 & 1 & 1 \\\\ 0 & 5 & 4 \\\\ 0 & 0 & 2.4 \\end{bmatrix}$.',
-              'Forward substitution $[L]\\{d\\} = \\{b\\}$: $d_1 = 9$, $d_2 = 20 - (-2)(9) = 38$, $d_3 = 35 - (3)(9) - (0.4)(38) = -7.2$.',
-              'Backward substitution $[U]\\{x\\} = \\{d\\}$: $x_3 = -7.2/2.4 = -3$, $x_2 = (38 - 4(-3))/5 = 10$, $x_1 = (9 - 10 + 3)/2 = 1$.',
-              'Check in the original equations: all three are satisfied.',
+              'Factorise: $u_{11} = 2$, $u_{12} = 1$, $u_{13} = 1$; $l_{21} = 4/2 = 2$, $l_{31} = 6/2 = 3$; $u_{22} = 3 - (2)(1) = 1$, $u_{23} = 2 - (2)(1) = 0$; $l_{32} = \\frac{5 - (3)(1)}{1} = 2$; $u_{33} = 7 - (3)(1) - (2)(0) = 4$.',
+              '$L = \\begin{bmatrix} 1 & 0 & 0 \\\\ 2 & 1 & 0 \\\\ 3 & 2 & 1 \\end{bmatrix}$, $U = \\begin{bmatrix} 2 & 1 & 1 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 4 \\end{bmatrix}$.',
+              'Forward substitution $[L]\\{d\\} = \\{b\\}$: $d_1 = 9$, $d_2 = 20 - (2)(9) = 2$, $d_3 = 35 - (3)(9) - (2)(2) = 4$.',
+              'Backward substitution $[U]\\{x\\} = \\{d\\}$: $x_3 = 4/4 = 1$, $x_2 = (2 - 0(1))/1 = 2$, $x_1 = (9 - 2 - 1)/2 = 3$.',
+              'Check in the original equations: $2(3) + 2 + 1 = 9$ ✓, $4(3) + 3(2) + 2(1) = 20$ ✓, $6(3) + 5(2) + 7(1) = 35$ ✓. $\\boxed{x = 3,\\; y = 2,\\; z = 1}$',
             ],
           },
           {
@@ -116,22 +116,22 @@ export default [
             q: "During takeoff, an aircraft's acceleration is denoted by $a(t) = 3.2 + 12t - 28t^2 + 32t^3 - 16t^4 + 3t^5$ m/s². Determine the velocity gained from $t = 0$ to $t = 1.75$ seconds during the takeoff roll. Use 7 intervals and choose the most appropriate numerical integration technique(s).",
             answer: [
               'The velocity gained is $v(1.75) - v(0) = \\int_0^{1.75} a(t)\\,dt$.',
-              'With 7 intervals $h = 1.75/7 = 0.25$; 7 is odd, so **Simpson\'s 1/3 rule cannot be used over the whole range** — use Simpson\'s 3/8 rule on the first 6 intervals (composite) and the trapezoidal rule on the last one, or composite Simpson\'s 1/3 on the first 6 intervals.',
+              'With 7 intervals $h = 1.75/7 = 0.25$. 7 is odd, so **Simpson\'s 1/3 rule cannot be used over the whole range**, and it is not a multiple of 3 either. Split $7 = 4 + 3$: Simpson\'s 1/3 rule on $t = 0$ to $1$ (4 intervals) and Simpson\'s 3/8 rule on $t = 1$ to $1.75$ (3 intervals).',
               'Evaluate $a(t)$ at $t = 0, 0.25, \\dots, 1.75$: $3.20000,\\ 4.89043,\\ 5.29375,\\ 5.59941,\\ 6.20000,\\ 7.04277,\\ 7.98125,\\ 9.12676$.',
-              'Simpson\'s 1/3 on the first six subintervals ($t = 0$ to $1.5$): $I_1 = \\frac{0.25}{3}\\left[3.2 + 4(4.89043 + 5.59941 + 7.04277) + 2(5.29375 + 6.2) + 7.98125\\right] = \\frac{0.25}{3}(104.29922) = 8.69160$.',
-              'Trapezoidal on the last subinterval: $I_2 = \\frac{0.25}{2}(7.98125 + 9.12676) = 2.13850$.',
-              'Velocity gained $= I_1 + I_2 = 10.83010$ m/s; integrating the polynomial exactly gives $10.82499$ m/s, so the numerical error is about $+0.0051$ m/s.',
+              'Simpson\'s 1/3 on $t = 0$ to $1$: $I_1 = \\frac{0.25}{3}\\left[3.2 + 4(4.89043 + 5.59941) + 2(5.29375) + 6.2\\right] = \\frac{0.25}{3}(61.94686) = 5.16224$.',
+              'Simpson\'s 3/8 on $t = 1$ to $1.75$: $I_2 = \\frac{3(0.25)}{8}\\left[6.2 + 3(7.04277 + 7.98125) + 9.12676\\right] = 0.09375(60.39882) = 5.66239$.',
+              'Velocity gained $= I_1 + I_2 = 10.82463$ m/s. $\\boxed{v(1.75) - v(0) \\approx 10.8246 \\text{ m/s}}$ Integrating the polynomial exactly gives $10.82499$ m/s, so the error is only about $-0.00036$ m/s (patching the odd strip with the trapezoidal rule instead gives $10.83010$, error $+0.0051$).',
             ],
           },
           {
             id: 'A2(f)', type: 'Numerical — Romberg', marks: 6, module: 'integration',
             q: "Use Romberg's Integration to calculate $\\int_1^3 (2x^2 + x)e^{-x}\\,dx$ correct up to 4 decimal places. Compare the result with the true value 2.5226.",
             answer: [
-              'Build the Romberg table: the first column is the trapezoidal rule with 1, 2, 4, 8 intervals; each later column is the Richardson extrapolation of the two to its left.',
-              '$R_{00} = \\dfrac{3-1}{2}\\left[f(1) + f(3)\\right]$ with $f(x) = (2x^2 + x)e^{-x}$.',
-              'Extrapolate: $R_{k,j} = R_{k,j-1} + \\dfrac{R_{k,j-1} - R_{k-1,j-1}}{4^j - 1}$.',
-              'The bottom-right entry of the Romberg table is the answer.',
-              'Compare with the true value 2.5226 and state the absolute error.',
+              'Build the Romberg table: the first column is the trapezoidal rule with 1, 2, 4, 8 intervals; each later column is the Richardson extrapolation of the two to its left, $R_{k,j} = R_{k,j-1} + \\dfrac{R_{k,j-1} - R_{k-1,j-1}}{4^j - 1}$.',
+              'Trapezoidal column with $f(x) = (2x^2 + x)e^{-x}$: $R_{00} = \\dfrac{3-1}{2}[f(1) + f(3)] = 2.149167$, $R_{10} = 2.427936$ ($h = 1$), $R_{20} = 2.498996$ ($h = 0.5$), $R_{30} = 2.516737$ ($h = 0.25$).',
+              'First extrapolation: $R_{11} = 2.520859$, $R_{21} = 2.522683$, $R_{31} = 2.522650$.',
+              'Second and third: $R_{22} = 2.522804$, $R_{32} = 2.522648$; $R_{33} = 2.522645$.',
+              'So $\\boxed{I \\approx 2.5226}$; against the true value 2.5226 the absolute error is $|2.522645 - 2.5226| \\approx 0.000045$, well inside 4 decimal places.',
             ],
           },
         ],
@@ -146,7 +146,7 @@ export default [
             answer: [
               'With $\\Delta f(x) = f(x+h) - f(x)$, $\\nabla f(x) = f(x) - f(x-h)$ and $\\delta f(x) = f(x + h/2) - f(x - h/2)$:',
               '$\\Delta f(x) = f(x+h) - f(x)$ and $\\nabla f(x+h) = f(x+h) - f(x)$, so $\\Delta f(x) = \\nabla f(x+h)$.',
-              'Also $\\delta f(x) = f(x+h/2) - f(x-h/2)$ and $\\delta f(x+h/2) = f(x+h) - f(x)$, so $\\delta^2 f(x) = \\delta f(x+h/2) - \\delta f(x) = f(x+h) - 2f(x) + f(x-h)$.',
+              'Also $\\delta f(x) = f(x+h/2) - f(x-h/2)$ and $\\delta f(x+h/2) = f(x+h) - f(x)$, and $\\delta f(x-h/2) = f(x) - f(x-h)$, so $\\delta^2 f(x) = \\delta f(x+h/2) - \\delta f(x-h/2) = f(x+h) - 2f(x) + f(x-h)$.',
               'And $\\Delta f(x) - \\nabla f(x) = [f(x+h) - f(x)] - [f(x) - f(x-h)] = f(x+h) - 2f(x) + f(x-h)$, which is the same. Hence $\\Delta - \\nabla = \\delta^2$.',
               'For Lagrange\'s formula with unequal intervals: write the interpolating polynomial through $n+1$ points as $P(x) = \\sum_{i=0}^{n} y_i L_i(x)$, where $L_i(x) = \\prod_{j \\ne i}\\dfrac{x - x_j}{x_i - x_j}$; $L_i(x_j) = \\delta_{ij}$ so $P(x_j) = y_j$.',
               'Hence $y(x) = \\sum_{i=0}^{n} y_i \\prod_{j \\ne i}\\dfrac{x - x_j}{x_i - x_j}$.',
@@ -179,7 +179,7 @@ export default [
   },
   {
     title: 'Spring 2024 semester final',
-    meta: 'CSE 2201, AUST. 3 hours, 70 marks. Question 1: any 5 of 7. Question 2: any 6 of 6. Question 3: answer all.',
+    meta: 'CSE 2201, AUST. 3 hours, 70 marks. Question 1: any 5 of 7. Question 2: any 6 of 8. Question 3: answer all.',
     sets: [
       {
         name: 'Question 1',
@@ -187,12 +187,14 @@ export default [
         items: [
           {
             id: 'Q1(a)', type: 'Theory — Define', marks: 4, module: 'errors',
-            q: 'Define significant digit, accuracy, and precision. Also, prove that $e_{r;xy} = |e_{r;x}| + |e_{r;y}|$, where the symbols have their usual meaning.',
+            q: 'Define significant digit, accuracy, and precision. Also, prove that $e_{r,x/y} = |e_{r,x}| + |e_{r,y}|$, where the symbols have their usual meaning.',
             answer: [
-              'A **significant digit** is any digit that is meaningful (not a leading or trailing placeholder zero).',
-              '**Accuracy** is how close a computed value is to the true value; **precision** is how closely repeated computations agree with each other.',
-              'For a product $z = xy$, the relative error is $e_{r;z} = \\dfrac{x\\,e_{r;x} + y\\,e_{r;y}}{xy} = e_{r;x} + e_{r;y}$.',
-              'Taking absolute values: $|e_{r;xy}| \\le |e_{r;x}| + |e_{r;y}|$, which is the usual statement for a quotient (the errors add instead of cancelling).',
+              'A **significant digit** is a digit used to express a number that carries meaning: every non-zero digit, zeros between significant digits, and trailing zeros that are explicitly significant — leading zeros only fix the decimal point (0.008472 has 4 sd).',
+              '**Accuracy** (Balagurusamy Ch. 4) is the number of significant digits in a value: 57.396 is accurate to 5 sd. **Precision** is the number of decimal positions, the order of magnitude of the last digit: 57.396 has precision $10^{-3}$.',
+              'Quotient: let $x = x_a + e_x$ and $y = y_a + e_y$ (approximate value plus error). Then $\\dfrac{x}{y} = \\dfrac{x_a + e_x}{y_a + e_y} = \\dfrac{x_a + e_x}{y_a}\\left(1 + \\dfrac{e_y}{y_a}\\right)^{-1} \\approx \\dfrac{x_a + e_x}{y_a}\\left(1 - \\dfrac{e_y}{y_a}\\right)$, dropping the squares and products of the small errors.',
+              'Multiplying out and dropping $e_xe_y$: $\\dfrac{x}{y} \\approx \\dfrac{x_a}{y_a} + \\dfrac{e_x}{y_a} - \\dfrac{x_ae_y}{y_a^2}$, so the error of the quotient is $e_{x/y} = \\dfrac{x_a}{y_a}\\left(\\dfrac{e_x}{x_a} - \\dfrac{e_y}{y_a}\\right)$.',
+              'Divide by $x_a/y_a$ to get the relative error: $e_{r,x/y} = \\dfrac{e_x}{x_a} - \\dfrac{e_y}{y_a} = e_{r,x} - e_{r,y}$.',
+              'The signs of the errors are not known, so the worst case adds the magnitudes: $\\boxed{e_{r,x/y} = |e_{r,x}| + |e_{r,y}|}$ — the same bound as for a product.',
             ],
           },
           {
@@ -219,7 +221,7 @@ export default [
             id: 'Q1(d)', type: 'Theory — Explain', marks: 4, module: 'elimination',
             q: 'Describe the four possible scenarios about the existence of solution(s) of a system of linear equations. Also, mention the condition for convergence of Jacobi iteration method and make comments on the strength of this condition.',
             answer: [
-              'With $A$ the coefficient matrix and $b$ the constant vector: (i) $\\det A \\ne 0$ — a **unique** solution; (ii) $\\det A = 0$ and $b \\notin C(A)$ — **no** solution (inconsistent); (iii) $\\det A = 0$ and $b \\in C(A)$ — **infinitely many** solutions; (iv) $\\det A = 0$ with $A = 0$ and $b \\ne 0$ — still no solution.',
+              'Seen as lines (two equations, two unknowns), a system can be in one of four situations (Balagurusamy): (i) **unique solution** — the lines cross at one point, $\\det A \\ne 0$; (ii) **no solution** — the lines are parallel, the equations are inconsistent, $\\det A = 0$; (iii) **no unique solution** (infinitely many) — the lines coincide, one equation is a multiple of the other, $\\det A = 0$; (iv) **ill-conditioned** — the lines are nearly parallel, $\\det A \\approx 0$, so a solution exists but small changes in the coefficients move it a long way.',
               'Jacobi converges if the system is **diagonally dominant**: $|a_{ii}| > \\sum_{j\\ne i}|a_{ij}|$ for every row.',
               'Strength: the condition is **sufficient but not necessary** — it guarantees convergence, but some systems converge without it, so failing the test does not prove divergence.',
             ],
@@ -238,10 +240,10 @@ export default [
             id: 'Q1(f)', type: 'Theory — Derive', marks: 4, module: 'integration',
             q: "Derive Simpson's one-third rule from the general quadrature formula for numerical integration with equidistant ordinates.",
             answer: [
-              'General quadrature: $\\int_a^b f(x)\\,dx \\approx \\sum w_i f(x_i)$, the weights coming from the Lagrange form of the interpolating polynomial.',
-              'For three ordinates at spacing $h$ the Lagrange weights are $h/3,\\ 4h/3,\\ h/3$.',
-              'Hence $\\int_{x_0}^{x_2} f(x)\\,dx \\approx \\dfrac{h}{3}\\left[f(x_0) + 4f(x_1) + f(x_2)\\right]$.',
-              'Error $-\\dfrac{(b-a)h^4}{180}f^{(4)}(\\xi)$; an even number of subintervals is required.',
+              'Replace $y$ by the Newton–Gregory forward series $y = y_0 + u\\Delta y_0 + \\frac{u(u-1)}{2!}\\Delta^2 y_0 + \\cdots$, $u = \\frac{x - x_0}{h}$, $dx = h\\,du$, $u$ from $0$ to $n$.',
+              'Integrate term by term — the general quadrature formula: $I = h\\left[n y_0 + \\frac{n^2}{2}\\Delta y_0 + \\frac{1}{2}\\left(\\frac{n^3}{3} - \\frac{n^2}{2}\\right)\\Delta^2 y_0 + \\cdots\\right]$.',
+              'Put $n = 2$, drop $\\Delta^3$ and higher: $I = h\\left[2y_0 + 2\\Delta y_0 + \\frac{1}{3}\\Delta^2 y_0\\right]$; substitute $\\Delta y_0 = y_1 - y_0$, $\\Delta^2 y_0 = y_2 - 2y_1 + y_0$: $\\boxed{\\int_{x_0}^{x_2} y\\,dx \\approx \\frac{h}{3}(y_0 + 4y_1 + y_2)}$.',
+              'Over successive pairs of strips this gives the composite rule $\\frac{h}{3}[y_0 + 4(y_1 + y_3 + \\cdots) + 2(y_2 + y_4 + \\cdots) + y_n]$; an even number of subintervals is required.',
             ],
           },
           {
@@ -263,14 +265,16 @@ export default [
         rule: 'Answer any 6 (6 × 6 = 36)',
         items: [
           {
-            id: 'Q2(a)', type: 'Numerical — Bisection', marks: 6, module: 'roots',
+            id: 'Q2(a)', type: 'Numerical — Bisection', marks: 6, module: 'roots', flagged: true,
             q: 'Find the largest root of the equation $x^2 - 4x - 10 = 0$ using the Bisection method. Use the formula for the search bracket to make the initial guesses and continue the bisection method for three iterations only.',
             answer: [
-              'Search bracket: for $x^2 - 4x - 10 = 0$ the roots are $\\dfrac{4 \\pm \\sqrt{16 + 40}}{2}$, so the largest root lies between 5 and 6 ($f(5) = -5$, $f(6) = 2$).',
-              'Iteration 1: $c = (5 + 6)/2 = 5.5$, $f(5.5) = 30.25 - 22 - 10 = -1.75$; the root is between 5.5 and 6.',
-              'Iteration 2: $c = (5.5 + 6)/2 = 5.75$, $f(5.75) = 33.0625 - 23 - 10 = 0.0625$; the root is between 5.5 and 5.75.',
-              'Iteration 3: $c = (5.5 + 5.75)/2 = 5.625$, $f(5.625) = 31.640625 - 22.5 - 10 = -0.859375$; the root is between 5.625 and 5.75.',
-              'After three iterations the largest root is bracketed by $[5.625, 5.75]$; the exact root is $2 + \\sqrt{14} = 5.7417$.',
+              'Note: the search-bracket formulas are not in your slides or the extracted book chapters; they are the standard ones from Balagurusamy\'s chapter on roots (the same $a_{n-1}/a_n$ appears in the class notes on the Fall 2024 paper). For $a_nx^n + a_{n-1}x^{n-1} + \\dots + a_0 = 0$, here $a_2 = 1$, $a_1 = -4$, $a_0 = -10$.',
+              'Largest possible root (search bracket): $|x^*_{\\max}| = \\sqrt{\\left(\\dfrac{a_{n-1}}{a_n}\\right)^2 - 2\\dfrac{a_{n-2}}{a_n}} = \\sqrt{(-4)^2 - 2(-10)} = \\sqrt{36} = 6$, so every real root lies in $[-6, 6]$.',
+              'Estimate of the largest root: $x^* = -\\dfrac{a_{n-1}}{a_n} = -\\dfrac{-4}{1} = 4$. Initial guesses $x_1 = 4$, $x_2 = 6$: $f(4) = 16 - 16 - 10 = -10 < 0$ and $f(6) = 36 - 24 - 10 = 2 > 0$, so the largest root is in $[4, 6]$.',
+              'Iteration 1: $x_0 = (4 + 6)/2 = 5$, $f(5) = 25 - 20 - 10 = -5$; same sign as $f(4)$, so the root is in $[5, 6]$.',
+              'Iteration 2: $x_0 = (5 + 6)/2 = 5.5$, $f(5.5) = 30.25 - 22 - 10 = -1.75$; the root is in $[5.5, 6]$.',
+              'Iteration 3: $x_0 = (5.5 + 6)/2 = 5.75$, $f(5.75) = 33.0625 - 23 - 10 = 0.0625$; the root is in $[5.5, 5.75]$.',
+              'After three iterations: $\\boxed{x \\approx 5.75, \\text{ root in } [5.5, 5.75]}$; the exact root is $2 + \\sqrt{14} = 5.7417$.',
             ],
           },
           {
@@ -287,10 +291,11 @@ export default [
             id: 'Q2(c)', type: 'Numerical — Matrix inversion', marks: 6, module: 'elimination',
             q: 'Solve the following system of linear equations by using the Matrix Inversion method. Note: if you use any other method, you may still receive partial marks: $2x + y + z = 7$, $4x + 2y + 3z = 4$, $x - y + z = 0$.',
             answer: [
-              'Form $A = \\begin{bmatrix} 2 & 1 & 1 \\\\ 4 & 2 & 3 \\\\ 1 & -1 & 1 \\end{bmatrix}$ and $b = \\begin{bmatrix} 7 \\\\ 4 \\\\ 0 \\end{bmatrix}$, and find $A^{-1}$ by Gauss-Jordan (augment $A$ with $I$).',
-              'Reduce $A$ to the identity, keeping the right half as $A^{-1}$.',
-              'Then $x = A^{-1}b$.',
-              'Back-substituting gives $x = 9$, $y = -1$, $z = -10$; check: $2(9) + (-1) + (-10) = 7$, $4(9) + 2(-1) + 3(-10) = 4$, $9 - (-1) + (-10) = 0$.',
+              'Write the system as $AX = B$ with $A = \\begin{bmatrix} 2 & 1 & 1 \\\\ 4 & 2 & 3 \\\\ 1 & -1 & 1 \\end{bmatrix}$, $B = \\begin{bmatrix} 7 \\\\ 4 \\\\ 0 \\end{bmatrix}$; if $|A| \\ne 0$ then $X = A^{-1}B$ with $A^{-1} = \\dfrac{\\operatorname{adj} A}{|A|}$ (Shanker Rao §11.1).',
+              '$|A| = 2(2 + 3) - 1(4 - 3) + 1(-4 - 2) = 10 - 1 - 6 = 3 \\ne 0$, so $A^{-1}$ exists.',
+              'Cofactors $C_{ij}$: row 1: $5,\\ -1,\\ -6$; row 2: $-2,\\ 1,\\ 3$; row 3: $1,\\ -2,\\ 0$. The adjoint is their transpose: $\\operatorname{adj} A = \\begin{bmatrix} 5 & -2 & 1 \\\\ -1 & 1 & -2 \\\\ -6 & 3 & 0 \\end{bmatrix}$, so $A^{-1} = \\dfrac{1}{3}\\begin{bmatrix} 5 & -2 & 1 \\\\ -1 & 1 & -2 \\\\ -6 & 3 & 0 \\end{bmatrix}$.',
+              '$X = A^{-1}B = \\dfrac{1}{3}\\begin{bmatrix} 5(7) - 2(4) + 1(0) \\\\ -1(7) + 1(4) - 2(0) \\\\ -6(7) + 3(4) + 0 \\end{bmatrix} = \\dfrac{1}{3}\\begin{bmatrix} 27 \\\\ -3 \\\\ -30 \\end{bmatrix} = \\begin{bmatrix} 9 \\\\ -1 \\\\ -10 \\end{bmatrix}$.',
+              '$\\boxed{x = 9,\\ y = -1,\\ z = -10}$; check: $2(9) + (-1) + (-10) = 7$, $4(9) + 2(-1) + 3(-10) = 4$, $9 - (-1) + (-10) = 0$.',
             ],
           },
           {
@@ -308,8 +313,8 @@ export default [
             q: 'Fit a power function model of the form $y = ax^b$ with the data $x = 1, 2, 3, 4, 5$ and $y = 0.5, 4, 13.5, 32, 62.5$.',
             answer: [
               'Take logarithms: $\\ln y = \\ln a + b\\ln x$, so fit a straight line to $(\\ln x, \\ln y)$.',
-              '$\\sum \\ln x = 4.7875$, $\\sum \\ln y = 10.8967$, $\\sum (\\ln x)^2 = 6.4457$, $\\sum (\\ln x)(\\ln y) = 14.7255$.',
-              '$b = \\dfrac{n\\sum (\\ln x)(\\ln y) - \\sum \\ln x \\sum \\ln y}{n\\sum (\\ln x)^2 - (\\sum \\ln x)^2} = \\dfrac{5(14.7255) - (4.7875)(10.8967)}{5(6.4457) - (4.7875)^2} = \\dfrac{25.0840}{8.6229} = 3.0$.',
+              '$\\sum \\ln x = 4.7875$, $\\sum \\ln y = 10.8967$, $\\sum (\\ln x)^2 = 6.1995$, $\\sum (\\ln x)(\\ln y) = 15.2801$, with $n = 5$.',
+              '$b = \\dfrac{n\\sum (\\ln x)(\\ln y) - \\sum \\ln x \\sum \\ln y}{n\\sum (\\ln x)^2 - (\\sum \\ln x)^2} = \\dfrac{5(15.2801) - (4.7875)(10.8967)}{5(6.1995) - (4.7875)^2} = \\dfrac{24.2325}{8.0773} = 3.0$.',
               '$\\ln a = \\bar{\\ln y} - b\\bar{\\ln x} = 2.1793 - 3(0.9575) = -0.6932$, so $a = e^{-0.6932} = 0.5$.',
               'The fitted model is $y = 0.5\\,x^3$, and the data are exactly $x^3/2$ ($0.5,\\ 4,\\ 13.5,\\ 32,\\ 62.5$), so the fit is exact.',
             ],
@@ -328,21 +333,21 @@ export default [
             id: 'Q2(g)', type: 'Numerical — Differentiation (tabulated)', marks: 6, module: 'differentiation',
             q: 'The following table provides the distance travelled by a vehicle at various time intervals. Estimate both velocity and acceleration at $t = 5$ sec and $t = 13$ sec: $t = 3, 5, 7, 9, 11, 13$ s and $s = 7, 8, 12, 19, 32, 50$ km.',
             answer: [
-              '$h = 2$ s. At $t = 5$ only forward differences exist, so use the three-point forward formula: $v(5) = \\dfrac{-3s(5) + 4s(7) - s(9)}{2h} = \\dfrac{-24 + 48 - 19}{4} = 1.25$ km/s.',
-              'Acceleration at $t = 5$: $a(5) = \\dfrac{s(5) - 2s(7) + s(9)}{h^2} = \\dfrac{8 - 24 + 19}{4} = 0.75$ km/s².',
+              '$h = 2$ s. $t = 5$ is an **interior** row (it has $t = 3$ before it and $t = 7$ after), so use the central formulas: $v(5) = \\dfrac{s(7) - s(3)}{2h} = \\dfrac{12 - 7}{4} = 1.25$ km/s.',
+              'Acceleration at $t = 5$: $a(5) = \\dfrac{s(7) - 2s(5) + s(3)}{h^2} = \\dfrac{12 - 16 + 7}{4} = 0.75$ km/s².',
               'At $t = 13$ (the last point) use the backward three-point formula: $v(13) = \\dfrac{3s(13) - 4s(11) + s(9)}{2h} = \\dfrac{150 - 128 + 19}{4} = 10.25$ km/s.',
               'Acceleration at $t = 13$ (backward second-derivative formula, four points): $a(13) = \\dfrac{2s(13) - 5s(11) + 4s(9) - s(7)}{h^2} = \\dfrac{100 - 160 + 76 - 12}{4} = 1.0$ km/s².',
             ],
           },
           {
             id: 'Q2(h)', type: 'Numerical — Weddle', marks: 6, module: 'integration',
-            q: "Evaluate $\\int_0^2 (2x - x^2)\\,dx$ by using Weddle's rule, taking seven ordinates. Also, compare the result with the exact value and determine the error.",
+            q: "Evaluate $\\int_0^3 (2x - x^2)\\,dx$ by using Weddle's rule, taking seven ordinates. Also, compare the result with the exact value and determine the error.",
             answer: [
-              'Seven ordinates over $[0, 2]$ give $h = 2/6 = 1/3$.',
-              "$f(x) = 2x - x^2$ at $x = 0, \\frac13, \\frac23, 1, \\frac43, \\frac53, 2$ gives $0,\\ \\frac{5}{9},\\ \\frac89,\\ 1,\\ \\frac89,\\ \\frac59,\\ 0$.",
-              "Weddle's rule: $\\int_0^2 f\\,dx \\approx \\frac{3h}{10}\\left[f_0 + 5f_1 + f_2 + 6f_3 + f_4 + 5f_5 + f_6\\right]$.",
-              'Substituting: $\\frac{3(1/3)}{10}\\left[0 + 5\\cdot\\frac{5}{9} + \\frac{8}{9} + 6(1) + \\frac{8}{9} + 5\\cdot\\frac{5}{9} + 0\\right]$.',
-              'The exact value is $\\left[x^2 - \\frac{x^3}{3}\\right]_0^2 = \\frac{4}{3}$; state the absolute error of your Weddle result against it.',
+              'Seven ordinates means six subintervals over $[0, 3]$: $h = 3/6 = 0.5$.',
+              "$y = 2x - x^2$ at $x = 0, 0.5, 1, 1.5, 2, 2.5, 3$: $y_0 = 0$, $y_1 = 0.75$, $y_2 = 1$, $y_3 = 0.75$, $y_4 = 0$, $y_5 = -1.25$, $y_6 = -3$.",
+              "Weddle's rule: $\\int_0^3 y\\,dx \\approx \\frac{3h}{10}\\left[y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + y_6\\right]$.",
+              'Substituting: $\\frac{3(0.5)}{10}\\left[0 + 5(0.75) + 1 + 6(0.75) + 0 + 5(-1.25) + (-3)\\right] = 0.15\\left[3.75 + 1 + 4.5 - 6.25 - 3\\right] = 0.15(0) = 0$.',
+              'Exact value: $\\left[x^2 - \\frac{x^3}{3}\\right]_0^3 = 9 - 9 = 0$. $\\boxed{I_{\\text{Weddle}} = 0,\\ \\text{exact} = 0,\\ \\text{error} = 0}$ — Weddle\'s rule is exact for a quadratic.',
             ],
           },
         ],
@@ -380,7 +385,7 @@ export default [
   },
   {
     title: 'Fall 2023 semester final',
-    meta: 'CSE 2201, AUST. 3 hours, 70 marks. Question 1: any 4 of 6. Question 2: any 6 of 8. Question 3: any 3 of 3.',
+    meta: 'CSE 2201, AUST. 3 hours, 70 marks. Question 1: any 4 of 6. Question 2: any 6 of 8. Question 3: any 3 of 5.',
     sets: [
       {
         name: 'Question 1',
@@ -410,8 +415,8 @@ export default [
             id: 'Q1(c)', type: 'Theory — Explain', marks: 4, module: 'roots',
             q: "How does Horner's Rule improve the accuracy for evaluating a polynomial.",
             answer: [
-              'Horner\'s rule evaluates $p(x) = a_0 + a_1x + \\dots + a_nx^n$ as $p(x) = (\\dots((a_0 + a_1x)x + a_2)x \\dots)x + a_n$.',
-              'It needs $n$ multiplications and $n$ additions instead of the $n^2$ operations of the naive form, so there are fewer rounding steps.',
+              'Horner\'s rule evaluates $p(x) = a_0 + a_1x + \\dots + a_nx^n$ in nested form, starting from the leading coefficient: $p(x) = (\\dots((a_nx + a_{n-1})x + a_{n-2})x + \\dots + a_1)x + a_0$.',
+              'It needs only $n$ multiplications and $n$ additions, against about $n(n+1)/2$ multiplications when every power $x^k$ is formed term by term, so there are fewer rounding steps.',
               'Fewer operations means less accumulated round-off error, so the result is more accurate.',
               'The same nested form gives the quotient polynomial when a root is known (synthetic division).',
             ],
@@ -422,8 +427,9 @@ export default [
             answer: [
               '$u = 5xy^2z^{-3}$, so $u = 5$ at $x = y = z = 1$.',
               '$\\dfrac{\\partial u}{\\partial x} = \\dfrac{5y^2}{z^3} = 5$, $\\dfrac{\\partial u}{\\partial y} = \\dfrac{10xy}{z^3} = 10$, $\\dfrac{\\partial u}{\\partial z} = -\\dfrac{15xy^2}{z^4} = -15$.',
-              '$e_r = \\dfrac{1}{u}\\left(\\dfrac{\\partial u}{\\partial x}\\Delta x + \\dfrac{\\partial u}{\\partial y}\\Delta y + \\dfrac{\\partial u}{\\partial z}\\Delta z\\right) = \\dfrac{1}{5}(5 + 10 - 15) = 0$.',
-              'So the relative error is zero — the errors in $y$ and $z$ cancel.',
+              'The signs of $\\Delta x, \\Delta y, \\Delta z$ are unknown, so take the **maximum** error — add the magnitudes: $\\Delta u_{\\max} = |5|(1) + |10|(1) + |-15|(1) = 5 + 10 + 15 = 30$.',
+              '$e_r = \\dfrac{\\Delta u_{\\max}}{u} = \\dfrac{30}{5} = 6$. $\\boxed{e_r = 6}$',
+              'Trap: adding the contributions with their signs gives $5 + 10 - 15 = 0$ — that is not the error bound (Shanker Rao Ex. 1.13 uses the absolute values; see the errors lesson).',
             ],
           },
           {
@@ -431,8 +437,8 @@ export default [
             q: 'Derive the three-point forward difference formula for tabular function in the context of numerical differentiation.',
             answer: [
               'Expand about $x_0$: $f(x_0+h) = f + hf\' + \\dfrac{h^2}{2}f\'\' + \\dfrac{h^3}{6}f\'\'\' + \\dots$ and $f(x_0+2h) = f + 2hf\' + 2h^2f\'\' + \\dfrac{4}{3}h^3f\'\'\' + \\dots$.',
-              'Form $-3f(x_0) + 4f(x_0+h) - f(x_0+2h)$: the $f$ terms cancel, the $hf\'$ terms give $4h - 2h = 2h$, the $h^2f\'\'$ terms cancel, and the $h^3f\'\'\'$ terms give $\\dfrac{2}{3}h^3f\'\'\'$.',
-              'Divide by $2h$: $f\'(x_0) = \\dfrac{-3f(x_0) + 4f(x_0+h) - f(x_0+2h)}{2h} - \\dfrac{1}{3}h^2f\'\'\'(x_0) + O(h^3)$.',
+              'Form $-3f(x_0) + 4f(x_0+h) - f(x_0+2h)$: the $f$ terms cancel, the $hf\'$ terms give $4h - 2h = 2h$, the $h^2f\'\'$ terms cancel, and the $h^3f\'\'\'$ terms give $\\left(\\dfrac{4}{6} - \\dfrac{4}{3}\\right)h^3f\'\'\' = -\\dfrac{2}{3}h^3f\'\'\'$.',
+              'So $-3f(x_0) + 4f(x_0+h) - f(x_0+2h) = 2hf\'(x_0) - \\dfrac{2}{3}h^3f\'\'\'(x_0) + \\dots$; divide by $2h$: $f\'(x_0) = \\dfrac{-3f(x_0) + 4f(x_0+h) - f(x_0+2h)}{2h} + \\dfrac{h^2}{3}f\'\'\'(x_0) + \\dots$.',
               'So $f\'(x_0) \\approx \\dfrac{-3f(x_0) + 4f(x_0+h) - f(x_0+2h)}{2h}$, with truncation error $O(h^2)$.',
             ],
           },
@@ -441,7 +447,7 @@ export default [
             q: 'Prove that (i) $\\Delta - \\nabla = \\delta^2$, (ii) $\\mu^2 = 1 + \\tfrac{1}{4}\\delta^2$, where the symbols have their usual meaning.',
             answer: [
               '(i) $\\Delta f(x) = f(x+h) - f(x)$ and $\\nabla f(x) = f(x) - f(x-h)$, so $(\\Delta - \\nabla)f(x) = f(x+h) - 2f(x) + f(x-h)$.',
-              'Also $\\delta^2 f(x) = \\delta f(x + h/2) - \\delta f(x) = [f(x+h) - f(x)] - [f(x) - f(x-h)] = f(x+h) - 2f(x) + f(x-h)$. The two agree, so $\\Delta - \\nabla = \\delta^2$.',
+              'Also $\\delta f(x) = f(x + h/2) - f(x - h/2)$, so $\\delta^2 f(x) = \\delta f(x + h/2) - \\delta f(x - h/2) =[f(x+h) - f(x)] - [f(x) - f(x-h)] = f(x+h) - 2f(x) + f(x-h)$. The two agree, so $\\Delta - \\nabla = \\delta^2$.',
               '(ii) $\\mu f(x) = \\tfrac{1}{2}[f(x+h/2) + f(x-h/2)]$, so $\\mu^2 f(x) = \\tfrac{1}{4}[f(x+h) + 2f(x) + f(x-h)]$.',
               'Using (i), $f(x+h) - 2f(x) + f(x-h) = \\delta^2 f(x)$, so $\\mu^2 f = f + \\tfrac{1}{4}\\delta^2 f$, i.e. $\\mu^2 = 1 + \\tfrac{1}{4}\\delta^2$.',
             ],
@@ -527,7 +533,7 @@ export default [
             id: 'Q2(g)', type: 'Numerical — Interpolation', marks: 6, module: 'interpolation',
             q: 'The following table gives the sales of Tex company for the five years. Estimate the sales for the year 1986 using 2nd degree Newton Gregory forward interpolating polynomial. [Your answer must include Forward Difference table.] Year: 1985, 1987, 1989, 1991, 1993; Sales (thousands): 40, 43, 48, 52, 57.',
             answer: [
-              'The years are not equally spaced (spacing 2 years) but the sales are given at two-year steps, so take $x = $ year index with $h = 2$.',
+              'The years are equally spaced, two years apart, so $h = 2$ and $x_0 = 1985$.',
               'Forward differences: $\\Delta y = 3, 5, 4, 5$; $\\Delta^2 y = 2, -1, 1$; $\\Delta^3 y = -3, 2$; $\\Delta^4 y = 5$.',
               'For 1986, $p = \\frac{x - x_0}{h} = \\frac{1986 - 1985}{2} = 0.5$.',
               'Newton-Gregory forward (second degree): $y = y_0 + p\\Delta y_0 + \\frac{p(p-1)}{2!}\\Delta^2 y_0 = 40 + 0.5(3) + \\frac{0.5(-0.5)}{2}(2)$.',
@@ -554,8 +560,8 @@ export default [
             id: 'Q3(a)', type: 'Theory — Justify', marks: 6, module: 'differentiation',
             q: 'Justify why the Richardson extrapolation method outperforms the three-point forward difference formula in generating accurate estimates of derivatives.',
             answer: [
-              'Three-point forward difference: $D(h) = f\'(x) + \\dfrac{h^2}{3}f\'\'\'(x) + O(h^3)$ — the error is $O(h^2)$.',
-              'Halving the step: $D(h/2) = f\'(x) + \\dfrac{h^2}{12}f\'\'\'(x) + O(h^3)$.',
+              'Three-point forward difference: $D(h) = \\dfrac{-3f(x) + 4f(x+h) - f(x+2h)}{2h} = f\'(x) - \\dfrac{h^2}{3}f\'\'\'(x) + O(h^3)$ — the error is $O(h^2)$.',
+              'Halving the step: $D(h/2) = f\'(x) - \\dfrac{h^2}{12}f\'\'\'(x) + O(h^3)$ — the $h^2$ error term is a quarter of the size.',
               'A suitable combination cancels the $h^2$ term: $R = \\dfrac{4D(h/2) - D(h)}{3} = f\'(x) + O(h^3)$.',
               'So Richardson extrapolation turns an $O(h^2)$ estimate into an $O(h^3)$ one using the same function values — it is strictly more accurate for the same cost.',
             ],
@@ -577,9 +583,9 @@ export default [
             answer: [
               'A straight line is a reasonable fit because the points lie close to a line (the correlation between $W$ and $A$ is near 1).',
               'Least squares: $\\sum y = na + b\\sum x$ and $\\sum xy = a\\sum x + b\\sum x^2$, with $n = 8$, $\\sum W = 645$, $\\sum A = 17.58$, $\\sum W^2 = 52303$, $\\sum WA = 1420.53$.',
-              '$b = \\dfrac{8(1420.53) - (645)(17.58)}{8(52303) - (645)^2} = \\dfrac{11364.24 - 11339.1}{418424 - 416025} = \\dfrac{25.14}{2399} = 0.010480$.',
-              '$a = \\bar{A} - b\\bar{W} = 2.1975 - (0.010480)(80.625) = 1.352545$.',
-              'So $A = 1.3525 + 0.010480\\,W$ (with $R^2 = 0.976$).',
+              '$b = \\dfrac{8(1420.53) - (645)(17.58)}{8(52303) - (645)^2} = \\dfrac{11364.24 - 11339.1}{418424 - 416025} = \\dfrac{25.14}{2399} = 0.010479$.',
+              '$a = \\bar{A} - b\\bar{W} = 2.1975 - (0.010479)(80.625) = 1.3526$.',
+              'So $\\boxed{A = 1.3526 + 0.010479\\,W}$ (with $R^2 = 0.9757$).',
             ],
           },
           {
@@ -587,9 +593,10 @@ export default [
             q: 'Interpret with an example; convergence rate of Gauss-Seidel is more rapid than Jacobi\'s method for solving linear system.',
             answer: [
               'Example: $5x + 2y + z = 12$, $x + 4y + 2z = 15$, $x + 2y + 5z = 20$ — diagonally dominant, so both converge.',
-              'Jacobi needs about 8 iterations to reach the solution $x = 1,\\ y = 2,\\ z = 3$; Gauss-Seidel reaches it in fewer sweeps because each new value is used immediately.',
-              'Reason: Gauss-Seidel\'s iteration matrix is $B_{GS} = (D + L)^{-1}U$ while Jacobi\'s is $B_J = -D^{-1}(L + U)$; the spectral radius of $B_{GS}$ is smaller, so it converges faster.',
-              'Both need the same convergence condition (diagonal dominance), but the rate differs — Gauss-Seidel is typically about twice as fast.',
+              'Jacobi from $(0, 0, 0)$ uses only old values: $(2.40, 3.75, 4.00)$, $(0.10, 1.15, 2.02)$, $(1.54, 2.72, 3.52)$, $(0.61, 1.61, 2.61)$, … — it oscillates about $(1, 2, 3)$ and needs **17** iterations before successive values agree to within $0.005$.',
+              'Gauss-Seidel from $(0, 0, 0)$ uses each new value at once: $x^{(1)} = 2.4$, $y^{(1)} = \\tfrac{1}{4}(15 - 2.4) = 3.15$, $z^{(1)} = \\tfrac{1}{5}(20 - 2.4 - 6.3) = 2.26$; then $(0.688, 2.448, 2.8832)$, $(0.8442, 2.0974, 2.9922)$, … — it reaches the same tolerance in **7** iterations.',
+              'Reason: Gauss-Seidel uses the most recent value as soon as it becomes available, so every equation in a sweep already sees the improved $x$ (and $y$); Jacobi waits for the whole sweep. In matrix form $B_J = -D^{-1}(L + U)$ and $B_{GS} = -(D + L)^{-1}U$, and here the spectral radius of $B_{GS}$ is the smaller one.',
+              'Both have the same sufficient condition (diagonal dominance) — only the rate differs.',
             ],
           },
           {
@@ -608,7 +615,7 @@ export default [
   },
   {
     title: 'Spring 2023 semester final',
-    meta: 'CSE 2201, AUST. 3 hours, 70 marks. Question 1: any 4 of 6. Question 2: any 6 of 8. Question 3: any 3 of 3.',
+    meta: 'CSE 2201, AUST. 3 hours, 70 marks. Question 1: any 4 of 6. Question 2: any 6 of 8. Question 3: any 3 of 5.',
     sets: [
       {
         name: 'Question 1',
@@ -650,8 +657,9 @@ export default [
             answer: [
               '$u = 5xy^2z^{-3} = 5$.',
               '$\\dfrac{\\partial u}{\\partial x} = \\dfrac{5y^2}{z^3} = 5$, $\\dfrac{\\partial u}{\\partial y} = \\dfrac{10xy}{z^3} = 10$, $\\dfrac{\\partial u}{\\partial z} = -\\dfrac{15xy^2}{z^4} = -15$.',
-              '$e_r = \\dfrac{1}{u}\\left(5(1) + 10(1) - 15(1)\\right) = \\dfrac{0}{5} = 0$.',
-              'So the relative error is zero — the contributions cancel exactly.',
+              'Maximum error — add the magnitudes, because the signs of the errors are unknown: $\\Delta u_{\\max} = |5|(1) + |10|(1) + |-15|(1) = 30$.',
+              '$e_r = \\dfrac{\\Delta u_{\\max}}{u} = \\dfrac{30}{5} = 6$. $\\boxed{e_r = 6}$',
+              'Trap: the signed sum $5 + 10 - 15 = 0$ is not the error bound — the contributions only cancel if the three errors happen to have those exact signs.',
             ],
           },
           {
@@ -659,8 +667,8 @@ export default [
             q: 'Derive the three point forward difference formula for tabular function in the context of numerical differentiation.',
             answer: [
               'Expand $f(x_0+h)$ and $f(x_0+2h)$ about $x_0$ in Taylor series and combine $-3f(x_0) + 4f(x_0+h) - f(x_0+2h)$.',
-              'The $f$ and $f\'\'$ terms cancel and the $f\'\'\'$ term survives: the combination equals $2h f\'(x_0) + \\frac{2}{3}h^3 f\'\'\'(x_0) + O(h^4)$.',
-              'Divide by $2h$: $f\'(x_0) = \\dfrac{-3f(x_0) + 4f(x_0+h) - f(x_0+2h)}{2h} - \\dfrac{1}{3}h^2 f\'\'\'(x_0) + O(h^3)$.',
+              'The $f$ and $f\'\'$ terms cancel and the $f\'\'\'$ term survives: the combination equals $2h f\'(x_0) - \\frac{2}{3}h^3 f\'\'\'(x_0) + O(h^4)$ (the $h^3$ coefficient is $4 \\cdot \\frac{1}{6} - \\frac{8}{6} = -\\frac{2}{3}$).',
+              'Divide by $2h$: $f\'(x_0) = \\dfrac{-3f(x_0) + 4f(x_0+h) - f(x_0+2h)}{2h} + \\dfrac{h^2}{3} f\'\'\'(x_0) + O(h^3)$.',
               'So the three-point forward difference is second-order accurate.',
             ],
           },
@@ -669,7 +677,7 @@ export default [
             q: 'Prove that (i) $\\Delta - \\nabla = \\delta^2$, (ii) $\\Delta = \\nabla E = E\\nabla = \\delta E^{1/2}$, where the symbols have their usual meaning.',
             answer: [
               '(i) As shown before: $(\\Delta - \\nabla)f(x) = f(x+h) - 2f(x) + f(x-h) = \\delta^2 f(x)$.',
-              '(ii) With $E f(x) = f(x+h)$: $\\Delta = E - 1$ and $\\nabla = 1 - E^{-1}$, so $\\nabla E = E - 1 = \\Delta$ and $E\\nabla = 1 - E^{-1}$ — but $E(1 - E^{-1}) = E - 1 = \\Delta$, so all three are equal.',
+              '(ii) With $E f(x) = f(x+h)$: $\\Delta = E - 1$ and $\\nabla = 1 - E^{-1}$, so $\\nabla E = (1 - E^{-1})E = E - 1 = \\Delta$ and $E\\nabla = E(1 - E^{-1}) = E - 1 = \\Delta$ (the operators commute).',
               'For $\\delta E^{1/2}$: $\\delta = E^{1/2} - E^{-1/2}$, and $\\delta E^{1/2} = E - 1 = \\Delta$.',
               'Hence $\\Delta = \\nabla E = E\\nabla = \\delta E^{1/2}$.',
             ],
@@ -722,7 +730,8 @@ export default [
               'Build the Romberg table: the first column is the trapezoidal rule with 1, 2, 4, 8, 16 subintervals; each later column extrapolates the two to its left.',
               '$R_{00} = \\dfrac{1}{2}[f(0) + f(1)] = \\dfrac{1 + e^{-1}}{2} = 0.683940$.',
               '$R_{k,j} = R_{k,j-1} + \\dfrac{R_{k,j-1} - R_{k-1,j-1}}{4^j - 1}$.',
-              'Continue to the bottom-right entry of the table.',
+              'Trapezoidal column ($n = 1, 2, 4, 8$): $R_{00} = 0.683940$, $R_{10} = 0.731370$, $R_{20} = 0.742984$, $R_{30} = 0.745866$.',
+              'Extrapolate: $R_{11} = 0.747180$, $R_{21} = 0.746855$, $R_{31} = 0.746826$; then $R_{22} = 0.746834$, $R_{32} = 0.746824$; then $R_{33} = 0.746824$. The last two columns agree to 4 decimals: $\\boxed{I = 0.7468}$.',
               'The result is $0.7468241$, and the exact value $\\tfrac{\\sqrt{\\pi}}{2}\\operatorname{erf}(1) = 0.7468241$ confirms it.',
             ],
           },
@@ -732,7 +741,7 @@ export default [
             answer: [
               'With three points $y_0 = 30000$, $y_1 = 60000$, $y_2 = 90000$ and $x = 55000$:',
               '$L_0 = \\dfrac{(55000 - 60000)(55000 - 90000)}{(30000 - 60000)(30000 - 90000)} = \\dfrac{(-5000)(-35000)}{(-30000)(-60000)} = \\dfrac{175000000}{1800000000} = 0.09722$.',
-              '$L_1 = \\dfrac{(55000 - 30000)(55000 - 90000)}{(60000 - 30000)(60000 - 90000)} = \\dfrac{(25000)(-35000)}{(30000)(-30000)} = 0.97222$, $L_2 = \\dfrac{(25000)(-5000)}{(60000)(-30000)} = -0.06944$.',
+              '$L_1 = \\dfrac{(55000 - 30000)(55000 - 90000)}{(60000 - 30000)(60000 - 90000)} = \\dfrac{(25000)(-35000)}{(30000)(-30000)} = 0.97222$, $L_2 = \\dfrac{(55000 - 30000)(55000 - 60000)}{(90000 - 30000)(90000 - 60000)} = \\dfrac{(25000)(-5000)}{(60000)(30000)} = -0.06944$.',
               '$g = 9.7487(0.09722) + 9.6879(0.97222) + 9.6278(-0.06944) = 0.9473 + 9.4188 - 0.6686 = 9.6980$.',
               'So $g(55000) \\approx 9.70$ m/s².',
             ],
@@ -753,14 +762,15 @@ export default [
             id: 'Q2(g)', type: 'Numerical — Differentiation (tabulated)', marks: 6, module: 'differentiation',
             q: 'The following table displays the landing position of a jet fighter on an aircraft carrier\'s runway, tracked by time: $t = 0, 0.52, 1.04, 1.75, 2.37, 3.25, 3.83$ s and $x = 153, 185, 208, 249, 261, 271, 273$ m. Where $x$ is the distance from the end of the carrier. Use appropriate numerical differentiation method for tabular function to approximate the velocity and acceleration at $t = 3.25$ second.',
             answer: [
-              'At $t = 3.25$ the point is in the interior of the table, so use the **central** difference: $h$ is not uniform here, so use the three-point non-uniform (Newton) forward/backward formula, or the central difference with the neighbours $t = 2.37$ and $t = 3.83$.',
-              'Velocity: $v(3.25) \\approx \\dfrac{x(3.83) - x(2.37)}{3.83 - 2.37} = \\dfrac{273 - 261}{1.46} = 8.22$ m/s.',
-              'Acceleration with the three-point central form on the uneven spacing needs care — using the uniform approximation with the local spacing $h \\approx 0.7$: $a \\approx \\dfrac{x(3.83) - 2x(3.25) + x(2.37)}{h^2} \\approx \\dfrac{273 - 542 + 261}{0.49} = -16.3$ m/s².',
-              'State the spacing you used; the data are not equally spaced, so the answer depends on the interpolation used.',
+              'The times are **not equally spaced** ($0.88$ s before $t = 3.25$, $0.58$ s after), so the $h$-based difference formulas do not apply. Use Newton\'s **divided difference** quadratic through the three points around it, $(2.37, 261)$, $(3.25, 271)$, $(3.83, 273)$, and differentiate it: $p_2\'(t) = a_1 + a_2[(t - t_0) + (t - t_1)]$, $p_2\'\'(t) = 2a_2$.',
+              'Divided differences: $a_1 = f[t_0, t_1] = \\dfrac{271 - 261}{3.25 - 2.37} = 11.3636$, $f[t_1, t_2] = \\dfrac{273 - 271}{3.83 - 3.25} = 3.4483$, $a_2 = f[t_0, t_1, t_2] = \\dfrac{3.4483 - 11.3636}{3.83 - 2.37} = -5.4215$.',
+              'Velocity at $t = t_1 = 3.25$: $v = a_1 + a_2(t_1 - t_0) = 11.3636 + (-5.4215)(0.88) = 6.593$ m/s.',
+              'Acceleration: $a = 2a_2 = 2(-5.4215) = -10.843$ m/s². $\\boxed{v(3.25) \\approx 6.593 \\text{ m/s},\\ a(3.25) \\approx -10.843 \\text{ m/s}^2}$',
+              'Trap: dividing $273 - 261$ by $1.46$, or using $\\frac{x_{i+1} - 2x_i + x_{i-1}}{h^2}$ with a made-up $h$, treats the table as evenly spaced — it is not.',
             ],
           },
           {
-            id: 'Q2(h)', type: 'Numerical — Euler', marks: 6, module: 'differentiation',
+            id: 'Q2(h)', type: 'Numerical — Euler', marks: 6, module: 'differentiation', flagged: true,
             q: "Evaluate the Ordinary Differential Equation $\\dfrac{dy}{dx} = x^3 + y$ to estimate $y(0.04)$ with initial condition $x = 0$, $y = 1$ using Euler's method for step size $h = 0.01$.",
             answer: [
               "Euler's method: $y_{n+1} = y_n + h\\,f(x_n, y_n)$ with $f(x, y) = x^3 + y$.",
@@ -768,7 +778,7 @@ export default [
               '$y_2 = 1.01 + 0.01(0.01^3 + 1.01) = 1.0201$ at $x_2 = 0.02$.',
               '$y_3 = 1.0201 + 0.01(0.02^3 + 1.0201) = 1.0303$ at $x_3 = 0.03$.',
               '$y_4 = 1.0303 + 0.01(0.03^3 + 1.0303) = 1.0406$ at $x_4 = 0.04$.',
-              'So $y(0.04) \\approx 1.0409$; Euler\'s method is first-order accurate, so refining $h$ would change the last digits.',
+              'So $\\boxed{y(0.04) \\approx 1.0406}$; Euler\'s method is first-order accurate, so refining $h$ would change the last digits.',
             ],
           },
         ],
@@ -781,8 +791,8 @@ export default [
             id: 'Q3(a)', type: 'Theory — Justify', marks: 6, module: 'differentiation',
             q: 'Justify why the Richardson extrapolation method outperforms the three-point forward difference formula in generating accurate estimates of derivatives.',
             answer: [
-              'Three-point forward difference has truncation error $O(h^2)$: $D(h) = f\'(x) + \\frac{h^2}{3}f\'\'\'(x) + O(h^3)$.',
-              'Halving the step gives $D(h/2) = f\'(x) + \\frac{h^2}{12}f\'\'\'(x) + O(h^3)$.',
+              'Three-point forward difference has truncation error $O(h^2)$: $D(h) = f\'(x) - \\frac{h^2}{3}f\'\'\'(x) + O(h^3)$.',
+              'Halving the step gives $D(h/2) = f\'(x) - \\frac{h^2}{12}f\'\'\'(x) + O(h^3)$.',
               'The combination $\\frac{4D(h/2) - D(h)}{3}$ cancels the $h^2$ term, leaving $O(h^3)$.',
               'It uses the same function values but gives a higher-order result, so it outperforms the forward difference at the same cost.',
             ],
@@ -794,7 +804,8 @@ export default [
               'The composite trapezoidal rule applies the single trapezoidal rule to each pair of consecutive ordinates:',
               '$\\sum_{i=0}^{5} \\frac{h}{2}(F_i + F_{i+1}) = \\frac{h}{2}\\left[F_0 + 2F_1 + 2F_2 + 2F_3 + 2F_4 + 2F_5 + F_6\\right]$.',
               'Grouping the interior terms: $F_1$ through $F_5$ each appear twice.',
-              'So $I = \\frac{h}{2}\\left(F_0 + 2\\sum_{i=1}^{5}F_i + F_6\\right)$, and the expression in the question counts the interior ordinates $F_2$ to $F_5$ — check the index range against your own table.',
+              'So $\\boxed{I = \\frac{h}{2}\\left(F_0 + 2\\sum_{i=1}^{5}F_i + F_6\\right)}$.',
+              'Note: the paper prints the sum from $i = 2$; that is a misprint — the first interior ordinate $F_1$ belongs to two strips ($[l_0, l_1]$ and $[l_1, l_2]$) and must be doubled like the others. Write the proof with $i = 1$ and say so in one line.',
             ],
           },
           {
@@ -802,20 +813,20 @@ export default [
             q: 'On average, the surface area $A$ of human beings is related to weight $W$ and height $H$. Measurements on individuals of height 180 cm and different weights give $W = 70, 75, 77, 80, 82, 84, 87, 90$ kg and $A = 2.10, 2.12, 2.15, 2.20, 2.22, 2.23, 2.26, 2.30$ m². (i) Justify that a power law $A = aW^b$ fits the above data reasonably well. (ii) Evaluate the constant $a$ and $b$.',
             answer: [
               'A power law is a straight line in log-log space: $\\ln A = \\ln a + b\\ln W$, so plot $\\ln A$ against $\\ln W$ — the points are nearly collinear, which justifies the model.',
-              '$\\sum \\ln W = 33.4359$, $\\sum \\ln A = 7.8702$, $\\sum (\\ln W)^2 = 1833.188$, $\\sum (\\ln W)(\\ln A) = 262.7977$.',
-              '$b = \\dfrac{8(262.7977) - (33.4359)(7.8702)}{8(1833.188) - (33.4359)^2} = 0.3799$.',
-              '$\\ln a = \\frac{7.8702 - 0.3799(33.4359)}{8} = -0.8805$, so $a = e^{-0.8805} = 0.4148$.',
-              'So $A = 0.4148\\,W^{0.3799}$ (with a log-log $R^2$ of about 0.971).',
+              '$\\sum \\ln W = 35.09509$, $\\sum \\ln A = 6.29507$, $\\sum (\\ln W)^2 = 154.00533$, $\\sum (\\ln W)(\\ln A) = 27.63367$, with $n = 8$.',
+              '$b = \\dfrac{8(27.63367) - (35.09509)(6.29507)}{8(154.00533) - (35.09509)^2} = 0.3799$.',
+              '$\\ln a = \\dfrac{6.29507 - 0.3799(35.09509)}{8} = -0.8797$, so $a = e^{-0.8797} = 0.4149$.',
+              'So $\\boxed{A = 0.4149\\,W^{0.3799}}$.',
             ],
           },
           {
-            id: 'Q3(d)', type: 'Theory — Analyze', marks: 6, module: 'differentiation',
+            id: 'Q3(d)', type: 'Theory — Analyze', marks: 6, module: 'differentiation', flagged: true,
             q: 'Analyze the underlying principle of Heun\'s Method in order to improve the accuracy of the solution for Ordinary Differentiation equations.',
             answer: [
               'Euler\'s method uses the slope at the start of the interval, so the error is $O(h)$.',
               'Heun\'s method takes an Euler predictor step to get $y^* = y_n + h f(x_n, y_n)$, then corrects it using the **average** of the slope at the start and the slope at the predicted point:',
               '$y_{n+1} = y_n + \\frac{h}{2}\\left[f(x_n, y_n) + f(x_n + h, y^*)\\right]$.',
-              'This is the trapezoidal (implicit) rule applied to the integral form of the ODE, and the error drops to $O(h^2)$.',
+              'The average slope is the trapezoidal rule applied to $y_{n+1} = y_n + \\int_{x_n}^{x_{n+1}} f\\,dx$; the trapezoidal rule itself would be implicit ($y_{n+1}$ on both sides), and the Euler predictor makes Heun explicit. The local error drops from $O(h^2)$ to $O(h^3)$, so the global error is $O(h^2)$ instead of Euler\'s $O(h)$.',
               'Heun\'s method is also called the improved Euler or the predictor-corrector method.',
             ],
           },

@@ -607,11 +607,13 @@ export function integrate({ xs, ys, method = 'trapezoid' }) {
     steps.push('\\text{Error: } -\\frac{(b - a)h^4}{180}f^{(4)}(\\xi)');
   } else if (method === 'simpson38') {
     if (N % 3 !== 0) throw new Error('Simpson\'s 3/8 rule needs a multiple of three subintervals.');
-    let s = 3 * ys[0] + 3 * ys[n - 1];
-    for (let i = 1; i < n - 1; i++) s += 3 * ys[i];
+    // composite form: weight 2 on the ordinates shared by two panels (every third), 3 on the rest
+    let s = ys[0] + ys[n - 1];
+    for (let i = 1; i < n - 1; i++) s += (i % 3 ? 3 : 2) * ys[i];
     value = (3 * h / 8) * s;
-    steps.push('\\textbf{Simpson\'s 3/8 rule: } I \\approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + \\cdots + y_{n-1}) + y_n\\right]');
-    steps.push(`I \\approx \\frac{3(${fmt(h)})}{8}\\left[${fmt(ys[0])} + 3(${ys.slice(1, n - 1).map((v) => fmt(v)).join(' + ')}) + ${fmt(ys[n - 1])}\\right] = ${fmt(value)}`);
+    const inner = (keep) => ys.slice(1, n - 1).filter((_, j) => ((j + 1) % 3 !== 0) === keep).map((v) => fmt(v)).join(' + ');
+    steps.push('\\textbf{Simpson\'s 3/8 rule: } I \\approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + y_2 + y_4 + y_5 + \\cdots) + 2(y_3 + y_6 + \\cdots) + y_n\\right]');
+    steps.push(`I \\approx \\frac{3(${fmt(h)})}{8}\\left[${fmt(ys[0])} + 3(${inner(true)})${N > 3 ? ` + 2(${inner(false)})` : ''} + ${fmt(ys[n - 1])}\\right] = ${fmt(value)}`);
     steps.push('\\text{Error: } -\\frac{3(b - a)h^4}{80}f^{(4)}(\\xi)');
   } else if (method === 'weddle') {
     if (N % 6 !== 0) throw new Error("Weddle's rule needs a multiple of six subintervals.");

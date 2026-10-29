@@ -624,11 +624,11 @@ export default {
         },
         {
           type: 'p',
-          text: 'The increment is now the area of a **trapezoid** instead of a rectangle, so the $O(h^2)$ local error of the two slopes cancels and the global error becomes $O(h^2)$ — the same order as Simpson\'s rule — at the cost of two function evaluations per step.',
+          text: 'The increment is now the area of a **trapezoid** instead of a rectangle — Heun is the trapezoidal rule applied to $\\int_{x_n}^{x_{n+1}} f\\,dx$, made explicit by the Euler predictor. The local error drops from $O(h^2)$ to $O(h^3)$, so the global error becomes $O(h^2)$ instead of $O(h)$ — the same order as the trapezoidal rule it imitates — at the cost of two function evaluations per step.',
         },
         {
           type: 'note',
-          text: "Heun's method is **not** in the slides or the class notes. It was asked in Spring 2023 Q2(d) (\"Analyze the underlying principle of Heun's Method in order to improve the accuracy of the solution for Ordinary Differential equations\") and again in Spring 2023 Q2(h) as the companion of Euler's method. It is taught here with the standard textbook method.",
+          text: "Heun's method is **not** in the slides or the class notes. It was asked in Spring 2023 Q3(d) (\"Analyze the underlying principle of Heun's Method in order to improve the accuracy of the solution for Ordinary Differential equations\"); Spring 2023 Q2(h) asks for Euler's method, the predictor Heun builds on (Euler is not in the slides either). It is taught here with the standard textbook method.",
         },
         {
           type: 'exam',

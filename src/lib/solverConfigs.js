@@ -98,7 +98,7 @@ export const SOLVERS = {
     {
       title: 'Solve with Do-Little LU (factorise, then forward and backward substitution)',
       fields: [
-        ['A', 'Coefficient matrix — rows separated by ;', 'matrix', '2,1,1;-4,3,2;6,5,7'],
+        ['A', 'Coefficient matrix — rows separated by ;', 'matrix', '2,1,1;4,3,2;6,5,7'],
         ['b', 'Constants', 'vec', '9,20,35'],
       ],
       run: (v) => s.luSolve(v),

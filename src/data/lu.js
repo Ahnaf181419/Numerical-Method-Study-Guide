@@ -117,9 +117,9 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "From **Fall 2024 A2(d)** (the past-paper system the module solves in full): factor $A = \\begin{bmatrix} 2 & 1 & 1 \\ -4 & 3 & 2 \\ 6 & 5 & 7 \\end{bmatrix}$ by Do-Little and solve $A\\mathbf{x} = [\\,9,\\ 20,\\ 35\\,]^T$." },
-        { type: "p", text: "Eliminate once, recording the multipliers: $m_{21} = -2$, $m_{31} = 3$, $m_{32} = 0.4$. The resulting rows: $R_2' = R_2 + 2R_1 = [\\,0 \\;\\; 5 \\;\\; 4\\,]$, $R_3' = R_3 - 3R_1 = [\\,0 \\;\\; 2 \\;\\; 4\\,]$, $R_3'' = R_3' - 0.4R_2' = [\\,0 \\;\\; 0 \\;\\; 2.4\\,]$. $L$ collects the multipliers, $U$ is the staircase." },
-        { type: "p", text: "Forward substitution $L\\mathbf{y} = \\mathbf{b}$: $\\mathbf{y} = [\\,9,\\ 38,\\ -7.2\\,]$. Back substitution $U\\mathbf{x} = \\mathbf{y}$: $z = -3$, then $y = 10$, then $x = 1$ — and the check $A[\\,1, 10, -3\\,]^T = [\\,9, 20, 35\\,]^T$ ✓. **Asked in:** factorisation into L and U is Fall 2023 Q2(f); solving by Do-Little is Fall 2024 A2(d)." },
+        { type: "p", text: "From **Fall 2024 A2(d)** (the past-paper system the module solves in full): factor $A = \\begin{bmatrix} 2 & 1 & 1 \\\\ 4 & 3 & 2 \\\\ 6 & 5 & 7 \\end{bmatrix}$ by Do-Little and solve $A\\mathbf{x} = [\\,9,\\ 20,\\ 35\\,]^T$." },
+        { type: "p", text: "Eliminate once, recording the multipliers: $m_{21} = 2$, $m_{31} = 3$, $m_{32} = 2$. The resulting rows: $R_2' = R_2 - 2R_1 = [\\,0 \\;\\; 1 \\;\\; 0\\,]$, $R_3' = R_3 - 3R_1 = [\\,0 \\;\\; 2 \\;\\; 4\\,]$, $R_3'' = R_3' - 2R_2' = [\\,0 \\;\\; 0 \\;\\; 4\\,]$. $L$ collects the multipliers, $U$ is the staircase." },
+        { type: "p", text: "Forward substitution $L\\mathbf{y} = \\mathbf{b}$: $\\mathbf{y} = [\\,9,\\ 2,\\ 4\\,]$. Back substitution $U\\mathbf{x} = \\mathbf{y}$: $z = 1$, then $y = 2$, then $x = 3$ — and the check $A[\\,3, 2, 1\\,]^T = [\\,9, 20, 35\\,]^T$ ✓. **Asked in:** factorisation into L and U is Fall 2023 Q2(f); solving by Do-Little is Fall 2024 A2(d)." },
         { type: "exam", text: "Three labelled blocks: the elimination producing $U$ (resulting rows shown), the $L$ read off from the multipliers, then the two substitutions — each block carries its own marks." },
       ],
     },
@@ -301,17 +301,17 @@ export default {
     {
       title: 'Solving a system with Do-Little LU',
       type: 'Numerical — Doolittle LU',
-      question: 'Solve the following system of linear equation using Do-Little LU Decomposition Method (show all necessary steps of the computation): $2x + y + z = 9$, $-4x + 3y + 2z = 20$, $6x + 5y + 7z = 35$.',
+      question: 'Solve the following system of linear equation using Do-Little LU Decomposition Method (show all necessary steps of the computation): $2x + y + z = 9$, $4x + 3y + 2z = 20$, $6x + 5y + 7z = 35$.',
       source: 'Fall 2024 A2(d)',
       marks: 6,
       steps: [
-        { t: 'Factorise $A$: $u_{11} = 2$, $u_{12} = 1$, $u_{13} = 1$; $l_{21} = -4/2 = -2$, $l_{31} = 6/2 = 3$; $u_{22} = 3 - (-2)(1) = 5$, $u_{23} = 2 - (-2)(1) = 4$; $l_{32} = \\dfrac{5 - (3)(1)}{5} = \\dfrac{2}{5} = 0.4$; $u_{33} = 7 - (3)(1) - (0.4)(4) = 2.4$.', m: '2 marks' },
-        { t: 'So $L = \\begin{bmatrix} 1 & 0 & 0 \\\\ -2 & 1 & 0 \\\\ 3 & 0.4 & 1 \\end{bmatrix}$ and $U = \\begin{bmatrix} 2 & 1 & 1 \\\\ 0 & 5 & 4 \\\\ 0 & 0 & 2.4 \\end{bmatrix}$.', m: '1 mark' },
-        { t: 'Forward substitution $[L]\\{d\\} = \\{b\\}$: $d_1 = 9$, $d_2 = \\dfrac{20 - (-2)(9)}{1} = 38$, $d_3 = \\dfrac{35 - (3)(9) - (0.4)(38)}{1} = -7.2$.', m: '1 mark' },
-        { t: 'Backward substitution $[U]\\{x\\} = \\{d\\}$: $x_3 = \\dfrac{-7.2}{2.4} = -3$, $x_2 = \\dfrac{38 - 4(-3)}{5} = 10$, $x_1 = \\dfrac{9 - 10 - (-3)}{2} = 1$.', m: '1 mark' },
-        { t: 'Check in the original equations: $2(1) + 10 + (-3) = 9$ ✓, $-4(1) + 3(10) + 2(-3) = 20$ ✓, $6(1) + 5(10) + 7(-3) = 35$ ✓.', m: '1 mark' },
+        { t: 'Factorise $A$: $u_{11} = 2$, $u_{12} = 1$, $u_{13} = 1$; $l_{21} = 4/2 = 2$, $l_{31} = 6/2 = 3$; $u_{22} = 3 - (2)(1) = 1$, $u_{23} = 2 - (2)(1) = 0$; $l_{32} = \\dfrac{5 - (3)(1)}{1} = 2$; $u_{33} = 7 - (3)(1) - (2)(0) = 4$.', m: '2 marks' },
+        { t: 'So $L = \\begin{bmatrix} 1 & 0 & 0 \\\\ 2 & 1 & 0 \\\\ 3 & 2 & 1 \\end{bmatrix}$ and $U = \\begin{bmatrix} 2 & 1 & 1 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 4 \\end{bmatrix}$.', m: '1 mark' },
+        { t: 'Forward substitution $[L]\\{d\\} = \\{b\\}$: $d_1 = 9$, $d_2 = \\dfrac{20 - (2)(9)}{1} = 2$, $d_3 = \\dfrac{35 - (3)(9) - (2)(2)}{1} = 4$.', m: '1 mark' },
+        { t: 'Backward substitution $[U]\\{x\\} = \\{d\\}$: $x_3 = \\dfrac{4}{4} = 1$, $x_2 = \\dfrac{2 - 0(1)}{1} = 2$, $x_1 = \\dfrac{9 - 2 - 1}{2} = 3$.', m: '1 mark' },
+        { t: 'Check in the original equations: $2(3) + 2 + 1 = 9$ ✓, $4(3) + 3(2) + 2(1) = 20$ ✓, $6(3) + 5(2) + 7(1) = 35$ ✓.', m: '1 mark' },
       ],
-      answer: '$\\boxed{x = 1,\\; y = 10,\\; z = -3}$',
+      answer: '$\\boxed{x = 3,\\; y = 2,\\; z = 1}$',
       note: 'Trap: solving $LUx = b$ in one step instead of introducing the intermediate vector $d$. Without $d$ the two substitutions cannot be separated.',
       explanation: [
         'The factorisation turns one hard problem into two easy ones. $LUx = b$ is a single system with a full matrix; introducing $d$ with $Ux = d$ splits it into two triangular systems, and triangular systems are solved by simple substitution.',

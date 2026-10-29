@@ -169,6 +169,7 @@ export default {
           ["3", "$5.625$", "$-0.859$", "$(5.625,\\ 5.75)$"],
         ] },
         { type: "p", text: "Each row halves the trap — $1 \\to 0.5 \\to 0.25 \\to 0.125$ — and the exact root $5.7417$ never escapes it. **Asked in:** bisection to a stated accuracy is Fall 2023 Q2(a) ($x^3 - 9x + 1$, 2 significant digits) and Spring 2023 Q2(a) ($e^x - 3x$, 2 decimals); the relatives appear as Spring 2024 Q1(b) (derive the secant formula) and the Fall 2023 Q3(b) tank problem." },
+        { type: "note", text: "The paper itself says to make the initial guesses with the **search-bracket formula**, which is not in your slides: $|x^*_{\\max}| = \\sqrt{(a_{n-1}/a_n)^2 - 2a_{n-2}/a_n} = 6$ and $x^* = -a_{n-1}/a_n = 4$, so the paper's start is $(4, 6)$. Its three iterations are $5 \\to 5.5 \\to 5.75$, ending in $(5.5,\\ 5.75)$ — see the full model answer under Exam prep → Past papers. The walk-through above starts from $(5, 6)$ to keep the first example short." },
         { type: "exam", text: "One line verifying the sign change, the iteration table with $c$ and $f(c)$ columns, then name the final bracket and the root it pins down." },
       ],
     },
