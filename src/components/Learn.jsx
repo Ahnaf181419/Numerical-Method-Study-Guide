@@ -103,7 +103,9 @@ export default function Learn({ module, index, learned, onIndex, onLearned, onDo
             <p className="font-sans text-sm font-medium text-gold">
               Lesson {i + 1} of {total}
             </p>
-            <h2 className="display mb-4 mt-1 text-[2rem] font-medium leading-tight sm:text-[2.3rem]">{s.heading}</h2>
+            <h2 className="display mb-4 mt-1 text-[2rem] font-medium leading-tight sm:text-[2.3rem]">
+              <Rich text={s.heading} />
+            </h2>
             <div className="prose-read text-text/90">
               {s.blocks.map((b, k) => (
                 <Block key={k} b={b} />

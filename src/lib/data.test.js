@@ -109,3 +109,12 @@ test('every worked example carries a Theory/Numerical type', () => {
     for (const e of m.examples)
       assert.ok(typeof e.type === 'string' && /^(Theory|Numerical) — /.test(e.type), `${m.id}: ${e.title} needs a type`);
 });
+
+test('titles and headings compile as inline math', () => {
+  for (const m of modules) {
+    inline(m.title);
+    m.sections.forEach((x) => inline(x.heading));
+    m.examples.forEach((e) => inline(e.title));
+    m.formulas.forEach((f) => inline(f.label) + inline(f.where));
+  }
+});

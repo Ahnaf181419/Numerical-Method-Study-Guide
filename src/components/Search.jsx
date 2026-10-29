@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { InlineMath } from 'react-katex';
+import { Rich } from './NotesView.jsx';
+import mathSnippet from '../lib/snippet.js';
 
 const plain = (t = '') => t.replace(/\$[^$]+\$/g, '…').replace(/\*\*/g, '');
 
@@ -45,11 +47,7 @@ export default function Search({ open, onClose, modules, onGo }) {
         .slice(0, 30)
     : [];
 
-  const snippet = (text) => {
-    const lower = text.toLowerCase();
-    const at = Math.max(0, lower.indexOf(terms[0]) - 50);
-    return (at ? '…' : '') + text.slice(at, at + 150) + (text.length > at + 150 ? '…' : '');
-  };
+  const snippet = (text) => mathSnippet(text, terms[0]);
 
   return (
     <dialog
@@ -78,7 +76,9 @@ export default function Search({ open, onClose, modules, onGo }) {
         {hits.map((h, k) => (
           <button key={k} onClick={() => onGo(h.m.id, h.i)} className="press block w-full rounded-xl px-4 py-3 text-left hover:bg-panel">
             <span className="flex items-baseline justify-between gap-3">
-              <span className="font-semibold text-text">{h.title}</span>
+              <span className="font-semibold text-text">
+                <Rich text={h.title} />
+              </span>
               <span className="shrink-0 text-xs text-ash">
                 {h.kind}, Ch {h.m.chapter}
               </span>
@@ -88,7 +88,9 @@ export default function Search({ open, onClose, modules, onGo }) {
                 <InlineMath math={h.tex} />
               </span>
             ) : (
-              <span className="mt-1 block text-sm leading-relaxed text-ash">{snippet(h.text)}</span>
+              <span className="mt-1 block text-sm leading-relaxed text-ash">
+                <Rich text={snippet(h.text)} />
+              </span>
             )}
           </button>
         ))}

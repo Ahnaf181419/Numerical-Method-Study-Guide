@@ -11,7 +11,9 @@ function Example({ ex }) {
   return (
     <section className="rounded-2xl border border-line bg-panel p-5 sm:p-6">
       <header className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="text-lg font-semibold">{ex.title}</h3>
+        <h3 className="text-lg font-semibold">
+          <Rich text={ex.title} />
+        </h3>
         <span className="flex flex-wrap items-center gap-2 text-sm text-ash">
           {ex.type ? <span className="rounded-md border border-line px-2 py-0.5 font-medium text-text/80">{ex.type}</span> : null}
           {ex.marks ? <span className="rounded-md bg-gold/15 px-2 py-0.5 font-medium text-gold">{ex.marks} marks</span> : null}
