@@ -238,11 +238,11 @@ test('iterative walk-through uses the sourced slides system', () => {
   ['2.40', '3.75', '4.00', '(1,\\ 2,\\ 3)', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `iterative missing ${n}`));
 });
 
-test('lu walk-through uses the sourced slides Do-Little matrix', () => {
+test('lu walk-through uses the sourced Fall 2024 A2(d) system', () => {
   const t = sectionText('lu', 'Start here: your first walk-through');
   const r = s.luSolve({ A: [[2, 1, 1], [-4, 3, 2], [6, 5, 7]], b: [9, 20, 35] });
   [1, 10, -3].forEach((v, i) => close(r.result.x[i], v, 1e-9));
-  ['38', '-7.2', 'z = -3', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `lu missing ${n}`));
+  ['Fall 2024 A2(d)', '38', '-7.2', 'z = -3', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `lu missing ${n}`));
 });
 
 test('differences walk-through uses the sourced Chapra x^4 table', () => {
@@ -301,8 +301,9 @@ test('pca walk-through uses the sourced PCA tutorial dataset', () => {
   const P = [[2.5, 2.4], [0.5, 0.7], [2.2, 2.9], [1.9, 2.2], [3.1, 3.0], [2.3, 2.7], [2.0, 1.6], [1.0, 1.1], [1.5, 1.6], [1.1, 0.9]];
   const r = s.pca({ points: P, threshold: 95 });
   close(r.result.eigvals[0], 1.1556249, 1e-6);
+  close(r.result.eigvals[1], 0.0442, 1e-3); // lambda2 = 0.0442 (NOT 0.0492): trace = 1.1998
   assert.equal(r.result.keep, 1);
-  ['1.1556', '96.3', '3.459', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `pca missing ${n}`));
+  ['1.1556', '0.0442', '96.3', '3.459', '0.854', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `pca missing ${n}`));
 });
 
 test('every module opens with the four Start-here sections', () => {

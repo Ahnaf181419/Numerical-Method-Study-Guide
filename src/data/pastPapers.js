@@ -593,7 +593,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(e)', type: 'Numerical — Jacobi (divergence)', marks: 6, module: 'iterative',
+            id: 'Q3(e)', type: 'Theory — Prove', marks: 6, module: 'iterative',
             q: 'Consider a two equation system $a_{11}x_1 + a_{12}x_2 = b_1$, $a_{21}x_1 + a_{22}x_2 = b_2$. Show that sufficient conditions for convergence of Gauss Seidel method are $|a_{11}| > |a_{12}|$ and $|a_{22}| > |a_{21}|$.',
             answer: [
               'Write $x_1 = F(x_1, x_2) = \\dfrac{b_1 - a_{12}x_2}{a_{11}}$ and $x_2 = G(x_1, x_2) = \\dfrac{b_2 - a_{21}x_1}{a_{22}}$.',
@@ -820,7 +820,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(e)', type: 'Numerical — Jacobi (divergence)', marks: 6, module: 'iterative',
+            id: 'Q3(e)', type: 'Theory — Prove', marks: 6, module: 'iterative',
             q: 'Consider a two equation system $a_{11}x_1 + a_{12}x_2 = b_1$, $a_{21}x_1 + a_{22}x_2 = b_2$. Show that sufficient conditions for convergence of Gauss Seidel method are $|a_{11}| > |a_{12}|$ and $|a_{22}| > |a_{21}|$.',
             answer: [
               'Write the system as $x_1 = \\dfrac{b_1 - a_{12}x_2}{a_{11}}$ and $x_2 = \\dfrac{b_2 - a_{21}x_1}{a_{22}}$.',

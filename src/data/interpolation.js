@@ -22,10 +22,10 @@ export const checks = {
     explain: "$u$ counts position in steps of size $h$ from the base row — fractional steps land between rows.",
   },
   "Start here: your first walk-through": {
-    q: "With only $(2,4)$ and $(3,9)$, why does the estimate at $x = 2.5$ miss the true $x^2$ value?",
-    options: ["Lagrange's formula is approximate by nature", "A line is being forced through curved data", "The weights were rounded", "2.5 is outside the data"],
+    q: "In the walk-through, the four Lagrange weights at $x = 2$ added up to…",
+    options: ["0", "1", "4", "19"],
     answer: 1,
-    explain: "Two points pin only a degree-1 polynomial; the true curve is degree 2, so a third point would be needed to hit it exactly.",
+    explain: "The weights ($-\\frac{1}{6}, \\frac{2}{3}, \\frac{2}{3}, -\\frac{1}{6}$) always sum to 1 — a free sanity check before substituting.",
   },
   'What interpolation is and why we need it': {
     q: 'Interpolation replaces the unknown function $f(x)$ by',
@@ -462,7 +462,7 @@ export default {
       title: 'Newton forward interpolation of the cubic through $(0,-1), (1,1), (2,1), (3,-2)$ at $x = 1.5$',
       type: 'Numerical — Newton forward',
       question: 'A third-degree polynomial passes through the points $(0,-1)$, $(1,1)$, $(2,1)$ and $(3,-2)$. Find the polynomial by Newton\'s forward interpolation formula and its value at $x = 1.5$.',
-      source: 'Fall 2024 Part B(b)',
+      source: 'Fall 2024 B1(b)',
       marks: 6,
       steps: [
         { t: 'Difference table: $\\Delta y_0 = 2$, $\\Delta^2 y_0 = -2$, $\\Delta^3 y_0 = -1$.', m: '2 marks' },
@@ -482,7 +482,7 @@ export default {
       title: "Newton's divided difference interpolation for $f(9)$",
       type: 'Numerical — Divided differences',
       question: 'Using Newton\'s divided difference formula, evaluate $f(9)$ from the table $x = 5, 7, 11, 13, 17$ with $f(x) = 150, 392, 1452, 2366, 5202$.',
-      source: 'Fall 2024 Part B(c)',
+      source: 'Fall 2024 B1(c)',
       marks: 6,
       steps: [
         { t: 'First divided differences: $\\dfrac{392-150}{7-5} = 121$, $\\dfrac{1452-392}{11-7} = 265$, $\\dfrac{2366-1452}{13-11} = 457$, $\\dfrac{5202-2366}{17-13} = 709$.', m: '2 marks' },

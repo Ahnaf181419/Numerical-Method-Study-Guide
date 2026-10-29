@@ -21,10 +21,10 @@ export const checks = {
     explain: "Error scales with $h^2$: halving $h$ multiplies the error by $(1/2)^2 = 1/4$.",
   },
   "Start here: your first walk-through": {
-    q: "For $y = x^2$ at $x = 2$ with $h = 1$, the forward slope gave 5. Why too big?",
-    options: ["Rounding in the table", "The one-sided chord leans on the curve's steepening side", "The wrong $h$ was used", "Forward formulas always halve the answer"],
+    q: "$t = 0$ is the first row of the rocket table. Which formulas did the walk-through use there, and why?",
+    options: ["Central — most accurate", "Forward — no data exists above the first row", "Backward — the table ends there", "Richardson — always required"],
     answer: 1,
-    explain: "The chord from $(2,4)$ to $(3,9)$ rides the curve's right-hand steepening; the central slope cancels that lean and returns the exact 4.",
+    explain: "Central and backward formulas need rows that do not exist at the top edge, so the forward three- and four-point formulas are the only legal choice — and saying so earns the justification mark.",
   },
   'Why numerical differentiation': {
     q: 'Numerical differentiation is needed when …',

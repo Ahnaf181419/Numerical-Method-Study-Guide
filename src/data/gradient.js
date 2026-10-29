@@ -25,10 +25,10 @@ export const checks = {
     explain: "In batch mode one epoch = one update, computed from all examples; in single mode one epoch = one update per example.",
   },
   "Start here: your first walk-through": {
-    q: "Why was the epoch-2 step (to 0.18) smaller than the epoch-1 step (to 0.1)?",
-    options: ["The learning rate was halved", "The error shrank to $-0.8$, so the derivative — and the step — shrank", "The table ran out of examples", "Gradients always grow"],
+    q: "After one epoch the parameters rose from 0 to 0.028 and 0.1. What made them increase?",
+    options: ["The learning rate was negative", "The errors were negative, so subtracting $\\alpha \\times$ (negative) adds", "Gradient descent always increases $\\theta$", "The data were sorted first"],
     answer: 1,
-    explain: "Step size follows the derivative, which follows the error; as predictions improve the walk naturally slows — the signature of approaching the minimum.",
+    explain: "Every prediction was 0 against positive targets, so both derivatives came out negative ($-2.8$ and $-10$) and $\\theta := \\theta - \\alpha(\\text{negative})$ moves $\\theta$ up.",
   },
   'What gradient descent does': {
     q: 'What is the basic idea of gradient descent?',

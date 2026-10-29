@@ -117,7 +117,7 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "From the **LU Decomposition slides**: factor $A = \\begin{bmatrix} 2 & 1 & 1 \\ -4 & 3 & 2 \\ 6 & 5 & 7 \\end{bmatrix}$ by Do-Little and solve $A\\mathbf{x} = [\\,9,\\ 20,\\ 35\\,]^T$." },
+        { type: "p", text: "From **Fall 2024 A2(d)** (the past-paper system the module solves in full): factor $A = \\begin{bmatrix} 2 & 1 & 1 \\ -4 & 3 & 2 \\ 6 & 5 & 7 \\end{bmatrix}$ by Do-Little and solve $A\\mathbf{x} = [\\,9,\\ 20,\\ 35\\,]^T$." },
         { type: "p", text: "Eliminate once, recording the multipliers: $m_{21} = -2$, $m_{31} = 3$, $m_{32} = 0.4$. The resulting rows: $R_2' = R_2 + 2R_1 = [\\,0 \\;\\; 5 \\;\\; 4\\,]$, $R_3' = R_3 - 3R_1 = [\\,0 \\;\\; 2 \\;\\; 4\\,]$, $R_3'' = R_3' - 0.4R_2' = [\\,0 \\;\\; 0 \\;\\; 2.4\\,]$. $L$ collects the multipliers, $U$ is the staircase." },
         { type: "p", text: "Forward substitution $L\\mathbf{y} = \\mathbf{b}$: $\\mathbf{y} = [\\,9,\\ 38,\\ -7.2\\,]$. Back substitution $U\\mathbf{x} = \\mathbf{y}$: $z = -3$, then $y = 10$, then $x = 1$ — and the check $A[\\,1, 10, -3\\,]^T = [\\,9, 20, 35\\,]^T$ ✓. **Asked in:** factorisation into L and U is Fall 2023 Q2(f); solving by Do-Little is Fall 2024 A2(d)." },
         { type: "exam", text: "Three labelled blocks: the elimination producing $U$ (resulting rows shown), the $L$ read off from the multipliers, then the two substitutions — each block carries its own marks." },
@@ -302,7 +302,7 @@ export default {
       title: 'Solving a system with Do-Little LU',
       type: 'Numerical — Doolittle LU',
       question: 'Solve the following system of linear equation using Do-Little LU Decomposition Method (show all necessary steps of the computation): $2x + y + z = 9$, $-4x + 3y + 2z = 20$, $6x + 5y + 7z = 35$.',
-      source: 'Fall 2024 Q2(d)',
+      source: 'Fall 2024 A2(d)',
       marks: 6,
       steps: [
         { t: 'Factorise $A$: $u_{11} = 2$, $u_{12} = 1$, $u_{13} = 1$; $l_{21} = -4/2 = -2$, $l_{31} = 6/2 = 3$; $u_{22} = 3 - (-2)(1) = 5$, $u_{23} = 2 - (-2)(1) = 4$; $l_{32} = \\dfrac{5 - (3)(1)}{5} = \\dfrac{2}{5} = 0.4$; $u_{33} = 7 - (3)(1) - (0.4)(4) = 2.4$.', m: '2 marks' },

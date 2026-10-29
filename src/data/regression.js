@@ -172,7 +172,7 @@ export default {
         { type: "p", text: "From **Fall 2023 Q3(c)**: the surface area $A$ of eight people against their weights $W$ ($W = 70, 75, 77, 80, 82, 84, 87, 90$; $A = 2.1, 2.12, 2.15, 2.2, 2.22, 2.23, 2.26, 2.3$ m²). Fit the least-squares straight line." },
         { type: "p", text: "Column totals: $n = 8$, $\\sum W = 645$, $\\sum A = 17.58$, $\\sum W^2 = 52303$, $\\sum WA = 1420.53$. The normal equations: $8a + 645b = 17.58$ and $645a + 52303b = 1420.53$." },
         { type: "math", tex: "b = \\frac{8(1420.53) - (645)(17.58)}{8(52303) - (645)^2} = \\frac{25.14}{2399} = 0.010479, \\qquad a = 2.1975 - 0.010479(80.625) = 1.3526" },
-        { type: "p", text: "The fitted line is $A = 1.3526 + 0.010479\\,W$ — every later regression question is this loop with different columns. **Asked in:** the same table is Spring 2023 Q3(c); the power-law version is Spring 2024 Q2(e); the interpolation-vs-regression discussion is Spring 2024 Q1(g)." },
+        { type: "p", text: "The fitted line is $A = 1.3526 + 0.010479\\,W$ — every later regression question is this loop with different columns. **Asked in:** the power-law fit of this very table is Spring 2023 Q3(c); a different power-law fit is Spring 2024 Q2(e); the interpolation-vs-regression discussion is Spring 2024 Q1(g)." },
         { type: "exam", text: "Totals table (with $WA$ and $W^2$ columns), both normal equations written out, then $b$ and $a$ by the named formulas, and the line boxed." },
       ],
     },

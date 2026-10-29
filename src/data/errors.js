@@ -23,10 +23,10 @@ export const checks = {
     explain: "$E_R = E_A/|X|$ divides the miss by the size of the true value, so the units cancel.",
   },
   "Start here: your first walk-through": {
-    q: "$\\frac{22}{7}$ has $E_R \\approx 4\\times10^{-4}$ against $\\pi$. Roughly how many significant digits agree?",
-    options: ["1–2", "3–4", "6–7", "Exactly 7"],
+    q: "In the walk-through, storing $X = 2.536$ as which value left the smaller error?",
+    options: ["2.53 (chopped)", "2.54 (rounded off)", "Both are equally wrong", "Neither — the true value is stored"],
     answer: 1,
-    explain: "The rule $E_R \\le \\tfrac{1}{2}10^{-k}$ for $k$ correct digits gives $k \\approx 3$–$4$ here.",
+    explain: "Rounding stays within half a unit of the last digit ($E_R = 1.5772 \\times 10^{-3}$); chopping can be twice as bad ($2.3659 \\times 10^{-3}$).",
   },
   'Types of error': {
     q: 'Which of these is **not** one of the three types of error in Shanker Rao, Ch. 1?',

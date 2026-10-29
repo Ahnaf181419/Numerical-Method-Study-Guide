@@ -340,7 +340,7 @@ export default {
       title: 'Gauss elimination with partial pivoting',
       type: 'Numerical — Gauss elimination (partial pivoting)',
       question: 'Solve the following system of linear equation using Gauss Elimination with Partial Pivoting (show all necessary steps of the computation): $x + 2y - 3z = -4$, $-9x + 8y + 7z = 28$, $4x + 5y + 6z = 32$.',
-      source: 'Fall 2024 Q2(b)',
+      source: 'Fall 2024 A2(b)',
       marks: 6,
       steps: [
         { t: '$\\left[\\begin{array}{ccc|c} 1 & 2 & -3 & -4 \\\\ -9 & 8 & 7 & 28 \\\\ 4 & 5 & 6 & 32 \\end{array}\\right]$ — first pivot column: $|a_{21}| = 9 > |a_{11}| = 1$, so interchange $R_1$ and $R_2$.', m: '1 mark' },

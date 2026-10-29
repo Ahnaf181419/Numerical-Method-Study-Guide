@@ -21,10 +21,10 @@ export const checks = {
     explain: "Strips = ordinates minus one: seven ordinates span six strips — exactly Weddle's requirement.",
   },
   "Start here: your first walk-through": {
-    q: "The trapezoid gave 3 against the true 2.6667 for $\\int_0^2 x^2 dx$. Why the overshoot?",
-    options: ["Rounding of the ordinates", "The chords lie above the upward-bending curve", "Two strips are always exact", "The rule forgot the end ordinates"],
-    answer: 1,
-    explain: "$x^2$ is convex, so straight tops ride above it; the bend is the error, and it shrinks as strips narrow ($O(h^2)$).",
+    q: "In the walk-through, Simpson's one-third rule weighted $y_1$, $y_3$ and $y_5$ by…",
+    options: ["1", "2", "4", "6"],
+    answer: 2,
+    explain: "The pattern is $1, 4, 2, 4, 2, 4, 1$ — odd-indexed ordinates get 4, even interior ones get 2, the ends get 1.",
   },
   'Why we integrate numerically': {
     q: 'Numerical integration is used because …',

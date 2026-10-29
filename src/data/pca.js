@@ -20,10 +20,10 @@ export const checks = {
     explain: "Covariance is about deviation from the mean; centring moves that reference point to the origin so the matrix sees the cloud's true shape.",
   },
   "Start here: your first walk-through": {
-    q: "In the walk-through, why could the second component be dropped with zero loss?",
-    options: ["Its eigenvalue was 4", "Its eigenvalue was 0 — no variance along it at all", "The threshold was 50%", "Two points cannot have two components"],
+    q: "The second component had $\\lambda_2 = 0.0442 \\ne 0$, yet it was dropped. Why was that acceptable?",
+    options: ["It was negative", "Its 3.7% variance share falls below the 95%-threshold cutoff", "PCA only ever keeps one component", "Its eigenvector was zero"],
     answer: 1,
-    explain: "$\\lambda_2 = 0$ says the data has no spread along the $y$-axis; keeping only PC1 at 100% loses nothing.",
+    explain: "The first component already explains 96.3% $\\ge$ 95%, so the remaining 3.7% is sacrificed deliberately — the threshold rule from the tutorial.",
   },
   'Why reduce the dimension': {
     q: 'The PCA slides name two motivations for dimensionality reduction. They are',
@@ -147,8 +147,8 @@ export default {
       heading: "Start here: your first walk-through",
       blocks: [
         { type: "p", text: "From the **PCA Tutorial (Math), Q1**: ten two-dimensional points beginning $(2.5, 2.4), (0.5, 0.7), (2.2, 2.9), \\ldots$ Reduce the data to one dimension while keeping at least 95% of the variance." },
-        { type: "p", text: "Mean-centre, build the covariance matrix, eigen-decompose (the tutorial's own steps): the eigenvalues come out $1.1556$ and $0.0492$, so the first component explains $\\frac{1.1556}{1.1556 + 0.0492} = 96.3\\% \\ge 95\\%$ — **keep one component**, exactly the tutorial's threshold rule." },
-        { type: "p", text: "Project onto that first eigenvector: the opening scores are $3.459,\\ 2.35,\\ 2.54, \\ldots$ — ten pairs have become ten numbers with 96.3% of the story intact. **Asked in:** none of the four available papers has set a PCA question yet — the teacher's tutorial worksheets are the source, and the exam-prep tab flags PCA as expected." },
+        { type: "p", text: "Mean-centre, build the covariance matrix, eigen-decompose (the tutorial's own steps): the eigenvalues come out $1.1556$ and $0.0442$, so the first component explains $\\frac{1.1556}{1.1998} = 96.3\\% \\ge 95\\%$ — **keep one component**, exactly the tutorial's threshold rule." },
+        { type: "p", text: "Project onto that first eigenvector: the opening scores are $3.459,\\ 0.854,\\ 3.623, \\ldots$ — ten pairs have become ten numbers with 96.3% of the story intact. **Asked in:** none of the four available papers has set a PCA question yet — the teacher's tutorial worksheets are the source, and the exam-prep tab flags PCA as expected." },
         { type: "exam", text: "The stations in order: centred data and covariance matrix, eigenvalues with percentages, the keep-decision against the threshold, the projected scores." },
       ],
     },
