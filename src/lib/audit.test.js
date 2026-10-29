@@ -257,3 +257,10 @@ test('differences walk-through numbers are self-consistent', () => {
   assert.ok(t.includes('1, 3, 5'), 'first differences');
   assert.ok(t.includes('2, 2'), 'constant second differences');
 });
+
+test('interpolation walk-through numbers match the engine', () => {
+  const t = sectionText('interpolation', 'Start here: your first walk-through');
+  const r = s.lagrange({ xs: [2, 3], ys: [4, 9], x: 2.5 });
+  close(r.result.y, 6.5, 1e-9);
+  assert.ok(t.includes('6.5'), 'interpolated value');
+});

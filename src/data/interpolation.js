@@ -3,6 +3,30 @@
 // formulae, inverse interpolation), the teacher's own interpolation notes.
 
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "Interpolation answers which question?",
+    options: ["What is the trend of noisy data?", "What is the value BETWEEN known data points?", "What is the value far beyond the last data point?", "Which point is an outlier?"],
+    answer: 1,
+    explain: "A curve is passed exactly through the known points and read in between; beyond the last point is extrapolation, a different (riskier) game.",
+  },
+  "Start here: the core idea": {
+    q: "$n + 1$ points with distinct $x$-values determine…",
+    options: ["Exactly one polynomial of degree $n$", "Infinitely many parabolas", "A unique straight line always", "No smooth curve at all"],
+    answer: 0,
+    explain: "Two points pin a line, three a parabola — in general $n+1$ points pin a unique degree-$n$ polynomial.",
+  },
+  "Start here: reading the symbols": {
+    q: "In Newton's forward formula, $u = 2.5$ means the target is…",
+    options: ["2.5 $x$-units above zero", "2.5 steps above the base row", "between rows 0 and 1", "outside the table"],
+    answer: 1,
+    explain: "$u$ counts position in steps of size $h$ from the base row — fractional steps land between rows.",
+  },
+  "Start here: your first walk-through": {
+    q: "With only $(2,4)$ and $(3,9)$, why does the estimate at $x = 2.5$ miss the true $x^2$ value?",
+    options: ["Lagrange's formula is approximate by nature", "A line is being forced through curved data", "The weights were rounded", "2.5 is outside the data"],
+    answer: 1,
+    explain: "Two points pin only a degree-1 polynomial; the true curve is degree 2, so a third point would be needed to hit it exactly.",
+  },
   'What interpolation is and why we need it': {
     q: 'Interpolation replaces the unknown function $f(x)$ by',
     options: [
@@ -111,6 +135,53 @@ export default {
   wave: 'interp',
   sources: ['Shanker Rao Ch 4-7', "Teacher's interpolation notes"],
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "The census ran in 2021; the report needs the population for 2023. The thermocouple logs every whole second; the controller needs the reading at 2.37 s. **Data never lands exactly where you need it.**" },
+        { type: "p", text: "Interpolation is the honest fix: pass one smooth curve **exactly through** every known data point, then read the curve wherever you like between them. (Guessing beyond the last point is **extrapolation** — same machinery, far more risk, because the data has run out.)" },
+        { type: "p", text: "The mathematical workhorse is the polynomial: through any $n+1$ points with distinct $x$-values there passes exactly **one** polynomial of degree $n$. The chapter's formulas are just efficient ways to build it — Newton's forms for equally spaced data, Lagrange's and the divided-difference table for anything else." },
+        { type: "list", items: [
+          "Choose the right formula family (equal vs unequal spacing).",
+          "Interpolate with Newton's forward and backward forms.",
+          "Handle unequal spacing with Lagrange and divided differences.",
+          "Estimate a missing row inside a table — a past-paper favourite.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "Two points pin a line, three pin a parabola, $n+1$ pin a degree-$n$ polynomial — 'connect the dots', but with a polynomial that must pass through **every** dot exactly. Once that curve exists, any in-between value is just a lookup." },
+        { type: "p", text: "The previous chapter's difference tables do the building when the $x$-values are **equally spaced**: Newton's forward formula is the base value $y_0$ plus a stack of corrections, one per difference column, weighted by how far (in steps) the target sits from the base row." },
+        { type: "math", tex: "y(x) = y_0 + u\\,\\Delta y_0 + \\frac{u(u-1)}{2!}\\,\\Delta^2 y_0 + \\cdots, \\qquad u = \\frac{x - x_0}{h}" },
+        { type: "note", text: "The key decoder ring: $u$ measures position **in steps, not in $x$-units** — halfway between rows 0 and 1 is $u = 0.5$, whatever $h$ is. Unequal spacing kills the step idea, and Lagrange's formula takes over." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$y_0$", "the base row of the table", "where you stand to interpolate"],
+          ["$h$", "equal spacing between $x$-values", "step size"],
+          ["$u = \\frac{x - x_0}{h}$", "target position measured in steps from the base", "the fractional step"],
+          ["$\\Delta^k y_0$", "$k$-th forward difference at the base row", "from the difference table"],
+          ["$f[x_0, x_1] = \\frac{y_1 - y_0}{x_1 - x_0}$", "divided difference", "slope allowing unequal spacing"],
+          ["$\\ell_i(x)$", "Lagrange's building block: 1 at $x_i$, 0 at every other node", "the influence of point $i$"],
+        ] },
+        { type: "p", text: "Subscript positions are relative: $y_0$ is whichever row you chose as base, and $u$ counts steps from that row." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Estimate $y$ at $x = 2.5$ from just two facts: $y(2) = 4$ and $y(3) = 9$. (Both come from $y = x^2$, so the truth is $6.25$ — see how close the honest guess gets.)" },
+        { type: "p", text: "**Triangle view:** the target sits exactly halfway, so take the midpoint of the two known heights: $\\frac{4 + 9}{2} = 6.5$. Straightforward — but only works halfway, and only for a line." },
+        { type: "p", text: "**Lagrange view (the machine that always works):** weight each known value by how close the target is to it. The weights come from fractions that sum to 1: $y(2.5) = 4 \\cdot \\frac{2.5 - 3}{2 - 3} + 9 \\cdot \\frac{2.5 - 2}{3 - 2} = 4(0.5) + 9(0.5) = 6.5$. The same answer — and the same formula scales to ten unevenly spaced points unchanged." },
+        { type: "p", text: "The gap to the truth ($6.5$ vs $6.25$) is the price of fitting a **line** through curved data: more points would pull the fitted polynomial up to degree 2 and land exactly on $6.25$." },
+        { type: "exam", text: "Exam shape: name the formula, tabulate the weights (or the difference table) with $u$ shown, substitute, and box the value — and if asked, one sentence on why the two-point answer misses the true curve (linear vs quadratic)." },
+      ],
+    },
     {
       heading: 'What interpolation is and why we need it',
       blocks: [
