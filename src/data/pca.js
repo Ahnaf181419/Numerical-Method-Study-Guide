@@ -148,7 +148,7 @@ export default {
       blocks: [
         { type: "p", text: "Run PCA on the smallest interesting cloud: two points, $(2, 0)$ and $(-2, 0)$. Everything computes by inspection — which is what makes it a teacher." },
         { type: "p", text: "**Centre:** the mean is $(0,0)$, so the points are already centred. **Covariance:** both points vary along $x$ (values $2, -2$) and not at all along $y$ (values $0, 0$), so $C = \\begin{bmatrix} 4 & 0 \\\\ 0 & 0 \\end{bmatrix}$." },
-        { type: "p", text: "**Eigenpairs:** the eigenvalues are $\\lambda_1 = 4$ (eigenvector: the $x$-axis) and $\\lambda_2 = 0$ (the $y$-axis). Explained variance: $\\frac{4}{4+0} = 100%$ on PC1. **Decision:** keeping one component at a 95% threshold loses nothing — $\\lambda_2 = 0$ means the $y$-axis carries no information at all." },
+        { type: "p", text: "**Eigenpairs:** the eigenvalues are $\\lambda_1 = 4$ (eigenvector: the $x$-axis) and $\\lambda_2 = 0$ (the $y$-axis). Explained variance: $\\frac{4}{4+0} = 100\\%$ on PC1. **Decision:** keeping one component at a 95% threshold loses nothing — $\\lambda_2 = 0$ means the $y$-axis carries no information at all." },
         { type: "p", text: "**Project:** each point's coordinate on PC1 is just its $x$-value — scores $2$ and $-2$. Two two-dimensional points have become two **numbers**, with literally zero information discarded: compression in its purest form." },
         { type: "exam", text: "Exam shape: the centred data and $C$ (a small table), the eigenvalues with their percentages, the keep-decision against the threshold, and the projected scores — exactly the stations above, in that order." },
       ],

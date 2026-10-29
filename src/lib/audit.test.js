@@ -233,10 +233,13 @@ test('elimination walk-through numbers match the engine', () => {
 
 test('iterative walk-through numbers match the engine', () => {
   const t = sectionText('iterative', 'Start here: your first walk-through');
-  const r = s.jacobi({ A: [[3, 1], [1, 2]], b: [5, 5], x0: [0, 0] });
+  const r = s.jacobi({ A: [[3, 1], [1, 2]], b: [5, 5], x0: [0, 0], maxIter: 60, tol: 1e-9 });
   close(r.result.table[1].x[0], 5 / 3, 1e-9);
   close(r.result.table[1].x[1], 2.5, 1e-9);
+  close(r.result.x[0], 1, 1e-6);
+  close(r.result.x[1], 2, 1e-6); // the exact solution is (1, 2): 3(1)+2=5 and 1+2(2)=5
   ['1.6667', '2.5', '0.8333', '1.6667'].forEach((n) => assert.ok(t.includes(n), `iterative missing ${n}`));
+  assert.ok(t.includes('(1, 2)'), 'exact solution stated correctly');
 });
 
 test('lu walk-through numbers match the engine', () => {
@@ -287,6 +290,8 @@ test('regression walk-through numbers match the engine', () => {
   close(r.result.a, 1 / 3, 1e-4);
   assert.ok(t.includes('1.5'), 'slope');
   assert.ok(t.includes('0.3333'), 'intercept');
+  const symbols = sectionText('regression', 'Start here: reading the symbols');
+  assert.ok(symbols.includes('$\\sum x, \\sum y, \\sum xy, \\sum x^2$'), 'the four totals listed');
 });
 
 test('gradient walk-through numbers match the engine', () => {
@@ -303,7 +308,7 @@ test('pca walk-through numbers match the engine', () => {
   const r = s.pca({ points: [[2, 0], [-2, 0]], threshold: 95 });
   close(r.result.eigvals[0], 4, 1e-9);
   assert.equal(r.result.keep, 1);
-  assert.ok(t.includes('100%'), 'all variance on one axis');
+  assert.ok(t.includes('100\\%'), 'all variance on one axis, percent escaped in math mode');
   assert.ok(t.includes('4'), 'largest eigenvalue');
 });
 

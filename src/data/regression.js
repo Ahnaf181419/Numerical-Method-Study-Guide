@@ -160,10 +160,10 @@ export default {
           ["$a$", "intercept of the fitted line", "where the line meets $x = 0$"],
           ["$b$", "slope of the fitted line", "change in $\\hat{y}$ per unit $x$"],
           ["$e_i = y_i - \\hat{y}_i$", "residual: the $i$-th point's miss", "the part the line can't explain"],
-          ["$\\sum x, \\sum xy, \\sum x^2$", "the four column totals", "the normal equations' raw material"],
+          ["$\\sum x, \\sum y, \\sum xy, \\sum x^2$", "the four column totals", "the normal equations' raw material"],
           ["$R^2$", "fraction of variation the line explains", "1 = perfect, 0 = no trend"],
         ] },
-        { type: "p", text: "Everything in a least-squares answer flows from four column totals: $n$, $\\sum x$, $\\sum y$, $\\sum xy$, $\\sum x^2$. Build them first, and the rest is substitution." },
+        { type: "p", text: "Everything in a least-squares answer flows from the four column totals $\\sum x$, $\\sum y$, $\\sum xy$, $\\sum x^2$ (plus the count $n$). Build them first, and the rest is substitution." },
       ],
     },
     {
