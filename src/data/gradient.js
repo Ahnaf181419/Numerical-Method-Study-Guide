@@ -6,6 +6,30 @@
 //   gradientDescent({ xs, ys, degree, theta0, alpha, epochs, mode }) -> { theta }
 
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "What does gradient descent offer that solving the normal equations directly does not?",
+    options: ["Exact answers always", "Incremental improvement that scales to many features and much data", "It needs no data", "It skips the cost function"],
+    answer: 1,
+    explain: "Descent improves the model step by step from any starting point, handles large feature counts, and can pause at 'good enough'.",
+  },
+  "Start here: the core idea": {
+    q: "In the update $\\theta_j := \\theta_j - \\alpha \\frac{\\partial J}{\\partial \\theta_j}$, why the minus sign?",
+    options: ["To keep $\\theta$ positive", "The gradient points uphill on the cost, so stepping opposite goes downhill", "It cancels the learning rate", "Convention without meaning"],
+    answer: 1,
+    explain: "Gradient ascent would climb the error; the minus walks the cost $J$ downhill toward its minimum.",
+  },
+  "Start here: reading the symbols": {
+    q: "An 'epoch' is…",
+    options: ["One parameter update per training example", "One complete pass over the training set", "The learning rate", "A diverged run"],
+    answer: 1,
+    explain: "In batch mode one epoch = one update, computed from all examples; in single mode one epoch = one update per example.",
+  },
+  "Start here: your first walk-through": {
+    q: "Why was the epoch-2 step (to 0.18) smaller than the epoch-1 step (to 0.1)?",
+    options: ["The learning rate was halved", "The error shrank to $-0.8$, so the derivative — and the step — shrank", "The table ran out of examples", "Gradients always grow"],
+    answer: 1,
+    explain: "Step size follows the derivative, which follows the error; as predictions improve the walk naturally slows — the signature of approaching the minimum.",
+  },
   'What gradient descent does': {
     q: 'What is the basic idea of gradient descent?',
     options: [
@@ -100,6 +124,54 @@ export default {
   sources: ['Gradient Descent slides'],
   flagged: true,
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "Predict a house's price from its size, rooms, age and postcode and you have a **many-feature** regression. The normal equations still 'work' — but they swell into a large matrix problem that is expensive to solve outright, and they must be re-solved from scratch whenever new data arrives." },
+        { type: "p", text: "Machine learning needs the opposite: a method that **improves a model incrementally**, survives huge data sets, and can stop whenever it is good enough. Gradient descent is that method — and the past papers ask you to run its very first steps by hand." },
+        { type: "p", text: "The idea is physical before it is mathematical: the model's total error is a landscape, and training is **walking downhill** on it." },
+        { type: "list", items: [
+          "Compute predictions $H_\\theta(x)$ and their errors.",
+          "Compute the partial derivatives (the downhill directions).",
+          "Update the parameters with the learning rate $\\alpha$.",
+          "Distinguish batch mode from single-example mode.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "Choose parameters $\\theta$; every choice produces some total error $J(\\theta)$ (the average squared miss over the training set). Picture $J$ as a height over the space of $\\theta$'s: for linear regression the shape is a **bowl** with one lowest point." },
+        { type: "p", text: "Standing anywhere on the bowl, the gradient $\\nabla J$ points straight **uphill**; so the update rule steps the other way, proportionally to a step size $\\alpha$ — the **learning rate**:" },
+        { type: "math", tex: "\\theta_j := \\theta_j - \\alpha \\frac{\\partial J}{\\partial \\theta_j}" },
+        { type: "p", text: "**Batch mode** computes the derivatives from the whole training set before stepping once. **Single (stochastic) mode** steps after every individual example — wobblier steps, same destination. One full pass over the data is an **epoch**." },
+        { type: "note", text: "$\\alpha$ is the dial that breaks the algorithm: too large and the steps overshoot the valley, bouncing out to infinity; too small and training crawls. The papers' values ($0.01$, $0.1$, $0.2$) sit in the safe middle." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$\\theta_0, \\theta_1$", "the parameters being learned (intercept, slope)", "'theta'"],
+          ["$H_\\theta(x) = \\theta_0 + \\theta_1 x$", "the hypothesis: the model's prediction", "H of x"],
+          ["$e^{(i)} = H_\\theta(x^{(i)}) - y^{(i)}$", "the error on training example $i$", "prediction minus actual"],
+          ["$J(\\theta)$", "cost: the average squared error over the training set", "the height of the landscape"],
+          ["$\\alpha$", "learning rate: the step size", "how boldly you walk downhill"],
+          ["epoch", "one complete pass over the training set", "batch mode steps once per epoch"],
+        ] },
+        { type: "p", text: "Superscripts $(i)$ number training examples; they are labels, not powers — same convention as the iteration counter in Jacobi." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Run one epoch of batch gradient descent on a training set of a single example, $(x, y) = (1, 1)$, starting from $\\theta_0 = \\theta_1 = 0$ with $\\alpha = 0.1$. One example means the 'average' is just the one error." },
+        { type: "p", text: "**Epoch 1:** the hypothesis is $H_\\theta(1) = 0 + 0(1) = 0$, so the error is $e = 0 - 1 = -1$. Both derivatives are the error (and the error times $x$, which is still $-1$): $\\frac{\\partial J}{\\partial \\theta_0} = -1$ and $\\frac{\\partial J}{\\partial \\theta_1} = -1$. Update:" },
+        { type: "math", tex: "\\theta_0 = 0 - 0.1(-1) = 0.1, \\qquad \\theta_1 = 0 - 0.1(-1) = 0.1" },
+        { type: "p", text: "**Epoch 2:** with the improved parameters the hypothesis rises to $H_\\theta(1) = 0.1 + 0.1(1) = 0.2$, the error shrinks to $-0.8$, and the next step is smaller: $\\theta_0 = 0.1 - 0.1(-0.8) = 0.18$ and $\\theta_1 = 0.18$. That shrinking step **is** convergence happening: the walk flattens as the valley floor approaches." },
+        { type: "exam", text: "Exam shape (the papers ask exactly this): a table with columns $H_\\theta$, error and error$\\times x$ per example, the two averaged derivatives, then the two updates with $\\alpha$ substituted — finish by stating the parameter values after one epoch." },
+      ],
+    },
     {
       heading: 'What gradient descent does',
       blocks: [

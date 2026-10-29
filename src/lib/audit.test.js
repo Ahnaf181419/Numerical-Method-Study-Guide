@@ -288,3 +288,12 @@ test('regression walk-through numbers match the engine', () => {
   assert.ok(t.includes('1.5'), 'slope');
   assert.ok(t.includes('0.3333'), 'intercept');
 });
+
+test('gradient walk-through numbers match the engine', () => {
+  const t = sectionText('gradient', 'Start here: your first walk-through');
+  const one = s.gradientDescent({ xs: [1], ys: [1], degree: 1, theta0: [0, 0], alpha: 0.1, epochs: 1, mode: 'batch' });
+  close(one.result.theta[0], 0.1, 1e-9); close(one.result.theta[1], 0.1, 1e-9);
+  const two = s.gradientDescent({ xs: [1], ys: [1], degree: 1, theta0: [0, 0], alpha: 0.1, epochs: 2, mode: 'batch' });
+  close(two.result.theta[0], 0.18, 1e-9);
+  assert.ok(t.includes('0.18'), 'second epoch shown');
+});
