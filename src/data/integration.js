@@ -626,38 +626,22 @@ export default {
     },
 
     {
-      title: "Weddle's rule for ∫₀³ (2x − x²) dx",
-      question:
-        'Evaluate $\\int_0^3 (2x - x^2)dx$ by using Weddle’s rule, taking seven ordinates. Also compare the result with the exact value and determine the error.',
+      title: "Weddle's rule for $\\int_0^2 (2x - x^2)\\,dx$",
+      question: "Evaluate $\\int_0^2 (2x - x^2)\\,dx$ by using Weddle's rule, taking seven ordinates. Also, compare the result with the exact value and determine the error.",
       source: 'Spring 2024 Q2(h)',
       marks: 6,
       steps: [
-        {
-          t: 'Seven ordinates means six subintervals: $h = \\frac{3-0}{6} = 0.5$. Ordinates $y_i = 2x_i - x_i^2$: $0,\\ 0.75,\\ 1,\\ 0.75,\\ 0,\\ -1.25,\\ -3$.',
-          m: '1 mark',
-        },
-        {
-          t: "Weddle’s rule: $I = \\frac{3h}{10}\\left[y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + y_6\\right]$.",
-          m: '1 mark',
-        },
-        {
-          t: '$I = 0.15\\left[0 + 5(0.75) + 1 + 6(0.75) + 0 + 5(-1.25) + (-3)\\right] = 0.15\\left[0 + 3.75 + 1 + 4.5 + 0 - 6.25 - 3\\right] = 0.15(0) = 0$.',
-          m: '2 marks',
-        },
-        {
-          t: 'Exact value: $\\int_0^3 (2x-x^2)dx = \\left[x^2 - \\frac{x^3}{3}\\right]_0^3 = 9 - 9 = 0$.',
-          m: '1 mark',
-        },
-        {
-          t: 'Error $= 0 - 0 = 0$: the result is **exact**. Weddle’s rule is exact for every polynomial of degree 5 or lower, and $2x - x^2$ is a quadratic.',
-          m: '1 mark',
-        },
-        {
-          t: '$\\boxed{I = 0 \\; (\\text{exact value } 0,\\; \\text{error } 0)}$',
-          m: '1 mark',
-        },
+        { t: "Seven ordinates means six subintervals: $h = \\frac{2-0}{6} = \\frac{1}{3}$. Ordinates $y_i = 2x_i - x_i^2$ at $x = 0, \\frac{1}{3}, \\frac{2}{3}, 1, \\frac{4}{3}, \\frac{5}{3}, 2$: $0,\\; \\frac{5}{9},\\; \\frac{8}{9},\\; 1,\\; \\frac{8}{9},\\; \\frac{5}{9},\\; 0$.", m: '2 marks' },
+        { t: "Weddle's rule: $I = \\frac{3h}{10}\\left[y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + y_6\\right]$.", m: '1 mark' },
+        { t: "$I = \\frac{3(1/3)}{10}\\left[0 + 5\\left(\\frac{5}{9}\\right) + \\frac{8}{9} + 6(1) + \\frac{8}{9} + 5\\left(\\frac{5}{9}\\right) + 0\\right] = 0.1\\left[\\frac{25+8+8+25}{9} + 6\\right] = 0.1\\left[\\frac{66}{9} + 6\\right]$.", m: '1 mark' },
+        { t: "$I = 0.1(7.3333 + 6) = 0.1(13.3333) = 1.3333$. Exact value: $\\left[x^2 - \\frac{x^3}{3}\\right]_0^2 = 4 - \\frac{8}{3} = \\frac{4}{3} = 1.3333$.", m: '1 mark' },
+        { t: 'Error $= 1.3333 - 1.3333 = 0$: the rule is **exact**, because Weddle\'s rule is exact for every polynomial of degree five or lower and $2x - x^2$ is only a quadratic.', m: '1 mark' },
       ],
-      answer: '$\\boxed{I \\approx 0 \\; (\\text{Weddle});\\; \\text{exact value } 0;\\; \\text{error } 0}$',
+      answer: "$\\boxed{I = \\frac{4}{3} = 1.3333 \\;(\\text{exact value } \\tfrac{4}{3},\\; \\text{error } 0)}$",
+      explanation: [
+        "Weddle's rule fits a sixth-degree pattern through every six-subinterval block, so a quadratic is reproduced exactly and the error vanishes.",
+        "The rule needs a multiple of six subintervals, and seven ordinates is exactly six subintervals — which is why the paper says seven ordinates.",
+      ],
       note: 'Trap: the ordinates go **negative** after $x = 2$ (the integrand $2x-x^2$ changes sign there), and the weighted sum cancels exactly. Do not “correct” a negative ordinate.',
       explanation: [
         'The weighted sum $\\left[0 + 3.75 + 1 + 4.5 + 0 - 6.25 - 3\\right]$ is exactly zero, and so is the integral of $2x - x^2$ over $[0,3]$. That is not luck: Weddle’s rule reproduces any polynomial of degree 5 or lower exactly, and $2x - x^2$ is a polynomial of degree 2.',

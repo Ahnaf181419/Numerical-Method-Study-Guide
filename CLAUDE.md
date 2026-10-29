@@ -1,7 +1,7 @@
 # CSE 2201 Numerical Methods — study portal
 
 A self-contained React study site for one student's final exam, used mostly on an iPad.
-Live at https://ahnaf181419.github.io/neumerical/ (GitHub Pages, deployed on every push to `main`).
+Live at https://ahnaf181419.github.io/Numerical-Method-Study-Guide/ (GitHub Pages, deployed on every push to `main`).
 
 **Read `docs/EXAM-GUIDELINES.md` first** — it holds the syllabus, the exam's question
 pattern, the teacher's six rules, the source map and the content rules. Everything below
@@ -11,7 +11,7 @@ assumes you have.
 
 - `npm run dev` — dev server (also on the LAN, `--host`)
 - `npm test` — node:test suites in `src/lib/*.test.js` (solvers + content integrity). Must pass before every commit.
-- `npm run build` — production build. CI sets `GITHUB_ACTIONS`, which switches Vite `base` to `/neumerical/`.
+- `npm run build` — production build. CI sets `GITHUB_ACTIONS`, which switches Vite `base` to `/Numerical-Method-Study-Guide/`.
 
 ## Content rules (most important)
 

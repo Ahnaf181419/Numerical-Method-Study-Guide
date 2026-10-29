@@ -210,7 +210,7 @@ export default {
           ordered: true,
           items: [
             '**$\\Delta - \\nabla \\equiv \\delta^2$** — go back to the definitions: both sides equal $f_1 - 2f_0 + f_{-1}$.',
-            '**$\\mu^2 \\equiv 1 + \\tfrac{1}{4}\\delta^2$** — square $\\mu = \\tfrac{1}{2}(E^{1/2}+E^{-1/2})$ and use $E + E^{-1} = 4 + \\delta^2$.',
+            '**$\\mu^2 \\equiv 1 + \\tfrac{1}{4}\\delta^2$** — square $\\mu = \\tfrac{1}{2}(E^{1/2}+E^{-1/2})$ and use $E + E^{-1} = 2 + \\delta^2$.',
             '**$\\Delta \\equiv \\nabla E \\equiv E\\nabla \\equiv \\delta E^{1/2}$** — every one of the four is $E - 1$.',
             '**$2\\mu\\delta \\equiv \\Delta + \\nabla$** — the mean-times-central-difference identity (Chapra Q9(h)).',
           ],
@@ -356,8 +356,8 @@ export default {
       steps: [
         { t: 'By definition $\\mu \\equiv \\tfrac{1}{2}\\left(E^{1/2} + E^{-1/2}\\right)$, so $\\mu^2 = \\tfrac{1}{4}\\left(E^{1/2} + E^{-1/2}\\right)^2$.', m: '2 marks' },
         { t: 'Expand: $\\mu^2 = \\tfrac{1}{4}\\left(E + 2 + E^{-1}\\right)$.', m: '1 mark' },
-        { t: 'Since $\\delta = E^{1/2} - E^{-1/2}$, we have $\\delta^2 = E - 2 + E^{-1}$, i.e. $E + E^{-1} = \\delta^2 + 4$.', m: '2 marks' },
-        { t: 'Substitute: $\\mu^2 = \\tfrac{1}{4}\\left(\\delta^2 + 4 + 2\\right) = 1 + \\tfrac{1}{4}\\delta^2$.', m: '1 mark' },
+        { t: 'Since $\\delta = E^{1/2} - E^{-1/2}$, we have $\\delta^2 = E - 2 + E^{-1}$, i.e. $E + E^{-1} = \\delta^2 + 2$.', m: '2 marks' },
+        { t: 'Substitute: $\\mu^2 = \\tfrac{1}{4}\\left[(\\delta^2 + 2) + 2\\right] = \\tfrac{1}{4}\\left(\\delta^2 + 4\\right) = 1 + \\tfrac{1}{4}\\delta^2$.', m: '1 mark' },
       ],
       answer: '$\\boxed{\\mu^2 \\equiv 1 + \\tfrac{1}{4}\\delta^2}$',
       note: 'Trap: forgetting that $E \\cdot E^{-1} = 1$, so $\\left(E^{1/2}+E^{-1/2}\\right)^2 = E + 2 + E^{-1}$ and not $E + E^{-1}$.',

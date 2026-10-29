@@ -4,6 +4,6 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: process.env.GITHUB_ACTIONS ? '/neumerical/' : '/',
+  base: process.env.GITHUB_ACTIONS ? '/Numerical-Method-Study-Guide/' : '/',
   server: { host: true },
 });

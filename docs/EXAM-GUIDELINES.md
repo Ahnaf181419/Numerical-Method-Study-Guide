@@ -179,6 +179,6 @@ Text uses `$inline math$` and `**bold**`.
 
 - `npm run dev` — dev server (LAN exposed)
 - `npm test` — node:test suites (solvers + content integrity). Must pass before every commit.
-- `npm run build` — production build; CI sets `GITHUB_ACTIONS`, switching Vite `base` to `/neumerical/`.
+- `npm run build` — production build; CI sets `GITHUB_ACTIONS`, switching Vite `base` to `/Numerical-Method-Study-Guide/`.
 - GitHub Pages: push to `main` → `.github/workflows/deploy.yml` deploys.
 - **Never commit** `ClassNotes/`, `Question Bank/`, `slides/`, `docs/books/`, `node_modules/`, `dist/`.

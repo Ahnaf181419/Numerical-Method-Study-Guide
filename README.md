@@ -4,7 +4,7 @@ A self-contained study site for the Numerical Methods final: every topic the exa
 taught from the class slides, the class notes, the books and four past papers — with worked
 answers written exactly the way the examiner wants them.
 
-Live at **https://ahnaf181419.github.io/neumerical/** (GitHub Pages, deployed on every push to `main`).
+Live at **https://ahnaf181419.github.io/Numerical-Method-Study-Guide/** (GitHub Pages, deployed on every push to `main`).
 
 ## What is in it
 
