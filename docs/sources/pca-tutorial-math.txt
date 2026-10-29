@@ -1,0 +1,139 @@
+Q1. Perform Principal Component Analysis on the following data set using the following
+guidelines ​
+   (i) Preprocess the data using Mean Normalization, with NO data Scaling / Feature Scaling. ​
+   (ii) Find the principal components along with the data variances along them.​
+   (iii) Reduce dimensionality to keep at least 95% variance of the original data set.​
+   (iv) Recast/Reduce the data points along the principal component(s), keeping at
+         Least 95% variance of the Original data set.​
+    (v) Reconstruct the original data points from the reduced dimensional
+         representation / PC-axis representation and find the mean absolute errors
+         (MAE), Sum of Squared Errors (SSE) and Root Mean Squared Error (RMSE) for
+          the data set. {RMSE = square root of Mean of Squared Error}​
+
+      Data Set: { (2.5, 2.4), (0.5, 0.7), (2.2, 2.9), (1.9, 2.2), (3.1, 3.0), (2.3, 2.7),
+                  (2.0, 1.6), (1.0, 1.1), (1.5, 1.6), (1.1, 0.9) }​
+​
+Q2. Repeat the previous 3 steps (iii)-(v), but now keeping at least 98% variance of the original
+dataset​
+​
+Q3. Repeat Q1 and Q2, after preprocessing the data using both Mean Normalization and
+Feature / Data scaling.
+Step 1: Preprocessing (Mean Normalization and Scaling of Data Points / Data Set)
+Step 2: Finding the Co-Variance Matrix from the Pre-Processed Data Points
+For Q3, you have to find the Co-Variance matrix using the Mean Normalized, then *Scaled* data points
+Step 3: Finding Eigen Values of the Covariance Matrix
+
+
+
+
+Step 4: Finding the Eigen Vectors for Each Eigen Value λ.
+  Then Form the Transformation matrix V by Column-wise stacking the Eigen Vectors
+Step 5: Reduce Dimensionality (Transform the Points using the
+  Principal Components’ Matrix V)
+Step 6: Reconstruction of the Original Data Points from the Transformed/Reduced Points and Calculation
+ of Errors
+
+Reconstructing Original 2D points from Transformed 1D Points Y
+
+  Transformed
+     Points
+                    Y=    3.459            V1’=   0.678   0.735
+                          0.854
+                          3.623
+                          2.905
+                          4.307
+                          3.544
+                          2.532
+                          1.487
+                          2.193
+                          1.407
+
+
+ Reconstructed
+    Points
+                   Xr =    Y       *      V1’             (10x1) * (1x2) ==> (10x2) Points
+
+
+                     =    3.459    *     0.678    0.735
+                          0.854
+                          3.623
+                          2.905
+                          4.307
+                          3.544
+                          2.532
+                          1.487
+                          2.193
+                          1.407
+                                X = Original
+                                                     E = Error = X -Xr            Absolute Error |E|          SE = Squared Error E2
+                                    Points
+Xr =     2.35    2.54           2.5        2.4         0.15     -0.14              0.15       0.14              0.0240       0.0203
+         0.58    0.63           0.5        0.7        -0.08      0.07              0.08       0.07              0.0062       0.0053
+         2.46    2.66           2.2        2.9        -0.26      0.24              0.26       0.24              0.0658       0.0562
+         1.97    2.14           1.9        2.2        -0.07      0.06              0.07       0.06              0.0049       0.0042
+         2.92    3.17           3.1         3          0.18     -0.17              0.18       0.17              0.0324       0.0274
+         2.40    2.60           2.3        2.7        -0.10      0.10              0.10       0.10              0.0106       0.0091
+         1.72    1.86            2         1.6         0.28     -0.26              0.28       0.26              0.0803       0.0681
+         1.01    1.09            1         1.1        -0.01      0.01              0.01       0.01              0.0001       0.0001
+         1.49    1.61           1.5        1.6         0.01     -0.01              0.01       0.01              0.0002       0.0001
+         0.95    1.03           1.1        0.9         0.15     -0.13              0.15       0.13              0.0213       0.0181
+
+                                                                        MAE
+                                                                                0.13      0.12         SSE=      0.25         0.21
+                                                                          =
+                                                                (MAE = Mean of Absolute Errors)         (SSE=Sum of Squared Errors)
+
+
+
+
+       for Q2.
+       Reconstructing Original 2D points from Transformed 2D Points YY
+
+         Transformed
+            Points
+                         YY =     3.459      0.210      V=    0.678      0.735
+                                  0.854     -0.107            0.735      -0.678
+                                  3.623     -0.349
+                                  2.905     -0.095
+                                  4.307      0.245
+                                  3.544     -0.140
+                                  2.532      0.385
+                                  1.487     -0.011
+                                  2.193      0.018
+                                  1.407      0.198
+    Reconstructed
+       Points
+                      Xrr =    YY        *          V              (10x2) * (2x2) ==> (10x2) Points
+
+
+                         =    3.459    0.210        *   0.678      0.735
+                              0.854   -0.107            0.735     -0.678
+                              3.623   -0.349
+                              2.905   -0.095
+                              4.307    0.245
+                              3.544   -0.140
+                              2.532    0.385
+                              1.487   -0.011
+                              2.193    0.018
+                              1.407    0.198
+
+
+                                 X = Original
+                                                        E = Error = X -Xrr        Absolute Error |E|         SE = Squared Error E2
+                                 Points
+=     2.50     2.40                2.5        2.4        0.00       0.00            0.00      0.00             0.0000       0.0000
+      0.50     0.70                0.5        0.7        0.00       0.00            0.00      0.00             0.0000       0.0000
+      2.20     2.90                2.2        2.9        0.00       0.00            0.00      0.00             0.0000       0.0000
+      1.90     2.20                1.9        2.2        0.00       0.00            0.00      0.00             0.0000       0.0000
+      3.10     3.00                3.1         3         0.00       0.00            0.00      0.00             0.0000       0.0000
+      2.30     2.70                2.3        2.7        0.00       0.00            0.00      0.00             0.0000       0.0000
+      2.00     1.60                 2         1.6        0.00       0.00            0.00      0.00             0.0000       0.0000
+      1.00     1.10                 1         1.1        0.00       0.00            0.00      0.00             0.0000       0.0000
+      1.50     1.60                1.5        1.6        0.00       0.00            0.00      0.00             0.0000       0.0000
+      1.10     0.90                1.1        0.9        0.00       0.00            0.00      0.00             0.0000       0.0000
+
+                                                                           MAE                          SSE
+                                                                                    0.00      0.00              0.00         0.00
+                                                                            =                             =
+                                                                    (MAE = Mean of Absolute Errors)    (SSE=Sum of Squared Errors)
+

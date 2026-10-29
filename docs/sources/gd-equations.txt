@@ -1,0 +1,27 @@
+For Batch Mode, the THETAs are Updated only ONCE for the whole Table (Training Set). Batch Mode Equations are as follows.
+
+
+
+
+                                                                                                                 P.D. = Average Error
+
+
+
+                                                                                                                 P. D. = Average over Error i * x i
+
+
+
+
+For Single Mode, Adjust the THETAs for each Pattern (Each Row of the Training Set), instead of just ONCE for Entire Table like Batch Mode)
+For Single Mode, Following Equations are Used, DROP the SUM symbol.
+
+
+
+
+                                                                                                                 Error i
+
+
+
+
+                                                                                                                 Error i * x i
+

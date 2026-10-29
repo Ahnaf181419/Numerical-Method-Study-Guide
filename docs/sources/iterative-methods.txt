@@ -1,0 +1,265 @@
+                                   CSE2201: Numerical Methods
+
+
+Iterative Solution of Linear Equations
+Find Approximation Solution Ax = b where A€R n*n
+    1. Number of equations n is large i.e O(15)
+    2. A is sparse very few non zero coefficients.
+    3. A is structured (meaning product of Ax can be calculated efficiently.)
+
+Main Idea: Avoid computation of A–1 and perform “cheap operation” Ax.
+
+      Direct method solution poses some problems when the systems are growing larger or
+       when most coefficients are zero.
+      They require prohibitively large number of floating point operation and thus not only
+       time-consuming, but also severely affect the solution's accuracy due to round-off errors.
+
+       Iterative approaches provide a solution for this, and this approach can also solve ill-
+       conditioned structures without addressing the issue of round-off errors.
+
+
+Jacobi’s Method
+Jacobi method is based on the idea as that for the fixed point iteration method discussed in the
+chapter “system of non linear equations”. Recalling that equation of the form: f(x) = 0 can be
+rearranged into a form: x = g(x).
+The function g(x) can be evaluated iteratively using an initial approximation x as:
+                     𝑥 = 𝑔(𝑥 ) … … … … … … … … … … … … … … … … (1)
+
+Jacobi method extends this idea to a system of equations. It is direct substitution method
+where the values of unknowns are improved by substituting directly the previous values.
+
+Jacobi Iteration Method:
+Let us consider a system of 3 equations in 3 unknowns.
+        a11 x1 + a12 x2 + a13 x3 = b1
+        a21 x1 + a22 x2 + a23 x3 = b2
+        a31 x1 + a32 x2 + a33x3 = bn
+
+Step 1:
+We rewrite the original system as
+                                     1
+                                   ( )
+                               𝑥         =
+                                       [𝑏 − 𝑎 𝑥 − 𝑎 𝑥 ]
+                                    𝑎
+                                ( )  1
+                               𝑥 =     [𝑏 − 𝑎 𝑥 − 𝑎 𝑥 ]
+                                    𝑎
+
+                                 ( )
+                             𝑥         =     [𝑏 − 𝑎 𝑥 − 𝑎 𝑥 ]
+
+Step 2:
+                                 ( ) ( )  ( )     ( ) ( )  ( )
+Compute the first approximation 𝑥 , 𝑥 ), 𝑥 using 𝑥 , 𝑥 , 𝑥
+            ( )                ( )           ( )
+        𝑥         =   𝑏 −𝑎 𝑥         −𝑎 𝑥
+            ( )                ( )           ( )
+        𝑥         =   𝑏 −𝑎 𝑥         −𝑎 𝑥
+                                    CSE2201: Numerical Methods
+
+             ( )                  ( )          ( )
+         𝑥         =   𝑏 −𝑎 𝑥           −𝑎 𝑥
+
+Step 3:
+                                ( ) ( ) ( )                 ( ) ( ) ( )
+Similarly second approximation 𝑥 , 𝑥 , 𝑥 ) evaluated using 𝑥 , 𝑥 , 𝑥 .
+
+             ( )                  ( )          ( )
+         𝑥         =   𝑏 −𝑎 𝑥           −𝑎 𝑥
+             ( )                  ( )          ( )
+         𝑥         =   𝑏 −𝑎 𝑥           −𝑎 𝑥
+             ( )                  ( )          ( )
+         𝑥         =   𝑏 −𝑎 𝑥           −𝑎 𝑥
+
+
+Step n+1:
+In general, if x1(n), x2(n),…,xn(n) are a system of nth approximations, then the next
+approximation is given by the formula:
+       x1(n+1) =   [b1 – a12 x2(n) – a13 x3(n) – …… – a1n xn(n)]
+        x2(n+1) =      [b2 – a21 x1(n) – a23 x3(n) – …… – a2n xn(n)]
+        …. …. …. …. …. …. …. …. .. … … … …
+        xn(n+1) = [b3 – a31 x1(n) – a32 x2(n) –…… – ann–1 xn(n)]
+
+In general, an iteration for xi can be obtained from the ith equation as follows
+                   1
+       xi (k+1) =     [bi –ai1 x1(k) – …. – aii–1 xi–1(k) – aii+1 xi+1(k) – … – ain xn(k)]
+                  aii
+
+Algorithm: Jacobi Iteration Method
+Choose start point X0 = (x10, x20, xn0)t
+For j=0,1,2….. until the stop criteria
+       For i = 1, 2, 3,….n
+                           1
+               xi (k+1) =     [bi –ai1 x1(k) – …. – aii–1 xi–1(k) – aii+1 xi+1(k) – … – ain xn(k)]
+                          aii
+       end
+end
+
+Choosing starting vector:
+  1. All vector xi =1
+  2. Best choice xi = bi/a ii
+
+Stopping Criteria:
+   1. Maximum number of iterations reached.
+   2. Reached the tolerance level.
+                                       CSE2201: Numerical Methods
+
+
+Example: Solve the following system of linear equations by Jacobi’s method
+             5x + 2y + z = 12
+               x + 4y + 2z = 15
+               x + 2y + 5z = 20
+
+Solution:
+The above system is diagonally dominant i.e. in each equation the absolute value of the largest
+coefficient is greater than the sum of the absolute values of the other coefficients. The given
+equations can be written as
+        x = 1/5 [12 – 2y –z ]
+        y = 1/4 [15 – x – 2z]
+        z = 1/5 [20 – x – 2y]
+
+We start the iteration by putting                  x = 0, y = 0, z = 0
+
+ For the first iteration we get
+       x (1) = 1/5 [12 – 0 – 0] = 2.40
+       y (1) = 1/4 [15 – 0 – 0] = 3.75
+       z (1) = 1/5 [20 – 0 – 0] = 4.00
+
+Substituting the values x (1), y (1) and z (1) we get,
+       x (2) = 1/5 [12 – 2(3.75) – 4.00 ] = 0.10
+       y (2) = 1/4 [15 – 2.40 – 2(4.00)] = 1.15
+       z (2) = 1/5 [20 – 2.40 – 2(3.75)] = 2.02
+
+The iteration process is continued and results are tabulated as follows
+
+    Iteration     1          2                 3                  4             5              6                 7           8
+        X        2.40      0.10              1.54               0.61          1.41           0.80              1.08        1.084
+        Y        3.75      1.15              1.72               1.17          2.29           1.69              1.95        1.95
+        Z        4.00      2.02              3.57               2.60          3.41           3.20              3.16        3.164
+
+The values of x, y, z at the end of the 8th iteration are
+       x = 1.084,       y = 1.95        and z = 3.164
+
+
+Gauss–Seidel method
+
+       Gauss-Seidel method is an improved version of Jacobi iteration method.
+                                                                                     ( )          ( )           ( )
+       In Jacobi method, we begin with the initial values 𝑥                                 ,𝑥         ,……𝑥          and obtain next
+                          ( )         ( )            ( )
+        approximation 𝑥          ,𝑥         ,……𝑥           .
+                                            ( )                      ( )               ( )
+       Note that, in computing 𝑥                 , we used 𝑥              and not 𝑥         which has just been computed.
+                                             ( )               ( )                                             ( )
+        Since, at that point, both 𝑥               and 𝑥             are available, we can use 𝑥                     which is a better
+                                                     ( )                                                 ( )                  ( )
+        approximation. For computing𝑥                      . Similarly, for computing 𝑥                        we can use 𝑥         and
+          ( )              ( )          ( )
+        𝑥 along with 𝑥 …, 𝑥 . This idea can be extended to all subsequent computations.
+        This approach is called the Gauss-Seidel method.
+                                   CSE2201: Numerical Methods
+
+
+       The Gauss-Seidel method uses the most recent values of x as soon as they become
+        available at any point of iteration process. During the (k+1)th iteration of Gauss-Seidel
+        method, xi takes the form
+
+        xi (k+1) =   [bi –ai1 x1(k+1) – …. – aii–1 xi–1(k+1) – aii+1 xi+1(k) – … – ain xn(k)]
+
+Condition for Convergence
+   Same as Jacobi’s method. But the convergence in Gauss-Seidel method is more rapid than
+   in Jacobi’s method.
+
+Algorithm: Gauss-Seidel Method
+   1. Obtain n, aij and bi values
+   2. Set x0 = bi/aii for i=1,2,…n
+   3. Set key =0
+   4. For i=1,2,…,n
+   5. Set sum = bi
+   6. For j=1,2,…n (j is not equal to i)
+   7. Set sum = sum aijx0j
+   8. Repeat j
+   9. Set xi = sum/aii
+   10. If key = 0 then
+   11. If abs(xi–x0i/xi)>error then
+   12. Set key = 1
+   13. Repeat i
+   14. If key = 1 then set x0i = xi
+   15. Go to step 3
+   16. Write result
+
+Example: Obtain the solution of the following system using Gauss–Seidel iteration method
+              2x + y + z = 5
+              3x + 5y + 2z = 15
+              2x + y + 4z =8
+
+Solution:        x = [5 – y –z ]/2
+                 y = [15 – 3x – 2z]/5
+                 z = [8 – 2x – y]/4
+
+We start the iteration by putting x = 0, y = 0, z = 0
+
+ For the first iteration, we get
+       x (1) = [5 – 0 – 0]/2      = 2.50
+       y (1) = [15 – 3×2.5 – 0]/5 = 1.5
+       z (1) = [8 – 2×2.5 – 1.5] /4 = 0.4
+
+Substituting the values x (1), y (1) and z (1) we get,
+       x (2) = [5 – 1.5 – 0.4]/2           = 1.6
+       y (2) = [15 – 3×1.6 – 2×0.4]/5 = 1.9
+       z (2) = [8 – 2×1.6 – 1.9]/4        = 0.7
+                                      CSE2201: Numerical Methods
+
+
+
+Condition for Convergence
+Sufficient condition for convergence for solving one non-linear equation is | G’(x) | < 1. And
+for two non-linear equations, F(x1, x2) and G (x1, x2), are
+
+                             |    |+|               |    <1                               (1)
+                          |      |+|            |        <1
+
+    We can express the Gauss-Seidel algorithm as follows:
+
+    x1 = F(x1, x2) =    (b1 – a12x2)
+                    =    –       x2
+    x2 = G (x1, x2) =   (b2 – a21x1)
+                    =    –       x1
+
+
+
+
+    The partial derivatives of these equations are
+
+                                            |            |= 0, |       |= – a12     and
+                                                                            a11
+
+
+                                        |               |= – a21 , |      |=0
+                                                              a 22
+
+    Substituting these values in first equation
+                                     |    |< 1 and                           |    |< 1
+
+
+    This means that
+                                  |𝑎 | > |𝑎 |                          and |𝑎 | > |𝑎 |
+
+    For each row, the absolute value of the diagonal element should be greater than the sum of
+    absolute values of the other elements in the equation. i.e.
+               | 𝑎 | >∑ |𝑎 |;         for i  j
+
+   Remember that this condition is sufficient, but not necessary, for convergence. Some
+    systems may converge even if this condition is not satisfied.
+   Systems that satisfy the above condition are called diagonally dominant systems.
+    Convergence of such systems is guaranteed.
+                            CSE2201: Numerical Methods
+
+
+References:
+
+1. BalaGurushamy, E. Numerical Methods. New Delhi : Tata McGraw-Hill, 2000.
+
+2. Steven C.Chapra, Raymon P. Cannale. Numerical Methods for Engineers. New Delhi :
+Tata McGRAW-HILL, 2003. ISMN 0-07-047437-0.
+

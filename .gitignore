@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.playwright-mcp/
+
+# Source material — never commit the scans or the books
+ClassNotes/
+Question Bank/
+slides/
+
+# Verbatim extracts from the copyrighted textbooks (Shanker Rao, Balagurusamy).
+# They stay on this machine so the content can be checked against them, but they
+# are not published to GitHub.
+docs/books/

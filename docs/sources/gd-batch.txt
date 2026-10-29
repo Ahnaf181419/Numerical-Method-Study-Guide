@@ -1,0 +1,53 @@
+    *****      First, READ the "Equations" Worksheet for the algorithm                       *****                       Ɵ0 = 0                        Ɵ1= 0
+
+                               m = 5                        alpha (α) = 0.01                               "PD w.r.t. Ɵ0" means "Partial Derivative with respect to Ɵ0" = PDƟ0
+
+                             Data Points: (x, y) = (1,1), (2,3), (4,3), (3,2), (5,5)
+
+Iteration/                                       Predicted y(i)         Error = Predicted - Actual         Error * x                Eq. (3a)                     Eq. (3b)
+ Epoch        Ɵ0     Ɵ1        x(i)    y(i)   HƟ(x(i)) = Ɵ0 + Ɵ 1x(i)           HƟ(x(i)) – y(i)      { HƟ(x(i)) – y(i) } * x(i) temp0 = Ɵ 0 – α*PDƟ0       temp1 = Ɵ 1 – α*PDƟ1
+               0      0         1       1               0                             -1                       -1                     0.028                         0.1
+                                2       3               0                             -3                       -6
+                                4       3               0                             -3                      -12                 Explanation:                 Explanation:
+                                3       2               0                             -2                       -6
+    1                           5       5               0                             -5                      -25
+                                                                                                                           temp0 or New Ɵ 0 =               temp1 or NewƟ 1 =
+                                                                               PD w.r.t. Ɵ0 from        PD w.r.t. Ɵ1 from     Old Ɵ 0 – α *                Old Ɵ 1 – α * average
+                                                                          eq. (2a) = avg. error      eq. (2b)=avg. error*x   average Error                      of Error*x
+                                                                                     -2.8                      -10
+             0.028   0.1        1       1             0.128                         -0.872                   -0.872                  0.05272                      0.18816
+                                2       3             0.228                         -2.772                   -5.544
+                                4       3             0.428                         -2.572                  -10.288
+                                3       2             0.328                         -1.672                   -5.016
+    2                           5       5             0.528                         -4.472                   -22.36
+                                                                                 PD w.r.t. Ɵ0             PD w.r.t. Ɵ1
+                                                                                from eq. (2a)           from eq. (2b)
+                                                                                     -2.472                   -8.816
+             0.0527 0.1882      1       1            0.24088                       -0.75912                 -0.75912                0.074548                     0.2658808
+                                2       3            0.42904                       -2.57096                 -5.14192
+                                4       3            0.80536                       -2.19464                 -8.77856
+                                3       2            0.6172                         -1.3828                  -4.1484
+    3                           5       5            0.99352                       -4.00648                 -20.0324
+                                                                                 PD w.r.t. Ɵ0             PD w.r.t. Ɵ1
+                                                                                from eq. (2a)           from eq. (2b)
+                                                                                    -2.1828                  -7.77208
+             0.0745 0.2659      1       1           0.3404288                     -0.6595712               -0.6595712              0.093826096                  0.334397472
+                                2       3           0.6063096                     -2.3936904               -4.7873808
+                                4       3           1.1380712                     -1.8619288               -7.4477152
+                                3       2           0.8721904                     -1.1278096               -3.3834288
+    4                           5       5           1.403952                       -3.596048                -17.98024
+                                                                                 PD w.r.t. Ɵ0             PD w.r.t. Ɵ1
+                                                                                from eq. (2a)           from eq. (2b)
+                                                                                   -1.9278096               -6.8516672
+             0.0938 0.3344      1       1          0.428223568                   -0.571776432             -0.571776432             0.110855911                  0.394798967
+                                2       3          0.76262104                     -2.23737896              -4.47475792
+                                4       3          1.431415984                   -1.568584016             -6.274336064
+                                3       2          1.097018512                   -0.902981488             -2.708944464
+    5                           5       5          1.765813456                   -3.234186544             -16.17093272
+                                                                                 PD w.r.t. Ɵ0             PD w.r.t. Ɵ1
+                                                                                from eq. (2a)           from eq. (2b)
+                                                                                 -1.702981488             -6.04014952
+https://machinelearningmastery.com/linear-regression-tutorial-using-gradient-descent-for-machine-learning/
+
+https://machinelearningmastery.com/implement-decision-tree-algorithm-scratch-python/
+

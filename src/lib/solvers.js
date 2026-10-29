@@ -1,0 +1,814 @@
+// Pure calculators for the exam math taught in CSE 2201 (slides + class notes + past papers).
+// Each returns { result, steps } where steps are LaTeX strings for the UI.
+//
+// House rules baked in here (from the teacher's six rules, see docs/EXAM-GUIDELINES.md):
+//   * a row operation is always written together with the row it produces;
+//   * partial pivoting is checked at EVERY pivot column, not just the first;
+//   * Gauss-Jordan ends in reduced row echelon form (identity for a square matrix) — no back substitution;
+//   * iterative methods check diagonal dominance before they start.
+
+import { compile, poly } from './expr.js';
+
+const fmt = (x, d = 4) => {
+  if (typeof x !== 'number' || !Number.isFinite(x)) return String(x);
+  const r = +x.toFixed(d);
+  return Object.is(r, -0) ? '0' : String(r);
+};
+const tex = (rows, digits = 4) =>
+  '\\begin{bmatrix} ' + rows.map((r) => r.map((v) => fmt(v, digits)).join(' & ')).join(' \\\\ ') + ' \\end{bmatrix}';
+const augTex = (rows, digits = 4) =>
+  '\\left[\\begin{array}{' + 'c|'.repeat(rows[0].length - 1) + 'c} ' +
+  rows.map((r) => r.map((v) => fmt(v, digits)).join(' & ')).join(' \\\\ ') + ' \\end{array}\\right]';
+const mul = (A, B) => A.map((r) => B[0].map((_, j) => r.reduce((s, v, k) => s + v * B[k][j], 0)));
+const mv = (A, v) => A.map((r) => r.reduce((s, x, k) => s + x * v[k], 0));
+const transpose = (A) => A[0].map((_, j) => A.map((r) => r[j]));
+
+// ---------------------------------------------------------------- linear systems
+
+// Forward elimination + back substitution.
+// pivot: 'auto' (naive until a zero pivot appears, then partial pivoting — the default),
+//        'on'  (partial pivoting at every column — when the question asks for it),
+//        'off' (naive only — errors out if a zero pivot appears).
+export function gaussEliminate({ A, b, pivot = 'auto' }) {
+  const n = A.length;
+  const M = A.map((row, i) => [...row, b[i]]);
+  const steps = [];
+  steps.push(`\\text{Augmented matrix: } ${augTex(M)}`);
+  let usedPivoting = false;
+
+  for (let k = 0; k < n - 1; k++) {
+    // --- pivot decision for this column -------------------------------------
+    if (Math.abs(M[k][k]) < 1e-12) {
+      if (pivot === 'off') {
+        throw new Error(`Zero pivot in column ${k + 1}. Switch on partial pivoting (or use "auto").`);
+      }
+      // find the largest magnitude below and swap it up
+      let r = k;
+      for (let i = k + 1; i < n; i++) if (Math.abs(M[i][k]) > Math.abs(M[r][k])) r = i;
+      [M[k], M[r]] = [M[r], M[k]];
+      usedPivoting = true;
+      steps.push(`\\text{Zero pivot in column ${k + 1} — swap } R_{${k + 1}} \\text{ and } R_{${r + 1}}:`);
+      steps.push(`${augTex(M)}`);
+    } else if (pivot === 'on') {
+      let r = k;
+      for (let i = k + 1; i < n; i++) if (Math.abs(M[i][k]) > Math.abs(M[r][k])) r = i;
+      if (r !== k) {
+        [M[k], M[r]] = [M[r], M[k]];
+        usedPivoting = true;
+        steps.push(`\\text{Partial pivoting: } |a_{${r + 1}${k + 1}}| = ${fmt(Math.abs(A[r][k]))} > |a_{${k + 1}${k + 1}}| = ${fmt(Math.abs(A[k][k]))}, \\text{ so swap } R_{${k + 1}} \\text{ and } R_{${r + 1}}:`);
+        steps.push(`${augTex(M)}`);
+      }
+    }
+
+    // --- eliminate -----------------------------------------------------------
+    for (let i = k + 1; i < n; i++) {
+      const aik = M[i][k];
+      const akk = M[k][k];
+      const m = aik / akk;
+      if (Math.abs(m) < 1e-15) continue;
+      const row = M[i].map((v, j) => v - m * M[k][j]);
+      M[i] = row;
+      const num = Math.abs(aik);
+      const den = Math.abs(akk);
+      const ratio = -aik / akk; // the teacher's form: R_i + (ratio) R_k
+      const op = ratio < 0 ? '-' : '+';
+      steps.push(
+        `R_{${i + 1}}' = R_{${i + 1}} ${op} \\left(\\frac{${fmt(num)}}{${fmt(den)}}\\right) R_{${k + 1}} = R_{${i + 1}} ${op} ${fmt(Math.abs(ratio))} R_{${k + 1}}`,
+      );
+      steps.push(`R_{${i + 1}}' = ${augTex([row])}`);
+    }
+  }
+
+  steps.push(`\\text{Upper triangular form: } ${augTex(M)}`);
+  if (usedPivoting) steps.push('\\text{(A row interchange was needed — partial pivoting was applied.)}');
+
+  // --- back substitution -----------------------------------------------------
+  const x = new Array(n).fill(0);
+  for (let i = n - 1; i >= 0; i--) {
+    let s = M[i][n];
+    for (let j = i + 1; j < n; j++) s -= M[i][j] * x[j];
+    x[i] = s / M[i][i];
+    const terms = [];
+    for (let j = i + 1; j < n; j++) {
+      const c = M[i][j];
+      terms.push(c < 0 ? `+ ${fmt(-c)}\\,x_{${j + 1}}` : `- ${fmt(c)}\\,x_{${j + 1}}`);
+    }
+    steps.push(
+      `x_{${i + 1}} = \\frac{${fmt(M[i][n])}${terms.length ? ' ' + terms.join(' ') : ''}}{${fmt(M[i][i])}} = ${fmt(x[i])}`,
+    );
+  }
+  steps.push(`\\boxed{x_1 = ${fmt(x[0])},\\quad x_2 = ${fmt(x[1])},\\quad x_3 = ${fmt(x[2])}}`);
+  return { result: { x, matrix: M, pivoted: usedPivoting }, steps };
+}
+
+// Gauss-Jordan: normalise the pivot row first, then eliminate, until the matrix is
+// reduced row echelon (the identity for a square matrix). No back substitution.
+export function gaussJordan({ A, b }) {
+  const n = A.length;
+  const M = A.map((row, i) => [...row, b[i]]);
+  const steps = [`\\text{Start: } ${augTex(M)}`];
+  for (let k = 0; k < n; k++) {
+    if (Math.abs(M[k][k]) < 1e-12) {
+      let r = k;
+      for (let i = k + 1; i < n; i++) if (Math.abs(M[i][k]) > Math.abs(M[r][k])) r = i;
+      if (r === k) throw new Error(`Zero pivot in column ${k + 1}; the matrix is singular.`);
+      [M[k], M[r]] = [M[r], M[k]];
+      steps.push(`\\text{Swap } R_{${k + 1}} \\text{ and } R_{${r + 1}}: ${augTex(M)}`);
+    }
+    const p = M[k][k];
+    if (Math.abs(p - 1) > 1e-12) {
+      M[k] = M[k].map((v) => v / p);
+      steps.push(`\\text{Normalise the pivot row: } R_{${k + 1}} \\leftarrow \\frac{1}{${fmt(p)}} R_{${k + 1}}`);
+      steps.push(`R_{${k + 1}} = ${augTex([M[k]])}`);
+    }
+    for (let i = 0; i < n; i++) {
+      if (i === k || Math.abs(M[i][k]) < 1e-15) continue;
+      const m = M[i][k];
+      M[i] = M[i].map((v, j) => v - m * M[k][j]);
+      steps.push(`R_{${i + 1}} \\leftarrow R_{${i + 1}} ${m < 0 ? '+' : '-'} ${fmt(Math.abs(m))} R_{${k + 1}}`);
+      steps.push(`R_{${i + 1}} = ${augTex([M[i]])}`);
+    }
+  }
+  steps.push(`\\text{Reduced row echelon form: } ${augTex(M)}`);
+  const x = M.map((r) => r[n]);
+  steps.push(`\\boxed{x_1 = ${fmt(x[0])},\\quad x_2 = ${fmt(x[1])},\\quad x_3 = ${fmt(x[2])}}`);
+  return { result: { x, matrix: M }, steps };
+}
+
+// Do-Little LU factorisation (L has ones on the diagonal), exactly as the LU slides do it.
+export function luDecompose({ A }) {
+  const n = A.length;
+  const L = Array.from({ length: n }, () => new Array(n).fill(0));
+  const U = Array.from({ length: n }, () => new Array(n).fill(0));
+  const steps = [`A = ${tex(A)} = L\\,U, \\qquad L = ${tex(L)} ,\\; U = ${tex(U)}`];
+  for (let i = 0; i < n; i++) L[i][i] = 1;
+
+  for (let j = 0; j < n; j++) {
+    U[0][j] = A[0][j];
+  }
+  steps.push(`u_{11} = a_{11} = ${fmt(A[0][0])}, \\quad u_{12} = a_{12} = ${fmt(A[0][1])}, \\quad u_{13} = a_{13} = ${fmt(A[0][2])}`);
+
+  if (n > 1) {
+    L[1][0] = A[1][0] / U[0][0];
+    steps.push(`l_{21} = \\frac{a_{21}}{u_{11}} = \\frac{${fmt(A[1][0])}}{${fmt(U[0][0])}} = ${fmt(L[1][0])}`);
+  }
+  if (n > 2) {
+    L[2][0] = A[2][0] / U[0][0];
+    steps.push(`l_{31} = \\frac{a_{31}}{u_{11}} = \\frac{${fmt(A[2][0])}}{${fmt(U[0][0])}} = ${fmt(L[2][0])}`);
+  }
+  for (let i = 1; i < n; i++) {
+    for (let j = i; j < n; j++) {
+      let s = A[i][j];
+      const parts = [];
+      for (let k = 0; k < i; k++) {
+        parts.push(`(${fmt(L[i][k])})(${fmt(U[k][j])})`);
+        s -= L[i][k] * U[k][j];
+      }
+      U[i][j] = s;
+      const names = [];
+      for (let k = 0; k < i; k++) names.push(`l_{${i + 1}${k + 1}}u_{${k + 1}${j + 1}}`);
+      steps.push(
+        `u_{${i + 1}${j + 1}} = a_{${i + 1}${j + 1}} ${names.length ? '- ' + names.join(' - ') : ''} = ${fmt(A[i][j])} ${parts.length ? '- ' + parts.join(' - ') : ''} = ${fmt(U[i][j])}`,
+      );
+    }
+    if (i < n - 1) {
+      for (let j = i; j < n - 1; j++) {
+        let s = A[j + 1][i];
+        const parts = [];
+        for (let k = 0; k < i; k++) {
+          parts.push(`(${fmt(L[j + 1][k])})(${fmt(U[k][i])})`);
+          s -= L[j + 1][k] * U[k][i];
+        }
+        L[j + 1][i] = s / U[i][i];
+        const names = [];
+        for (let k = 0; k < i; k++) names.push(`l_{${j + 2}${k + 1}}u_{${k + 1}${i + 1}}`);
+        steps.push(
+          `l_{${j + 2}${i + 1}} = \\frac{a_{${j + 2}${i + 1}} ${names.length ? '- ' + names.join(' - ') : ''}}{u_{${i + 1}${i + 1}}} = \\frac{${fmt(A[j + 1][i])} ${parts.length ? '- ' + parts.join(' - ') : ''}}{${fmt(U[i][i])}} = ${fmt(L[j + 1][i])}`,
+        );
+      }
+    }
+  }
+  steps.push(`L = ${tex(L)}`);
+  steps.push(`U = ${tex(U)}`);
+  steps.push(`\\text{Check: } L\\,U = ${tex(mul(L, U))}`);
+  return { result: { L, U }, steps };
+}
+
+// Solve with the LU factors: forward substitution for d, then backward substitution for x.
+export function luSolve({ A, b }) {
+  const { L, U } = luDecompose({ A }).result;
+  const n = A.length;
+  const steps = [`[L]\\{d\\} = \\{b\\} \\quad\\text{(forward substitution)}`];
+  const d = new Array(n).fill(0);
+  for (let i = 0; i < n; i++) {
+    let s = b[i];
+    const terms = [];
+    for (let k = 0; k < i; k++) {
+      const c = L[i][k];
+      terms.push(c < 0 ? `+ ${fmt(-c)}d_{${k + 1}}` : `- ${fmt(c)}d_{${k + 1}}`);
+      s -= c * d[k];
+    }
+    d[i] = s / L[i][i];
+    steps.push(`d_{${i + 1}} = \\frac{${fmt(b[i])}${terms.length ? ' ' + terms.join(' ') : ''}}{${fmt(L[i][i])}} = ${fmt(d[i])}`);
+  }
+  steps.push(`[U]\\{x\\} = \\{d\\} \\quad\\text{(backward substitution)}`);
+  const x = new Array(n).fill(0);
+  for (let i = n - 1; i >= 0; i--) {
+    let s = d[i];
+    const terms = [];
+    for (let k = i + 1; k < n; k++) {
+      const c = U[i][k];
+      terms.push(c < 0 ? `+ ${fmt(-c)}x_{${k + 1}}` : `- ${fmt(c)}x_{${k + 1}}`);
+      s -= c * x[k];
+    }
+    x[i] = s / U[i][i];
+    steps.push(`x_{${i + 1}} = \\frac{${fmt(d[i])}${terms.length ? ' ' + terms.join(' ') : ''}}{${fmt(U[i][i])}} = ${fmt(x[i])}`);
+  }
+  steps.push(`\\boxed{x_1 = ${fmt(x[0])},\\quad x_2 = ${fmt(x[1])},\\quad x_3 = ${fmt(x[2])}}`);
+  return { result: { x, L, U, d }, steps };
+}
+
+// Is the system diagonally dominant? (rule 5: check this before iterating)
+export function diagonalDominance({ A }) {
+  const n = A.length;
+  const rows = A.map((row, i) => {
+    const diag = Math.abs(row[i]);
+    const off = row.reduce((s, v, j) => s + (j === i ? 0 : Math.abs(v)), 0);
+    return { row: i + 1, diag, off, dominant: diag > off };
+  });
+  const dominant = rows.every((r) => r.dominant);
+  const steps = rows.map(
+    (r) => `\\text{Row } ${r.row}: \\;|a_{${r.row}${r.row}}| = ${fmt(r.diag)} ${r.dominant ? '>' : '\\le'} \\sum_{j \\ne ${r.row}} |a_{${r.row}j}| = ${fmt(r.off)}`,
+  );
+  steps.push(
+    dominant
+      ? '\\text{The system is diagonally dominant — the iteration will converge.}'
+      : '\\text{The system is NOT diagonally dominant as written. Rearrange the equations before iterating, or the iterates will diverge.}',
+  );
+  return { result: { rows, dominant }, steps };
+}
+
+// Jacobi and Gauss-Seidel: iteration tables.
+function iterate({ A, b, x0, tol, maxIter, mode }) {
+  const n = A.length;
+  const dom = diagonalDominance({ A });
+  const steps = [];
+  steps.push('\\textbf{Step 1: check diagonal dominance}');
+  steps.push(...dom.steps);
+  if (!dom.result.dominant) {
+    steps.push('\\text{Warning: the iteration below may diverge on this arrangement of the equations.}');
+  }
+  const names = ['x', 'y', 'z'];
+  const isolated = A.map((row, i) => {
+    const parts = [];
+    for (let j = 0; j < n; j++) if (j !== i) parts.push(`${fmt(row[j])}${names[j]}`);
+    return `\\frac{${fmt(b[i])}${parts.length ? ' - ' + parts.join(' - ') : ''}}{${fmt(row[i])}}`;
+  });
+  steps.push('\\textbf{Step 2: rewrite each equation with its own variable isolated}');
+  steps.push(isolated.map((s, i) => `${names[i]}^{(k+1)} = ${s}`).join(' \\\\ '));
+  steps.push('\\textbf{Step 3: iterate}');
+
+  let x = x0 ? [...x0] : A.map((row, i) => b[i] / row[i]);
+  steps.push(`\\text{Starting vector: } ${x.map((v, i) => `${names[i]}^{(0)} = ${fmt(v)}`).join(', ')}`);
+  const table = [{ k: 0, x: [...x] }];
+  const lines = [];
+  for (let it = 1; it <= maxIter; it++) {
+    const prev = [...x];
+    const next = [...x];
+    for (let i = 0; i < n; i++) {
+      let s = b[i];
+      if (mode === 'jacobi') {
+        for (let j = 0; j < n; j++) if (j !== i) s -= A[i][j] * prev[j];
+      } else {
+        for (let j = 0; j < n; j++) if (j !== i) s -= A[i][j] * next[j];
+      }
+      next[i] = s / A[i][i];
+    }
+    x = next;
+    table.push({ k: it, x: [...x] });
+    lines.push(
+      `${names.map((nm, i) => `${nm}^{(${it})} = ${fmt(x[i])}`).join(', \\quad ')}`,
+    );
+    if (Math.max(...x.map((v, i) => Math.abs(v - prev[i]))) < tol) {
+      steps.push(`\\text{Iteration } ${it}: ${lines[lines.length - 1]}`);
+      steps.push(`\\text{Change} < ${tol} \\Rightarrow \\text{stop.} `);
+      break;
+    }
+  }
+  steps.push(...lines.map((l, i) => `\\text{Iteration } ${i + 1}: ${l}`));
+  steps.push(`\\boxed{${names.map((nm, i) => `${nm} = ${fmt(x[i])}`).join(', \\quad ')}}`);
+  return { result: { x, table, dominant: dom.result.dominant }, steps };
+}
+
+export function jacobi({ A, b, x0, tol = 1e-6, maxIter = 20 }) {
+  return iterate({ A, b, x0, tol, maxIter, mode: 'jacobi' });
+}
+
+export function gaussSeidel({ A, b, x0, tol = 1e-6, maxIter = 20 }) {
+  return iterate({ A, b, x0, tol, maxIter, mode: 'seidel' });
+}
+
+// ---------------------------------------------------------------- roots of equations
+
+export function bisection({ expr, a, b, tol = 0.001, maxIter = 50 }) {
+  const f = compile(expr);
+  const steps = [`f(x) = ${expr}, \\qquad f(${fmt(a)}) = ${fmt(f(a))}, \\quad f(${fmt(b)}) = ${fmt(f(b))}`];
+  let lo = a, hi = b;
+  let flo = f(lo), fhi = f(hi);
+  if (flo * fhi > 0) throw new Error('f(a) and f(b) have the same sign — there is no root between them.');
+  steps.push('\\textbf{Iteration table}');
+  let mid = lo;
+  for (let it = 1; it <= maxIter; it++) {
+    mid = (lo + hi) / 2;
+    const fm = f(mid);
+    steps.push(`\\text{It } ${it}: \\; c = \\frac{${fmt(lo)} + ${fmt(hi)}}{2} = ${fmt(mid)}, \\; f(c) = ${fmt(fm)}`);
+    if (flo * fm < 0) { hi = mid; fhi = fm; } else { lo = mid; flo = fm; }
+    if (Math.abs(hi - lo) < tol) { steps.push(`\\text{Interval width} < ${tol} \\Rightarrow \\text{stop.}`); break; }
+  }
+  mid = (lo + hi) / 2;
+  steps.push(`\\boxed{x \\approx ${fmt(mid)}}`);
+  return { result: { root: mid, a: lo, b: hi }, steps };
+}
+
+export function newtonRaphson({ expr, x0, tol = 0.001, maxIter = 50 }) {
+  const f = compile(expr);
+  const h = 1e-7;
+  const df = (x) => (f(x + h) - f(x - h)) / (2 * h);
+  const steps = [`f(x) = ${expr}, \\qquad f'(x) \\approx \\frac{f(x + h) - f(x - h)}{2h}, \\; h = 10^{-7}`];
+  let x = x0;
+  steps.push(`\\textbf{Iteration table} (x_0 = ${fmt(x)})`);
+  for (let it = 1; it <= maxIter; it++) {
+    const fx = f(x);
+    const dfx = df(x);
+    const next = x - fx / dfx;
+    steps.push(`\\text{It } ${it}: \\; x_{${it}} = ${fmt(x)} - \\frac{${fmt(fx)}}{${fmt(dfx)}} = ${fmt(next)}`);
+    if (Math.abs(next - x) < tol) { x = next; steps.push(`|\\Delta x| < ${tol} \\Rightarrow \\text{stop.}`); break; }
+    x = next;
+  }
+  steps.push(`\\boxed{x \\approx ${fmt(x)}}`);
+  return { result: { root: x }, steps };
+}
+
+export function secant({ expr, x0, x1, tol = 0.001, maxIter = 50 }) {
+  const f = compile(expr);
+  const steps = [`f(x) = ${expr}`];
+  let a = x0, b = x1;
+  steps.push(`\\textbf{Iteration table} (x_0 = ${fmt(a)}, x_1 = ${fmt(b)})`);
+  for (let it = 2; it <= maxIter; it++) {
+    const fa = f(a), fb = f(b);
+    if (Math.abs(fb - fa) < 1e-14) throw new Error('The two starting points give the same function value.');
+    const c = (a * fb - b * fa) / (fb - fa);
+    steps.push(`\\text{It } ${it}: \\; x_{${it}} = \\frac{${fmt(a)}(${fmt(fb)}) - ${fmt(b)}(${fmt(fa)})}{${fmt(fb)} - ${fmt(fa)}} = ${fmt(c)}`);
+    a = b; b = c;
+    if (Math.abs(c - a) < tol) { steps.push(`|\\Delta x| < ${tol} \\Rightarrow \\text{stop.}`); break; }
+  }
+  steps.push(`\\boxed{x \\approx ${fmt(b)}}`);
+  return { result: { root: b }, steps };
+}
+
+// Horner's rule: value of a polynomial and its quotient after dividing by (x - r).
+export function horner({ coeffs, r }) {
+  const c = coeffs.map(Number);
+  const steps = [];
+  const bs = [c[0]];
+  steps.push(`b_0 = a_0 = ${fmt(bs[0])}`);
+  for (let i = 1; i < c.length; i++) {
+    const next = c[i] + r * bs[i - 1];
+    bs.push(next);
+    steps.push(`b_${i} = a_${i} + r\\,b_{${i - 1}} = ${fmt(c[i])} + ${fmt(r)}(${fmt(bs[i - 1])}) = ${fmt(next)}`);
+  }
+  const q = bs.slice(0, -1);
+  steps.push(`\\text{Quotient coefficients: } ${q.map((v, i) => `b_${i} = ${fmt(v)}`).join(', ')}`);
+  steps.push(`p(${fmt(r)}) = b_${c.length - 1} = ${fmt(bs[c.length - 1])}`);
+  const deg = q.length - 1;
+  const qTex = q.map((v, i) => `${fmt(v)}x^{${deg - i}}`).join(' + ');
+  steps.push(`\\boxed{p(x) = (x - ${fmt(r)})\\left[${qTex}\\right] + ${fmt(bs[c.length - 1])}}`);
+  return { result: { value: bs[c.length - 1], quotient: q }, steps };
+}
+
+// ---------------------------------------------------------------- interpolation
+
+const diffTable = (ys) => {
+  const cols = [ys];
+  let cur = ys;
+  while (cur.length > 1) {
+    cur = cur.slice(1).map((v, i) => v - cur[i]);
+    cols.push(cur);
+  }
+  return cols;
+};
+
+// Newton's forward (Gregory) formula for equally spaced points.
+export function newtonForward({ xs, ys, x }) {
+  const h = xs[1] - xs[0];
+  const cols = diffTable(ys);
+  const u = (x - xs[0]) / h;
+  const steps = [`\\textbf{Difference table}`];
+  const head = cols.map((_, k) => `\\Delta^{${k}}`);
+  steps.push(
+    '\\begin{array}{c|' + 'c'.repeat(cols.length) + '} \\hline ' +
+    head.join(' & ') + ' \\\\ \\hline ' +
+    cols.map((c) => c.map((v) => fmt(v)).join(' & ')).join(' \\\\ ') + ' \\end{array}',
+  );
+  const terms = [];
+  let sum = 0;
+  for (let k = 0; k < cols.length; k++) {
+    const c = cols[k][0];
+    let t = c;
+    for (let j = 1; j <= k; j++) t *= (u - (j - 1)) / j;
+    sum += t;
+    terms.push(`\\frac{${fmt(c)}}{${k}!}(${fmt(u)})^{\\underline{${k}}}`);
+  }
+  steps.push(`u = \\frac{x - x_0}{h} = \\frac{${fmt(x)} - ${fmt(xs[0])}}{${fmt(h)}} = ${fmt(u)}`);
+  steps.push(`y(x) = ${terms.join(' + ')}`);
+  steps.push(`\\boxed{y(${fmt(x)}) = ${fmt(sum)}}`);
+  return { result: { y: sum, table: cols, u }, steps };
+}
+
+// Lagrange's formula for unequal intervals.
+export function lagrange({ xs, ys, x }) {
+  const n = xs.length;
+  const parts = [];
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    let num = 1, den = 1;
+    for (let j = 0; j < n; j++) {
+      if (j === i) continue;
+      num *= x - xs[j];
+      den *= xs[i] - xs[j];
+    }
+    const v = (ys[i] * num) / den;
+    sum += v;
+    const numT = Array.from({ length: n - 1 }, (_, j) => j === i ? '' : `(x - ${fmt(xs[j])})`).filter(Boolean).join('');
+    const denT = Array.from({ length: n - 1 }, (_, j) => j === i ? '' : `(${fmt(xs[i])} - ${fmt(xs[j])})`).filter(Boolean).join('');
+    parts.push(`${fmt(ys[i])}\\frac{${numT}}{${denT}}`);
+  }
+  const steps = [`y(x) = \\sum_{i=0}^{${n - 1}} y_i \\prod_{j \\ne i} \\frac{x - x_j}{x_i - x_j}`];
+  steps.push(parts.join(' + '));
+  steps.push(`\\boxed{y(${fmt(x)}) = ${fmt(sum)}}`);
+  return { result: { y: sum }, steps };
+}
+
+// Newton's divided-difference formula (unequal intervals).
+export function dividedDifference({ xs, ys, x }) {
+  const n = xs.length;
+  const cols = [ys];
+  for (let k = 1; k < n; k++) {
+    const prev = cols[k - 1];
+    const cur = [];
+    for (let i = 0; i < prev.length - 1; i++) {
+      cur.push((prev[i + 1] - prev[i]) / (xs[i + k] - xs[i]));
+    }
+    cols.push(cur);
+  }
+  const steps = ['\\textbf{Divided-difference table}'];
+  steps.push(
+    '\\begin{array}{c|' + 'c'.repeat(n) + '} \\hline ' +
+    cols.map((_, k) => `f[${k}]`).join(' & ') + ' \\\\ \\hline ' +
+    cols.map((c) => c.map((v) => fmt(v)).join(' & ')).join(' \\\\ ') + ' \\end{array}',
+  );
+  const terms = [];
+  let sum = ys[0];
+  terms.push(`${fmt(ys[0])}`);
+  for (let k = 1; k < n; k++) {
+    let t = cols[k][0];
+    for (let j = 0; j < k; j++) t *= x - xs[j];
+    sum += t;
+    terms.push(`${fmt(cols[k][0])}${Array.from({ length: k }, (_, j) => `(x - ${fmt(xs[j])})`).join('')}`);
+  }
+  steps.push(`f(x) = ${terms.join(' + ')}`);
+  steps.push(`\\boxed{f(${fmt(x)}) = ${fmt(sum)}}`);
+  return { result: { y: sum, table: cols }, steps };
+}
+
+// ---------------------------------------------------------------- differentiation
+
+// method: 'forward2' | 'forward3' | 'backward2' | 'backward3' | 'central2' | 'central3'
+export function differentiate({ xs, ys, x, method = 'central2' }) {
+  const i = xs.indexOf(x);
+  const h = xs[1] - xs[0];
+  const at = (k) => (k >= 0 && k < xs.length ? ys[k] : NaN);
+  const steps = [];
+  let f = null, order = '';
+  if (method === 'forward2') {
+    order = 'O(h)';
+    f = (at(i + 1) - at(i)) / h;
+    steps.push(`f'(${fmt(x)}) = \\frac{f(x + h) - f(x)}{h} = \\frac{${fmt(at(i + 1))} - ${fmt(at(i))}}{${fmt(h)}} = ${fmt(f)}`);
+  } else if (method === 'forward3') {
+    order = 'O(h^2)';
+    f = (-3 * at(i) + 4 * at(i + 1) - at(i + 2)) / (2 * h);
+    steps.push(`f'(${fmt(x)}) = \\frac{-3f(x) + 4f(x + h) - f(x + 2h)}{2h} = \\frac{${fmt(-3 * at(i))} + ${fmt(4 * at(i + 1))} - ${fmt(at(i + 2))}}{${fmt(2 * h)}} = ${fmt(f)}`);
+  } else if (method === 'backward2') {
+    order = 'O(h)';
+    f = (at(i) - at(i - 1)) / h;
+    steps.push(`f'(${fmt(x)}) = \\frac{f(x) - f(x - h)}{h} = ${fmt(f)}`);
+  } else if (method === 'backward3') {
+    order = 'O(h^2)';
+    f = (3 * at(i) - 4 * at(i - 1) + at(i - 2)) / (2 * h);
+    steps.push(`f'(${fmt(x)}) = \\frac{3f(x) - 4f(x - h) + f(x - 2h)}{2h} = ${fmt(f)}`);
+  } else if (method === 'central2') {
+    order = 'O(h^2)';
+    f = (at(i + 1) - at(i - 1)) / (2 * h);
+    steps.push(`f'(${fmt(x)}) = \\frac{f(x + h) - f(x - h)}{2h} = \\frac{${fmt(at(i + 1))} - ${fmt(at(i - 1))}}{${fmt(2 * h)}} = ${fmt(f)}`);
+  } else if (method === 'central3') {
+    order = 'O(h^4)';
+    f = (-at(i + 2) + 8 * at(i + 1) - 8 * at(i - 1) + at(i - 2)) / (12 * h);
+    steps.push(`f'(${fmt(x)}) = \\frac{-f(x + 2h) + 8f(x + h) - 8f(x - h) + f(x - 2h)}{12h} = ${fmt(f)}`);
+  } else if (method === 'secondCentral') {
+    order = 'O(h^2)';
+    f = (at(i + 1) - 2 * at(i) + at(i - 1)) / (h * h);
+    steps.push(`f''(${fmt(x)}) = \\frac{f(x + h) - 2f(x) + f(x - h)}{h^2} = ${fmt(f)}`);
+  }
+  steps.push(`\\text{Error order: } ${order}`);
+  return { result: { derivative: f, order }, steps };
+}
+
+// Richardson extrapolation from two step sizes h and h/2 (central differences).
+export function richardson({ expr, x, h }) {
+  const f = compile(expr);
+  const steps = [];
+  const d = (hh) => (f(x + hh) - f(x - hh)) / (2 * hh);
+  const d1 = d(h), d2 = d(h / 2);
+  const R = (4 * d2 - d1) / 3;
+  steps.push(`D(h) = \\frac{f(x + h) - f(x - h)}{2h} = ${fmt(d1)} \\quad (O(h^2))`);
+  steps.push(`D(h/2) = ${fmt(d2)} \\quad (O(h^2))`);
+  steps.push(`R = \\frac{4D(h/2) - D(h)}{3} = \\frac{4(${fmt(d2)}) - (${fmt(d1)})}{3} = ${fmt(R)} \\quad (O(h^4))`);
+  steps.push(`\\boxed{f'(${fmt(x)}) \\approx ${fmt(R)}}`);
+  return { result: { coarse: d1, fine: d2, richardson: R }, steps };
+}
+
+// ---------------------------------------------------------------- integration
+
+export function integrate({ xs, ys, method = 'trapezoid' }) {
+  const n = xs.length;
+  const N = n - 1; // number of subintervals
+  const h = xs[1] - xs[0];
+  const steps = [`h = x_1 - x_0 = ${fmt(h)}, \\quad n = ${N} \\text{ subintervals}`];
+  let value = 0;
+  if (method === 'trapezoid') {
+    let s = (ys[0] + ys[n - 1]) / 2 + ys.slice(1, n - 1).reduce((a, b) => a + b, 0);
+    value = h * s;
+    steps.push(`\\textbf{Trapezoidal rule: } I \\approx \\frac{h}{2}\\left[y_0 + 2(y_1 + \\cdots + y_{n-1}) + y_n\\right]`);
+    steps.push(`I \\approx ${fmt(h)}(${fmt(ys[0])} + 2(${ys.slice(1, n - 1).map((v) => fmt(v)).join(' + ')}) + ${fmt(ys[n - 1])}) = ${fmt(value)}`);
+    steps.push('\\text{Error: } -\\frac{(b - a)h^2}{12}f\'\'(\\xi)');
+  } else if (method === 'simpson13') {
+    if (N % 2 !== 0) throw new Error('Simpson\'s 1/3 rule needs an even number of subintervals.');
+    let s = ys[0] + ys[n - 1];
+    for (let i = 1; i < n - 1; i++) s += (i % 2 ? 4 : 2) * ys[i];
+    value = (h / 3) * s;
+    steps.push('\\textbf{Simpson\'s 1/3 rule: } I \\approx \\frac{h}{3}\\left[y_0 + 4(y_1 + y_3 + \\cdots) + 2(y_2 + y_4 + \\cdots) + y_n\\right]');
+    steps.push(`I \\approx \\frac{${fmt(h)}}{3}\\left[${fmt(ys[0])} + 4(${oddOrEven(ys, n, true)}) + 2(${oddOrEven(ys, n, false)}) + ${fmt(ys[n - 1])}\\right] = ${fmt(value)}`);
+    steps.push('\\text{Error: } -\\frac{(b - a)h^4}{180}f^{(4)}(\\xi)');
+  } else if (method === 'simpson38') {
+    if (N % 3 !== 0) throw new Error('Simpson\'s 3/8 rule needs a multiple of three subintervals.');
+    let s = 3 * ys[0] + 3 * ys[n - 1];
+    for (let i = 1; i < n - 1; i++) s += 3 * ys[i];
+    value = (3 * h / 8) * s;
+    steps.push('\\textbf{Simpson\'s 3/8 rule: } I \\approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + \\cdots + y_{n-1}) + y_n\\right]');
+    steps.push(`I \\approx \\frac{3(${fmt(h)})}{8}\\left[${fmt(ys[0])} + 3(${ys.slice(1, n - 1).map((v) => fmt(v)).join(' + ')}) + ${fmt(ys[n - 1])}\\right] = ${fmt(value)}`);
+    steps.push('\\text{Error: } -\\frac{3(b - a)h^4}{80}f^{(4)}(\\xi)');
+  } else if (method === 'weddle') {
+    if (N % 6 !== 0) throw new Error("Weddle's rule needs a multiple of six subintervals.");
+    const pattern = [1, 5, 1, 6, 1, 5];
+    let s = 0;
+    for (let i = 0; i < n; i++) s += pattern[i % 6] * ys[i];
+    value = (3 * h / 10) * s;
+    steps.push("\\textbf{Weddle's rule: } I \\approx \\frac{3h}{10}\\left[y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + y_6 + \\cdots + y_n\\right]");
+    steps.push(`I \\approx \\frac{3(${fmt(h)})}{10}\\left[${fmt(ys[0])} + 5(${fmt(ys[1])}) + ${fmt(ys[2])} + 6(${fmt(ys[3])}) + ${fmt(ys[4])} + 5(${fmt(ys[5])}) + ${fmt(ys[6])}\\right] = ${fmt(value)}`);
+    steps.push('\\text{Error: } -\\frac{h^7}{140}f^{(6)}(\\xi)');
+  } else if (method === 'compositeTrapezoid') {
+    value = h * ((ys[0] + ys[n - 1]) / 2 + ys.slice(1, n - 1).reduce((a, b) => a + b, 0));
+    steps.push('\\textbf{Composite trapezoidal rule} (the single trapezoidal rule applied to each pair):');
+    steps.push(`I \\approx ${fmt(value)}`);
+  } else if (method === 'compositeSimpson13') {
+    if (N % 2 !== 0) throw new Error('Composite Simpson\'s 1/3 rule needs an even number of subintervals.');
+    let s = ys[0] + ys[n - 1];
+    for (let i = 1; i < n - 1; i++) s += (i % 2 ? 4 : 2) * ys[i];
+    value = (h / 3) * s;
+    steps.push('\\textbf{Composite Simpson\'s 1/3 rule}:');
+    steps.push(`I \\approx ${fmt(value)}`);
+  }
+  steps.push(`\\boxed{I \\approx ${fmt(value)}}`);
+  return { result: { value }, steps };
+}
+
+const oddOrEven = (ys, n, odd) =>
+  ys.slice(1, n - 1).filter((_, i) => (i + 1) % 2 === (odd ? 1 : 0)).map((v) => fmt(v)).join(' + ');
+
+// Romberg integration: trapezoidal rule refined, then Richardson on each column.
+export function romberg({ expr, a, b, n = 8 }) {
+  const f = compile(expr);
+  const steps = [];
+  const table = [];
+  for (let k = 0; k <= Math.log2(n); k++) {
+    const m = 2 ** k;
+    const h = (b - a) / m;
+    let s = (f(a) + f(b)) / 2;
+    for (let i = 1; i < m; i++) s += f(a + i * h);
+    table[k] = [h * s];
+    if (k > 0) {
+      for (let j = 1; j <= k; j++) {
+        const prev = table[k - 1][j - 1];
+        const cur = table[k][j - 1];
+        table[k][j] = cur + (cur - prev) / (4 ** j - 1);
+      }
+    }
+  }
+  steps.push('\\textbf{Romberg table} (first column = trapezoidal, each later column = Richardson extrapolation)');
+  steps.push(
+    '\\begin{array}{c|' + 'c'.repeat(table.length) + '} \\hline ' +
+    table.map((_, k) => `R_{${k}}`).join(' & ') + ' \\\\ \\hline ' +
+    table.map((r) => r.map((v) => fmt(v)).join(' & ')).join(' \\\\ ') + ' \\end{array}',
+  );
+  const last = table[table.length - 1];
+  steps.push(`\\boxed{I \\approx R_{${table.length - 1},${table.length - 1}} = ${fmt(last[last.length - 1])}}`);
+  return { result: { value: last[last.length - 1], table }, steps };
+}
+
+// ---------------------------------------------------------------- regression
+
+// Least squares straight line y = a + b x, from the normal equations.
+export function leastSquares({ xs, ys }) {
+  const n = xs.length;
+  let sx = 0, sy = 0, sxx = 0, sxy = 0;
+  xs.forEach((x, i) => { sx += x; sy += ys[i]; sxx += x * x; sxy += x * ys[i]; });
+  const b = (n * sxy - sx * sy) / (n * sxx - sx * sx);
+  const a = (sy - b * sx) / n;
+  const ybar = sy / n;
+  const sst = ys.reduce((s, y) => s + (y - ybar) ** 2, 0);
+  const sse = ys.reduce((s, y, i) => s + (y - (a + b * xs[i])) ** 2, 0);
+  const r2 = 1 - sse / sst;
+  const steps = [
+    '\\textbf{Normal equations} \\; \\sum y = na + b\\sum x, \\quad \\sum xy = a\\sum x + b\\sum x^2',
+    `\\sum x = ${fmt(sx)}, \\; \\sum y = ${fmt(sy)}, \\; \\sum x^2 = ${fmt(sxx)}, \\; \\sum xy = ${fmt(sxy)}, \\; n = ${n}`,
+    `b = \\frac{n\\sum xy - \\sum x \\sum y}{n\\sum x^2 - (\\sum x)^2} = \\frac{${n}(${fmt(sxy)}) - (${fmt(sx)})(${fmt(sy)})}{${n}(${fmt(sxx)}) - (${fmt(sx)})^2} = ${fmt(b)}`,
+    `a = \\bar{y} - b\\bar{x} = ${fmt(ybar)} - (${fmt(b)})(${fmt(sx / n)}) = ${fmt(a)}`,
+    `\\boxed{y = ${fmt(a)} ${b < 0 ? '-' : '+'} ${fmt(Math.abs(b))}x}`,
+    `\\text{Coefficient of determination: } R^2 = 1 - \\frac{SSE}{SST} = ${fmt(r2)}`,
+  ];
+  return { result: { a, b, r2 }, steps };
+}
+
+// Power law fit y = a x^b via log-log linear regression.
+export function powerLawFit({ xs, ys }) {
+  const lx = xs.map((x) => Math.log(x));
+  const ly = ys.map((y) => Math.log(y));
+  const { a: la, b: lb } = leastSquares({ xs: lx, ys: ly }).result;
+  const a = Math.exp(la);
+  const steps = [
+    'Take logs: \\; \\ln y = \\ln a + b\\ln x, \\text{ so fit a straight line to } (\\ln x, \\ln y).',
+    `b = ${fmt(lb)}, \\quad \\ln a = ${fmt(la)} \\Rightarrow a = e^{${fmt(la)}} = ${fmt(a)}`,
+    `\\boxed{y = ${fmt(a)}\\,x^{${fmt(lb)}}}`,
+  ];
+  return { result: { a, b: lb }, steps };
+}
+
+// Gradient descent on a polynomial regression: mode 'batch' or 'single'.
+export function gradientDescent({ xs, ys, degree = 1, theta0 = [0, 0], alpha = 0.01, epochs = 5, mode = 'batch' }) {
+  const d = degree + 1;
+  let theta = [...theta0];
+  const names = ['\\theta_0', '\\theta_1', '\\theta_2'];
+  const basis = (x) => Array.from({ length: d }, (_, k) => x ** k);
+  const predict = (x, t) => basis(x).reduce((s, b, k) => s + b * t[k], 0);
+  const steps = [];
+  steps.push(
+    mode === 'batch'
+      ? '\\textbf{Batch mode}: the parameters are updated once per epoch, after the whole table has been used.'
+      : '\\textbf{Single mode}: the parameters are updated after every row; drop the \\sum symbol.',
+  );
+  steps.push(
+    `\\text{Cost: } J(\\theta) = \\frac{1}{2m}\\sum_{i=1}^{m}\\left(H_\\theta(x^{(i)}) - y^{(i)}\\right)^2`,
+  );
+  steps.push(
+    `\\text{Update: } \\theta_j \\leftarrow \\theta_j - \\alpha\\frac{\\partial J}{\\partial \\theta_j}, \\qquad \\alpha = ${fmt(alpha)}`,
+  );
+  steps.push(
+    `\\frac{\\partial J}{\\partial \\theta_j} = ${mode === 'batch' ? '\\frac{1}{m}\\sum' : ''}(H_\\theta(x^{(i)}) - y^{(i)})\\,x^{(i)}_j`,
+  );
+  const m = xs.length;
+  const rows = [];
+  for (let e = 1; e <= epochs; e++) {
+    const grad = new Array(d).fill(0);
+    const line = [];
+    for (let i = 0; i < m; i++) {
+      const err = predict(xs[i], theta) - ys[i];
+      const b = basis(xs[i]);
+      if (mode === 'batch') {
+        for (let j = 0; j < d; j++) grad[j] += err * b[j];
+      } else {
+        for (let j = 0; j < d; j++) grad[j] = err * b[j];
+        for (let j = 0; j < d; j++) theta[j] -= alpha * grad[j];
+        line.push(`  (x=${fmt(xs[i])}, y=${fmt(ys[i])}) \\; H_\\theta = ${fmt(predict(xs[i], theta))}, \\; e = ${fmt(err)}, \\; \\Delta\\theta = ${theta.map((t, j) => `${names[j]} = ${fmt(t)}`).join(', ')}`);
+      }
+    }
+    if (mode === 'batch') {
+      for (let j = 0; j < d; j++) grad[j] /= m;
+      const before = [...theta];
+      for (let j = 0; j < d; j++) theta[j] -= alpha * grad[j];
+      line.push(`  epoch ${e}: \\; \\partial J/\\partial\\theta_j = ${grad.map((g) => fmt(g)).join(', ')}, \\; \\theta: ${before.map((t, j) => fmt(t)).join(', ')} \\to ${theta.map((t) => fmt(t)).join(', ')}`);
+    }
+    rows.push(line.join('\n'));
+  }
+  steps.push('\\textbf{Iteration table}');
+  steps.push(rows.join('\n'));
+  steps.push(`\\boxed{\\theta_0 = ${fmt(theta[0])}, \\quad \\theta_1 = ${fmt(theta[1])}${degree > 1 ? `, \\quad \\theta_2 = ${fmt(theta[2])}` : ''}}`);
+  return { result: { theta }, steps };
+}
+
+// ---------------------------------------------------------------- PCA
+
+// Jacobi eigenvalue algorithm for a symmetric matrix.
+function jacobiEigen(A0) {
+  const n = A0.length;
+  let A = A0.map((r) => [...r]);
+  let V = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? 1 : 0)));
+  for (let sweep = 0; sweep < 100; sweep++) {
+    let off = 0;
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) off += A[i][j] ** 2;
+    if (off < 1e-22) break;
+    for (let p = 0; p < n; p++) {
+      for (let q = p + 1; q < n; q++) {
+        if (Math.abs(A[p][q]) < 1e-15) continue;
+        const tau = (A[q][q] - A[p][p]) / (2 * A[p][q]);
+        const t = Math.sign(tau || 1) / (Math.abs(tau) + Math.sqrt(tau * tau + 1));
+        const c = 1 / Math.sqrt(t * t + 1);
+        const s = t * c;
+        for (let k = 0; k < n; k++) {
+          const akp = A[k][p], akq = A[k][q];
+          A[k][p] = c * akp - s * akq;
+          A[k][q] = s * akp + c * akq;
+        }
+        for (let k = 0; k < n; k++) {
+          const apk = A[p][k], aqk = A[q][k];
+          A[p][k] = c * apk - s * aqk;
+          A[q][k] = s * apk + c * aqk;
+        }
+        for (let k = 0; k < n; k++) {
+          const vkp = V[k][p], vkq = V[k][q];
+          V[k][p] = c * vkp - s * vkq;
+          V[k][q] = s * vkp + c * vkq;
+        }
+        A[p][q] = 0; A[q][p] = 0;
+      }
+    }
+  }
+  const vals = A.map((r, i) => r[i]);
+  const order = vals.map((v, i) => i).sort((a, b) => vals[b] - vals[a]);
+  const eigvals = order.map((i) => vals[i]);
+  const eigvecs = order.map((i) => {
+    const v = V.map((r) => r[i]);
+    const biggest = v.reduce((best, c, k) => (Math.abs(c) > Math.abs(v[best]) ? k : best), 0);
+    return v[biggest] < 0 ? v.map((c) => -c) : v;
+  });
+  return { eigvals, eigvecs };
+}
+
+export function pca({ points, threshold = 95, scale = false }) {
+  const m = points.length;
+  const n = points[0].length;
+  const mean = Array.from({ length: n }, (_, j) => points.reduce((s, p) => s + p[j], 0) / m);
+  const steps = [];
+  steps.push(`\\textbf{Step 1: preprocessing} \\quad \\bar{x} = (${mean.map((v) => fmt(v)).join(', ')})`);
+  const centred = points.map((p) => p.map((v, j) => v - mean[j]));
+  steps.push(`\\text{Mean-normalised points: } ${points.map((p, i) => `(${centred[i].map((v) => fmt(v)).join(', ')})`).join(', ')}`);
+  const sd = Array.from({ length: n }, (_, j) => Math.sqrt(centred.reduce((s, p) => s + p[j] ** 2, 0) / m));
+  let work = centred;
+  if (scale) {
+    work = centred.map((p) => p.map((v, j) => v / sd[j]));
+    steps.push(`\\text{Scaled points (divide each column by its standard deviation): } ${sd.map((v) => fmt(v)).join(', ')}`);
+    steps.push(`\\text{Scaled points: } ${work.map((p) => p.map((v) => fmt(v)).join(', ')).join('; ')}`);
+  }
+  const cov = Array.from({ length: n }, (_, i) =>
+    Array.from({ length: n }, (_, j) => work.reduce((s, p) => s + p[i] * p[j], 0) / m),
+  );
+  steps.push(`\\textbf{Step 2: covariance matrix} \\quad \\Sigma = \\frac{1}{${m}}\\sum (x^{(i)}-\\bar{x})(x^{(i)}-\\bar{x})^T = ${tex(cov)}`);
+
+  const { eigvals, eigvecs } = jacobiEigen(cov);
+  steps.push(`\\textbf{Step 3: eigenvalues} \\quad \\lambda_1 = ${fmt(eigvals[0])}, \\; \\lambda_2 = ${fmt(eigvals[1])}`);
+  steps.push(`\\textbf{Step 4: eigenvectors} \\quad v_1 = ${eigvecs[0].map((v) => fmt(v)).join(', ')}, \\; v_2 = ${eigvecs[1].map((v) => fmt(v)).join(', ')}`);
+  const V = transpose(eigvecs);
+  steps.push(`\\text{Transformation matrix } V = ${tex(V)} \\text{ (eigenvectors stacked column-wise)}`);
+
+  const total = eigvals.reduce((a, b) => a + b, 0);
+  const pct = eigvals.map((v) => (100 * v) / total);
+  steps.push(`\\text{Variance along each PC: } ${pct.map((p, k) => `${fmt(p)}\\% (PC ${k + 1})`).join(', ')}`);
+  let keep = 1;
+  let acc = pct[0];
+  while (keep < n && acc < threshold) { keep++; acc += pct[keep - 1]; }
+  steps.push(`\\text{Keep } ${keep} \\text{ component(s): } ${fmt(acc)}\\% \\ge ${threshold}\\%`);
+
+  const proj = points.map((p) => p.map((_, j) => eigvecs[j].reduce((s, v, k) => s + v * p[k], 0)));
+  steps.push(`\\textbf{Step 5: transform the points} \\quad Y = X\\,V = ${proj.map((r) => `(${r.map((v) => fmt(v)).join(', ')})`).join(', ')}`);
+  const recon = proj.map((r) => r.slice(0, keep).reduce((acc, v, k) => {
+    const out = new Array(n).fill(0);
+    eigvecs[k].forEach((c, j) => { out[j] += v * c; });
+    return out.map((o, j) => acc[j] + o);
+  }, new Array(n).fill(0)));
+  steps.push(`\\textbf{Step 6: reconstruct} \\quad X_r = Y\\,V^T = ${recon.map((r) => `(${r.map((v) => fmt(v)).join(', ')})`).join(', ')}`);
+  const errs = points.map((p, i) => p.map((v, j) => v - recon[i][j]));
+  const mae = Array.from({ length: n }, (_, j) => errs.reduce((s, e) => s + Math.abs(e[j]), 0) / m);
+  const sse = Array.from({ length: n }, (_, j) => errs.reduce((s, e) => s + e[j] ** 2, 0));
+  const rmse = Array.from({ length: n }, (_, j) => Math.sqrt(sse[j] / m));
+  steps.push(`\\text{MAE} = (${mae.map((v) => fmt(v)).join(', ')}), \\quad \\text{SSE} = (${sse.map((v) => fmt(v)).join(', ')}), \\quad \\text{RMSE} = (${rmse.map((v) => fmt(v)).join(', ')})`);
+  return { result: { mean, sd, cov, eigvals, eigvecs, V, pct, keep, proj, recon, mae, sse, rmse, errs }, steps };
+}

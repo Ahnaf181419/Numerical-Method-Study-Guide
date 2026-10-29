@@ -1,0 +1,675 @@
+Interpolation
+Given the set of tabular values (x0, y0), (x1, y1), (x2, y2),... ... ... (xn, yn), satisfying the relation y = f(x) where the explicit nature of f(x) is not known, it is requested to find a simpler function say φ(x), such that f(x) and φ(x) agree at the set of tabulated points. Such a process is called interpolation.
+If φ(x) is a polynomial, then the process is called polynomial interpolation and φ(x) is called the interpolating polynomial.
+Similarly, different types of interpolation arise depending on whether φ(x) is a finite trigonometric series, series of Bessel functions, etc.
+Application of interpolation:
+Analyzing experimental data
+Plotting smooth curves to represent experimental data
+Derive many different formulas
+The justification for replacing a given function by a polynomial or by a trigonometric series relies on two theorems proved by Weierstrass (1885).
+If f(x) is continuous in an interval (a, b) (i.e. a ≤ x ≤ n), then given any ε > 0, there exits a polynomial p(x) such that
+| f(x) – p(x) | < ε for all x in (a, b)
+Every continuous function of period 2л can be represented by a finite trigonometric series of the form g(x) = a0 + a1 sin x + a2 sin 2x + ... ... ... …   + an sin nx + b1 cos x + b2 cos 2x +... ... ... bn cos nx
+where, | f(x) – g(x) | < δ for all values of x in the interval considered and δ represents any pre assigned positive quantity.
+This means that it is possible to find a polynomial p(x) whose graph remain within the regain bounded by y = f(x) + ε and y = f(x) - ε for all x between a and b, however small ε may be.
+	
+Finites Differences
+Assume that we have a table of values (xi, yi), i = 0, 1, 2, …, n of any function y = f(x), the values of x being equally spaced, i.e. xi = x0 + ih, i = 0,1,2,  ...,n. Suppose that we are required to recover the values of f(x) for some intermediate values of x, or to obtain the derivative of f(x) for some x in the range x0 ≤ x ≤ xn. The methods for solution of these problems are based on the concept of the differences of a function which is discussed below.
+Forward Differences
+If y0, y1, y2, ... ..., yn denote a set of values of y, then y1 - y0, y2 - y1, ... ... ... , yn - yn-1 are called the differences of y. Denoting these differences by Δy0, Δy1, Δy2,... ... ... , Δyn-1 respectively, we have, 
+Δy0 = y1 – y0,	Δy1 = y2 – y1,   .... ...., Δyn-1 = yn – yn-1
+General form: Δyi = yi+1 – yi,  where i = 0, 1, 2, 3, ….., n-1
+where Δ is called the forward difference operator and Δy0, Δy1, Δy2, ..., Δyn-1 are called first forward differences.
+The difference of the first forward differences are called second forward differences and denoted by Δ2y0, Δ2y1, Δ2y2, ... .… Similarly, one can define third forward differences, fourth forward differences, etc.
+	Δ2y0 = Δy1 – Δy0 = (y2 – y1) – (y1 – y0) = y2 - 2y1 + y0
+	Δ3y0 = Δ2y1 – Δ2y0 = (y3 – 2y2 + y1) - (y2 - 2y1 + y0) = y3 - 3y2 + 3y1 - y0
+Any higher order difference can easily be expressed in terms of the ordinates, since the coefficients occurring on the right side are the binomial coefficients.
+     Δr yi = Δr-1 yi+1 -  Δr-1 yi
+Δny0 =	      (-1)k ck yn-k
+	Δny0 = yn – nc1 yn-1 + nc2 yn-2 - nc3 yn-3	... ...+ (-1)n yo
+Forward Difference Table
+The following table shows how the forward differences of all orders can be formed:
+The above table is called a diagonal difference table. The first term in the table is y0. It is called the leading term. The difference Δy0, Δ2y0, Δ3y0... are called the leading differences.	
+There is another type of difference table called horizontal difference table.
+Example:
+A convenient check may be obtained by noting the sum of the entries in any column equals the differences between the first and last entries in preceding column.
+Properties of the operator Δ
+If c is a constant then Δc = 0.
+Δ is distributive i.e. Δ [f(x) + g(x)] = Δf(x) + Δg(x)
+If c is a constant then Δ[c f(x)] = c Δf(x)
+If m and n are positive integers then Δm Δn f(x) = Δm+n f(x)
+Δ [f1(x) + f2(x) + …. + fn(x)] = Δ f1(x) + Δ f2(x) + …. + Δ fn(x)
+Δ [f(x) g(x)] = f(x+h) Δ g(x) + g(x) Δ f(x) 
+Δ [f(x) / g(x)] = (g(x) Δ f(x) - f(x) Δ g(x)) / (g(x) g(x+h))
+Theorem: The nth differences of a polynomial of the nth degree are constant when the value of independent variables are at equal intervals.
+Proof: Page-51 [G. Shanker Rao]
+The converse of the above theorem is true i.e. if the nth differences of a tabulated function are constant and the values of the independent variable are equally spaced then the function is a polynomial of degree n.
+Example 4: Page 52 [G. Shanker Rao]
+Error Propagation in a Difference Table
+ε, such that the erroneous value of y5 is y5 + ε. In this case the error ε effects the successive differences and spreads out fanwise as higher orders are formed in the table.  The table given below shown us the effect of the error. [p-69, Rao]
+Example 25: Page-69 [G. Shanker Rao]
+Backward differences
+The differences y1 – y0, y2 – y1   ...., yn – yn-1 are called first backward differences if they are denoted by (y1, (y2, ... ... , (yn respectively, so that (y1 = y1–y0, (y2 = y2 – y1, ... ..., (yn = yn – yn-1, where ( is called the backward difference operator.
+The difference of the first backward differences are called second backward differences and denoted by (2y0, (2y1, (2y2, ... .… Similarly, one can define third backward differences, fourth backward differences, etc.
+	(2y2 = (y2 – (y1 = (y2 – y1) – (y1 – y0) = y2 - 2y1 + y0
+	(3y3 = (2y3 – (2y2 = (y3 – 2y2 + y1) - (y2 - 2y1 + y0) = y3 - 3y2 + 3y1 - y0 etc.
+General form: (yi = yi – yi-1,  where i = 1, 2, 3, ….., n-1
+     (k yi = (k-1 yi -  (k-1 yi-1
+Backward Difference Table
+The following table shows how the backward differences of all orders can be formed. 
+The above table is called a horizontal difference table.
+Central Differences
+The central difference operator δ is defined by the relations - 
+		δy1/2 = y1 – y0,  δy3/2 = y2 – y1   .... ....     δyn-1/2 = yn – yn-1 
+	Similarly,
+		δ2y1 = δy3/2 – δy1/2
+	δ3y3/2 = δ2y2 – δ2y1
+	In general,
+		δyi = yi+1/2 – yi- 1/2
+	δnyi = δn-1yi+1/2 – δn-1yi- ½
+It is clear from the three tables that in a definite numerical case, the same number occurs in the same position whether we use forward, backward or central differences.
+The Averaging Operator (μ)
+The averaging operator μ is defined as 
+		μyi = ½(yi+1/2 – yi - 1/2)
+Shift Operator (E)	
+The shift operator (also called displacement operator) E is defined by the equation
+		Eyi = yi+1  or E f(x) = f(x+h)
+which shows that the effect of E is to shift the functional value yi to the next higher value yi+1. 
+		E2yi = E(Eyi)
+	Eyi+1 = yi+2
+	So,
+		Enyi = yi+n
+		Eny0 = yn
+		En f(x) = f(x+nh)
+		E-n f(x) = f(x-nh)
+D Operator
+The D operator is defined as 
+		Dy(x) = d/dx y(x)
+′(x)
+D2f(x) = d2/dx2 f(x) = f″(x)
+Some Important Relations between different operators 
+1. E ( 1 + (
+	(y0 = y1 – y0 = Ey0 - y0 =(E-1)y0
+	( ( ( E – 1
+2. (E ( E (
+	E(yn = E(yn+1 – yn ) = Eyn+1 – Eyn = yn+2 – yn+1 = (yn+1 = (Eyn
+	((E ( E(
+3. ( ( 1 – E-1
+	(yn = yn – yn-1 = yn – E-1yn = (1 – E-1)yn 
+	(( ( 1 – E-1 
+4. ( - ( ( ((
+	( - ( ( (E - 1) – (1-E-1) ( E – 2 + E-1
+	(( ( (E - 1)(1-E-1) ( E – 2 + E-1
+( ( - ( ( ((( ((
+5. ( ( (E ( E( ( δ E1/2
+	( ( (1-E-1) 
+	( E( ( E(1-E-1) ( E – 1 ( (
+	( (E ( (1-E-1)E ( E – 1 ( (
+	( δ ( E1/2 – E-1/2
+    δE1/2 ( E1/2 (E1/2 – E-1/2) ( E – 1 ( (
+	( ( ( (E ( E( ( δ E1/2
+6. δ ( E1/2 – E-1/2
+	δyr = yr+1/2 – yr-1/2
+		= E1/2yr – E-1/2yr-1/2 = ( E1/2 – E-1/2 )yr-1/2
+	(δ ( E1/2 – E-1/2
+7. ( ( ½( E1/2 + E-1/2)
+	(yr = ½ ( yr+1/2 + yr-1/2 ) 
+		= ½( E1/2 yr + E-1/2 yr) = ½( E1/2  + E-1/2 )yr
+	(( ( ½(E1/2 + E-1/2)
+8. (2 =1 + 1/4 δ2
+	( ( ½(E1/2 + E-1/2)
+	(2 ( ½(E1/2 + E-1/2)2 ( ¼{ (E1/2 - E-1/2)2 + 4} ( ¼( δ 2 + 4) ( ¼δ 2 + 1 
+	((2 =1 + 1/4 δ2
+Home Task:
+	9. ( - ( ( δ2
+	10. E1/2 ( ( + ½δ
+	11. (1+ ()(1-() ( 1
+12. ( ( E-1(
+13. δ ( E-1/2 (
+Interpolation with Equal Intervals
+Newton’s Forward interpolation formula 
+Let y = f(x) be a function which takes the values y0, y1, y2, …., yn corresponding to the (n+1) values x0, x1, x2, …, xn of the independent variables. Let the values of x be equally spaced i.e. xi = x0 + ih where i = 0,1,2, ... ... n and h is the interval of differencing. Let φ(x) be a polynomial of the nth degree such that y and φ(x) agree at the tabulated points i.e. f(xi) = φ(xi),  i = 0,1,2... ... ... n and at all other points f(x) = φ(x) + R(x) where R(x) is called error term of the interpolation formula. Ignoring the error term let us assume  
+f(x) ≈ φ(x) = a0 + a1 (x-x0) + a2 (x-x0) (x-x1) + ... ... + an (x-x0) (x-x1) ... ... (x-xn-1)
+The constants a0, a1, ... ..., an can be determined as follows:
+putting x = x0 we get
+f(x0) ≈ φ(x0) = a0
+			∴ a0 = y0
+putting x = x1 we get
+f(x1) ≈ φ(x1) = a0 + a1 (x1 - x0) = y0 + a1h
+		∴ a1 = (y1 -y0) / h = ∆y0 / h
+putting x = x2 we get
+			f(x2) ≈ φ(x2) = a0 + a1 (x2 - x0) + a1 (x2 - x0) (x2 – x1)
+			y2 = y0 + ∆y0/h(2h) + a2 (2h)(h)
+y2 = y0 + 2(y1 - y0) + a2 (2h2)
+					y2 - 2y1 + y0
+a2  = ----------------------
+				      2h2				
+					Δ2y0
+∴ 	a2  = -----------------
+				 2! h2				
+Similarly by putting x = x3, x = x4, ... ... x = xn we get,
+		Δ3y0			Δ4y0				Δny0
+a3  = -----------------,	a4  = -----------------, …….,  an  = -----------------
+ 	3! h3			4! h4				n! hn		
+putting the values of a0, a1, ... ..., an we get
+f(x) ≈ φ(x) = y0 + (∆y0/h)(x-x0) + (Δ2y0 / (2! h2)) (x-x0)(x-x1) + ... ... 
+... ... + (Δny0/ (n! hn)) (x-x0)(x-x1) ... ... (x-xn-1)
+writing u = ((x-x0) / h), we get
+		x-x0 = uh
+		x-x1 = (x-x0) + (x0-x1) = (x-x0) - (x1-x0) = uh – h = (u – 1)h
+Similarly,        x-x2 = (u-2)h
+		x-x3 = (u-3)h
+		.... ... ... ... ... 
+		x-xn-1 = (u – n +1)h
+f(x) ≈ φ(x) = y0 + u(∆y0/1!) + u(u-1)(Δ2y0)/ 2! + ... ... 
+... ... + u(u-1)(u-2) ... ... (u – n +1) (Δny0)/n!
+The above formula is called Newton’s forward interpolation formula. 
+Newton’s forward interpolation formula is used to interpolate the values of y near the beginning of a set of tabular values. 
+Example 5: Page-85 [G. Shanker Rao]	
+Newton-Gregory Backward Interpolation formula
+Newton forward interpolation formula cannot be used for interpolating a value of y near the end of a table of values. For this purpose, we use another formula known as Newton-Gregory interpolation formula.
+Let y = f(x) be a function which takes the values y0, y1, y2, …., yn corresponding to the (n+1) values x0, x1, x2, …, xn of the independent variables. Let the values of x be equally spaced i.e. xi = x0 + ih where i = 0,1,2, ... ... n and h is the interval of differencing. Let φ(x) be a polynomial of the nth degree such that y and φ(x) agree at the tabulated points i.e. f(xi) = φ(xi),  i = 0,1,2... ... ... n and at all other points f(x) = φ(x) + R(x) where R(x) is called error term of the interpolation formula. Ignoring the error term let us assume
+f(x) ≈ φ(x) = a0 + a1 (x-xn) + a2 (x- xn) (x- xn-1) + ... ... + an( x- xn)(x- xn-1) ... ... (x-x1)
+putting x = xn we get
+f(xn) ≈ φ(xn) = a0
+		∴ a0 = yn
+putting x = xn-1 we get
+f(xn-1) ≈ φ(xn-1) = a0 + a1(xn-1 - xn) = yn + a1(-h)
+∴ a1 = (yn –yn-1) / h = (yn / h
+putting x = xn-2 we get
+		f(xn-2) ≈ φ(xn-2) = a0 + a1(xn-2 - xn) + a2 (xn-2 - xn)( xn-2 – xn-1)
+			yn-2 = yn + (yn/h (-2h) + a2 (-2h)(-h)
+			yn-2 = yn – 2 yn + 2 yn-1 + a2 (2h2)
+				yn - 2yn-1 + yn-2
+a2  = ----------------------
+			      2h2				
+				(2 yn
+               ∴ a2  = -----------------
+			 2! h2				
+Similarly, 
+		(3 yn			(4yn			  (nyn
+a3  = -----------------,  a4  = -----------------,  ….,  an  = -----------------
+	 3! h3			4! h4			   n! hn
+putting the values of a0,a1, ... ...an we get
+f(x) ≈ φ(x) = yn + ((yn/h)(x-xn) + ((2yn / (2! h2)) (x-xn)(x-xn-1) + ... ... 
+... ... + ((nyn/ (n! hn)) (x-xn)(x-xn-1) ... ... (x-x1)
+writing u = ((x-xn)/h), we get
+x-xn = uh
+		x-xn-1 = (x-xn) + (xn- xn-1) = (u + 1)h
+Similarly,	x-xn-2 = (u+2)h
+x-xn-3 = (u+3)h
+		.... ... ... ... ... 
+		x-x1 = (u + n -1)h
+f(x) ≈ φ(x) = yn + u ((yn /1!) + u (u+1) ( (2yn) / 2! + ... ... 
+... ... + u (u+1) (u+2) ... ... (u + n -1) ((nyn) / n!
+The above formula is called Newton’s backward interpolation formula.
+Example 10: Page-90 [G. Shanker Rao]
+Example: Find the cubic polynomial which takes the following values 
+		y(0) = 1, y(1) = 0, y(0) = 1, y(2) = 1, y(3) = 10
+Solution: 
+Here, h =1, u = (x-x0) / h = (x - 0) / 1 = x
+    φ(x) 	= 1 + x(-1) + (x(x-1)/2!)(2) + (x(x-1)(x-2)/3!)(6)
+	= 1 + (-x) + x(x-1) + x(x-1)(x-2)
+	= 1 – x + x2 – x + x3 – x2 – 2x2 + 2x
+= x3 – 2x2 + 1
+Which is the polynomial from which we obtained from the above tabular values.
+Compute f(4)
+Solution: h = 1, u = (4-0) / 1 = 4
+φ(4) = 1 + 4(-1) + 4( 4 – 1 ) + 4(4 – 1)(4 – 2) = 1 – 4 + 12 + 24 = 33
+Again putting 4 in the equation we get,
+	43 – 2.42 + 1 = 33
+This process of finding the value of y for some value of x outside the given range is called extrapolation and this example demonstrates the fact that if a tabulated function is a polynomial then interpolation and extrapolation would give exact values.
+If a tabulated function is other then a polynomial, then extrapolation very far from the table limits would be dangerous - although interpolation can be carried out very accurately. Example 3.8: Page-63 [S. S. Sastry]
+Example 3.5: Page-63 [G. Shanker Rao]
+Newton’s Binomial Expansion formula
+yn – n yn-1 + n (n-1)/2 yn-2 + …. + (-1)n y0 = 0
+The above formula is called Newton’s binomial expansion formula and is useful in finding the missing values without constructing the difference table. [Rao, p-81]
+Example 1: Page-81 [G. Shanker Rao]
+Central Difference Interpolation Formula
+Newton’s forward and backward interpolation formulae are suited for interpolation near the beginning and end values of the tabulated data respectively. For interpolation near the middle of a difference table, central difference formulae are preferable.
+6
+f
+–
+š
+,
+˜
+Ö
+Ø
+š
+,
+˜
+Ö
+Ø
+„@
+^„@
+n formula:
+The Newton’s forward interpolation formula is 
+f(x) = y0 + u∆y0 + u(u-1)(Δ2y0)/ 2! + ... ... + u(u-1)(u-2) ... ...(u – n +1) (Δny0)/n!
+where, u = ((x-x0)/h) and x > x0.
+From the central difference table we have
+Δ3y-1 = Δ2y0 – Δ2y-1 
+Δ2y0 =  Δ2y-1 + Δ3y-1
+Similarly, 	Δ3y0 = Δ3y-1 + Δ4y-1 
+Δ4y0 = Δ4y-1 + Δ5y-1 
+Substituting the values, we have
+f(x) = y0 + u∆y0 + u(u-1)( Δ2y-1+Δ3y-1)/ 2! + u(u-1)(u-2) (Δ3y-1 + Δ4y-1)/3! + …..
+       = y0 + u∆y0 + u(u-1)( Δ2y-1)/ 2! + (u+1)u(u-1) (Δ3y-1)/3! 
++ (u+1)u(u-1)(u-2) (Δ4y-2)/4! + ….. 
+This is called Gauss forward interpolation formula.
+Gauss Backward Interpolation formula
+We have, 	Δ2y-1 = Δy0 – Δy-1 
+Δy0   = Δy-1 + Δ2y-1 
+Similarly,	Δ2y0 = Δ2y-1+ Δ3y-1
+Δ3y0 = Δ3y-1 + Δ4y-1 
+Again,		Δ3y-1 = Δ3y-2 + Δ4y-2 
+Δ4y-1 = Δ4y-2 + Δ5y-2
+Now,
+y = f(x) = y0 + u(Δy-1-Δ2y-1) + u(u-1)( Δ2y-1-Δ3y-1)/ 2! + u(u-1)(u-2) (Δ3y-1-Δ4y-1)/3! + ….
+             = y0 + u∆y-1 + u(u+1)( Δ2y-1)/ 2! + (u+1)u(u-1) (Δ3y-2)/3! 
+    + (u+2)(u+1)u(u-1) (Δ4y-2)/4! + …….
+This is called Gauss backward interpolation formula.
+Stirlings’s Formula
+Taking the mean of the two Gauss’s formula (forward and backward), we obtain
+This formula is called Stirlings’s formula.
+Bessel’s Formula
+Changing the origin in the Gauss’s backward interpolation formula from 0 to 1, we have,
+Taking the mean of the above formula and the Gauss’s forward interpolation formula, we obtain,
+This is called Bessel’s formula.
+Gauss’s forward formula is used to interpolate the values of the function for the value of u such that 0 < u < 1, and Gauss’s backward formula is used to for a negative values of u which lies between –1 and 0 i.e. –1 < u < 0. Stirling’s formula gives the most accurate result for –0.25 ≤ u ≤ 0.25. Bessel’s formula is most efficient for ¼ ≤ u ≤ ¾ .   
+Example 1, 2, 6, 8:  Page 123 – 129 [G. Shanker Rao].
+Interpolation with Unequal Intervals
+The Newton’s forward and backward interpolation formula and central difference formulae are applicable only when values of n are given at equal intervals. When the values of independent variable x are given at unequal intervals then we can use the following formula.
+Lagrange’s Interpolation Formula
+Let y = f(x) be a function which assumes the values f(x0), f(x1), f(x2), …., f(xn) corresponding to the values x = x0, x1, x2, …, xn where the values of x are not equispaced. Since (n+1) values of the function are given corresponding to the (n+1) values of the independent variable x, we can represent the function y = f(x) by a polynomial in x of degree n.
+Let the Polynomial be
+f(x) = a0(x-x1)(x-x2)...(x-xn) + a1(x-x0)(x-x2)....(x-xn) + a2(x-x0)(x-x1)(x-x3)...(x-xn)  
++ ... ... + an(x-x1)(x-x2)... ...(x-xn-1) 		. . . . . . . . . . . . (1)
+Each term in equation (1) being a product of n factors in x of degree n.
+Putting x = x0, we get,
+f(x0) = a0(x0-x1) (x0-x2) ... ... (x0-xn)     
+				f(x0)
+		∴ a0 = ------------------------------------
+	 	 	 (x0-x1) (x0-x2) ... ... (x0-xn)
+Putting x = x1, we get,
+f(x1) = a1(x1-x0) (x1-x2) ... ... (x1-xn)     
+				f(x1)
+		a1 = ------------------------------------
+			(x1-x0) (x1-x2) ... ... (x1-xn)
+Similarly Putting x = x2, x = x3, ... ... , x = xn we get
+f(x2)
+		a2 = ------------------------------------
+			(x2-x0) (x2-x2) ... ... (x2-xn)
+		... ... ... ... ... ... ... ... ... ... ... ... ... ...
+f(xn)
+		an = ---------------------------------------
+			(xn-x0) (xn-x2) ... ... (xn-xn-1)
+Substituting the values of a0, a1, ... ...an we get
+   	       (x-x1) (x-x2) ... ... (x-xn)		    (x-x0) (x-x2) ... ... (x-xn)
+y = f(x) = -------------------------------- f(x0) + ------------------------------------ f(x1) 
+	                  (x0-x1) (x0-x2) ... ... (x0-xn)	  	  (x1-x0) (x1-x2) ... ... (x1-xn)
+			   	   (x-x0) (x-x2) ... ... (x-xn-1)
+			+ ... ... + ---------------------------------- f(xn)
+			   	   (xn-x0) (xn-x2) ... ... (xn-xn-1)
+This is called Lagrange’s interpolation formula. This can also be used for equal intervals. 
+Example 5, 6: Page – 107 [G. Shankar Rao].
+Divided Difference
+The first divided difference of f(x) between x0 and x1 is denoted by f[x0,x1] and is defined as 
+		     f(x0) - f(x1)
+f[x0,x1] = ---------------
+			        x0 - x1
+and similarly,
+		     f(x1) - f(x2)
+f[x1,x2] = ---------------  etc.
+			        x1 - x2
+The second order divided difference between x0, x1 and x2
+		         f[x0,x1] - f[x1,x2]
+f[x0,x1,x2] = --------------------
+			             x0 - x2
+The (k+1)th divided difference	
+		       f[x0,x1... ... xk] - f[x1,x2... ... xk+1] 
+f[x0,x1,... ...xk+1] = ------------------------------------------
+			                x0 – xk+1
+Divided Difference Table: Page-98 [G. Shanker Rao].
+Example 2: Page-99 [G. Shanker Rao].
+Properties of Divided differences
+1. Divided differences are symmetric function of their arguments.
+		     f(x0) - f(x1) 		f(x1) - f(x0)
+f[x0,x1] = --------------- = -------------------- = f[x1,x0] 
+			        x0-x1		  x1-x0
+2. The divided difference of the product of a constant and a function is equal to the product of the constant and the divided difference of the function i.e.
+k f[x0,x1] = f k[x1,x0] where k is a constant.
+3. The divided difference of the sum (or difference) of two functions is equal to the sum (or difference) of the corresponding separate divided differences.
+	If f(x) = g(x) + h(x) then, f[x0,x1] = g[x0,x1] + h[x0,x1]
+4. The nth order divided differences of a polynomial of nth degree are constants.
+5. The (n+1)th order divided differences of a polynomial of nth degree will be zero.
+Newton’s General Divided Difference Formula
+Let y = f(x) be a function which assumes the values f(x0), f(x1), f(x2), …., f(xn) corresponding to the values x = x0, x1, x2, …, xn where the values of x are not necessarily equispaced. From the definition of divided difference
+		     f(x) - f(x0)
+f[x,x0] = ---------------- 
+			          x - x0
+	f(x) = f(x0) + (x-x0) f[x,x0] .... .... (1)
+Again,
+		       f[x,x0] - f[x0,x1]
+f[x,x0,x1] = --------------------
+			             x - x1
+		
+		f[x,x0] = f[x0,x1] + (x-x1) f[x,x0,x1] ... ...(2)
+Substituting in (1) we get,
+f(x) = f(x0) + (x-x0) f[x0,x1] + (x-x0) (x-x1) f[x,x0,x1]
+Proceeding in this way we get,
+f(x) = f(x0) + (x-x0) f[x0,x1] + (x-x0) (x-x1) f[x0,x1,x2]+... ... 
+	+ (x-x0) (x-x1).. ... (x-xn-1) f[x0,x1,... ..,xn]
+	+ (x-x0) (x-x1).. ... (x-xn) f[x,x0,x1,... ..,xn]
+If f(x) is a polynomial of degree n then, the (n+1)th order divided differences of f(x) will be zero.	
+∴ f[x,x0,x1,... ...xn] = 0
+Hence,  f(x) = f(x0) + (x-x0) f[x0,x1] + (x-x0) (x-x1) f[x0,x1,x2]+... ... 
+	+ (x-x0) (x-x1).. ... (x-xn-1) f[x0,x1,... ..,xn]
+This is called Newton’s divided difference formula.
+Example 3: Use Newton divided difference formula to find f(6) for the following table.
+x	5	7	11	13	21
+f(x)	150	392	1452	2366	9702
+Solution:
+x	f(x)	▲ f(x)	▲2 f(x)	▲3 f(x)	▲4 f(x)
+5	150
+
+
+
+121
+
+	7	392
+24
+
+
+265
+1
+	11	1452
+32
+0
+
+457
+1
+	13	2366
+46
+
+
+917
+
+	21	9702
+
+
+
+We have f[x0] = 150,  f[x0, x1] = 121, f[x0, x1, x2] = 24, f[x0, x1, x2, x3] = 1
+f(6) = 150 + (6 - 5) (121) +  (6 - 5) (6 - 7) (24) + (6 - 5) (6 - 7) (6 – 11) (1) + 0 + …
+       = 150 + 121 –24 + 5
+       =  252
+Example 4: Page-104 [G. Shanker Rao].
+Inverse Interpolation
+Given a set of values of x and y for y = f(x), the process of finding the value of x for a certain value of y is called inverse interpolation.
+Lagrange’s Inverse Interpolation: 
+We know, the Lagrange interpolation formula is
+   	       (x-x1) (x-x2) ... ... (x-xn)		    (x-x0) (x-x2) ... ... (x-xn)
+y = f(x) = -------------------------------- f(x0) + ------------------------------------ f(x1) 
+	                  (x0-x1) (x0-x2) ... ... (x0-xn)	  	  (x1-x0) (x1-x2) ... ... (x1-xn)
+			   	  (x-x0) (x-x2) ... ... (x-xn-1)
+			+ ... ... + ---------------------------------- f(xn)
+			   	  (xn-x0) (xn-x2) ... ... (xn-xn-1)
+By interchanging x and y we can express x as a function of y as follows:	
+ 
+   	       (y-y1) (y-y2) ... ... (y-yn)		    (y-y0) (y-y2) ... ... (y-yn)
+         x = -------------------------------- x0 + ------------------------------------ x1 
+	                  (y0-y1) (y0-y2) ... ... (y0-yn)	  	  (y1-y0) (y1-y2) ... ... (y1-yn)
+			   	   (y-y0) (y-y2) ... ... (y-yn-1)
+			+ ... ... + ---------------------------------- xn
+			   	   (yn-y0) (yn-y2) ... ... (yn-yn-1)
+This is called Lagrange’s inverse interpolation formula.
+Example 7: Page-110 [G. Shanker Rao].
+	Page   PAGE  15  of   NUMPAGES  15 
+x=a
+x=b
+y = f(x)+ ε
+y = f(x) - ε
+ y=p(x)
+ y=f(x)
+∑
+n
+k=0
+x
+y
+Δ
+Δ2
+Δ3
+Δ4
+x0
+x1
+x2
+x3
+x4
+y0
+y1
+y2
+y3
+y4
+Δy0
+Δ4y0
+Δ2y0
+Δ3y0
+Δy1
+Δy2
+Δy3
+Δ2y1
+Δ2y2
+Δ3y1
+x
+y
+Δ
+Δ2
+Δ3
+Δ4
+0
+1
+2
+3
+4
+7
+9
+43
+169
+471
+2
+34
+126
+302
+24
+32
+92
+176
+60
+84
+(4
+(3
+(2
+(
+y
+x
+y0
+x0
+(y1
+y1
+x1
+(2y1
+(y2
+(3y1
+(2y2
+y2
+x2
+(4y1
+(3y2
+(y3
+y3
+x3
+(2y3
+(y4
+y4
+x4
+x
+y
+δ
+δ2
+δ3
+δ4
+x0
+x1
+x2
+x3
+x4
+y0
+y1
+y2
+y3
+y4
+δy1/2
+δ4y1
+δ2y1
+δ3y3/2
+δy3/2
+δy5/2
+δy7/2
+δ2y2
+δ2y3
+δ3y5/2
+x	y	∆	∆2	∆3
+0	1
+
+
+	-1
+
+1	0
+2
+
+	1
+6
+3	1
+8
+
+	9
+
+4	10
+
+	
+	x	y 	Δy	Δ2y	Δ3y	Δ4y	Δ5y	Δ6y
+x-3	x0-3h	y-3
+
+
+
+
+	Δy-3
+
+
+	x-2	x0-2h	y-2
+Δ2y-3
+
+
+
+	Δy-2
+Δ3y-3
+
+	x-1	x0-h	y-1
+Δ2y-2
+Δ4y-3
+
+
+	Δy-1
+Δ3y-2
+Δ5y-3
+	x0	x0	y0
+Δ2y-1
+Δ4y-2
+Δ6y-3
+
+	Δy0
+Δ3y-1
+Δ5y-2
+	x+1	x0+h	y+1
+Δ2y0
+Δ4y-1
+
+
+	Δy+1
+Δ3y0
+
+	x+2	x0+2h	y+2
+Δ2y+1
+
+
+
+	Δy+2
+
+
+	x+3	x0+3h	y+3
+
+
+
+
+	x	y 	Δy	Δ2y	Δ3y	Δ4y	Δ5y	Δ6y
+x-3	x0-3h	y-3
+
+
+
+
+	Δy-3
+
+
+	x-2	x0-2h	y-2
+Δ2y-3
+
+
+
+	Δy-2
+Δ3y-3
+
+	x-1	x0-h	y-1
+Δ2y-2
+Δ4y-3
+
+
+	Δy-1
+Δ3y-2
+Δ5y-3
+	x0	x0	y0
+Δ2y-1
+Δ4y-2
+Δ6y-3
+
+	Δy0
+Δ3y-1
+Δ5y-2
+	x+1	x0+h	y+1
+Δ2y0
+Δ4y-1
+
+
+	Δy+1
+Δ3y0
+
+	x+2	x0+2h	y+2
+Δ2y+1
+
+
+
+	Δy+2
+
+
+	x+3	x0+3h	y+3
+
+
+
+
+        		            	 u(u-1)  		        (u- ½)u(u-1)
+y = ½ [y0 + y1] + (u- ½)Δy0 + ------- . ½[Δ2y-1+ Δ2y0] + -----------------Δ3y-1+ ... ... ...
+        				   2!      			   3!
+	   u(Δy0+Δy-1)	       u2Δ2y-1            u(u2-1)    Δ3y-1 + Δ3y-2	u2(u2-1) Δ4y-2
+y = y0 + ----------------- + ------------ + ---------- . ----------------- + --------------------- + ... ... ...
+		2		2	       3!		2			4!
+		         u(u-1)		 u(u-1)(u-2) 
+y = y1 + (u-1)Δy0 + ------------ Δ2y0 + --------------  Δ3y-1+ ... ... ...
+			2!		     3!

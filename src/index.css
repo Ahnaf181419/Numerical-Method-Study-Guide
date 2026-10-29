@@ -1,0 +1,303 @@
+@import 'tailwindcss';
+
+/* Premium dark: warm graphite base, ash for secondary text, warm white for reading,
+   gold = the signal (active, progress, correct), red = exam-critical and errors. */
+@theme {
+  --color-ink: #141312;
+  --color-panel: #1c1b19;
+  --color-raise: #262422;
+  --color-line: #34312d;
+  --color-ash: #a39d94;
+  --color-text: #f3efe7;
+  --color-gold: #f0c35a;
+  --color-red: #e8584a;
+  --font-serif: 'Newsreader Variable', Charter, 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Manrope Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgb(240 195 90 / 0.06), transparent 60%),
+    var(--color-ink);
+  background-attachment: fixed;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+::selection {
+  background: rgb(240 195 90 / 0.35);
+}
+
+.prose-read {
+  font-family: var(--font-serif);
+  font-size: 1.17rem;
+  line-height: 1.68;
+  font-optical-sizing: auto;
+}
+
+.display {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+}
+
+/* Display math: scroll sideways instead of breaking the layout on narrow screens. */
+.math-block {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-left: 2px solid rgb(240 195 90 / 0.55);
+  background: linear-gradient(90deg, rgb(240 195 90 / 0.07), rgb(240 195 90 / 0.015));
+  padding: 0.25rem 1rem;
+  border-radius: 0 10px 10px 0;
+}
+.math-block .katex-display {
+  margin: 0.6rem 0;
+}
+.katex {
+  font-size: 1.08em;
+}
+
+/* ---------- Motion ---------- */
+
+/* Content swap between modes / lessons: bridge the change, don't perform. */
+.enter {
+  animation: enter 220ms var(--ease-out) both;
+}
+.enter-next {
+  animation: enter-x 240ms var(--ease-out) both;
+  --from: 16px;
+}
+.enter-prev {
+  animation: enter-x 240ms var(--ease-out) both;
+  --from: -16px;
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes enter-x {
+  from {
+    opacity: 0;
+    transform: translateX(var(--from));
+  }
+}
+
+/* Dashboard first paint: one orchestrated stagger. */
+.stagger > * {
+  animation: enter 360ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+/* Signal trace draws once per chapter. */
+.trace {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 1.1s var(--ease-out) forwards;
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Progress rings and bars: state indication. */
+.ring-fill {
+  transition: stroke-dashoffset 700ms var(--ease-out);
+}
+.bar-fill {
+  transform-origin: left;
+  transition: transform 500ms var(--ease-out);
+}
+
+/* Press feedback on every tappable surface. */
+.press {
+  transition:
+    transform 140ms var(--ease-out),
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+.press:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lift:hover {
+    border-color: rgb(240 195 90 / 0.45);
+  }
+}
+
+/* Quiz feedback. */
+.pop {
+  animation: pop 260ms var(--ease-out);
+}
+@keyframes pop {
+  40% {
+    transform: scale(1.025);
+  }
+}
+.shake {
+  animation: shake 320ms var(--ease-in-out);
+}
+@keyframes shake {
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+/* Tab indicator. */
+.tab-ind {
+  transition:
+    transform 220ms var(--ease-out),
+    opacity 180ms ease;
+}
+
+/* Flashcard flip. */
+.card-3d {
+  transition: transform 420ms var(--ease-out);
+  transform-style: preserve-3d;
+}
+.card-3d.flipped {
+  transform: rotateY(180deg);
+}
+.face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.face-back {
+  transform: rotateY(180deg);
+}
+
+/* Dialogs: modal scales in from centre, drawer slides from the left edge. */
+dialog {
+  transition:
+    opacity 220ms var(--ease-out),
+    transform 220ms var(--ease-out),
+    overlay 220ms allow-discrete,
+    display 220ms allow-discrete;
+  opacity: 0;
+  transform: scale(0.97);
+}
+dialog[open] {
+  opacity: 1;
+  transform: none;
+}
+@starting-style {
+  dialog[open] {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+dialog.drawer {
+  transform: translateX(-100%);
+  opacity: 1;
+  transition-duration: 320ms;
+  transition-timing-function: var(--ease-drawer);
+}
+dialog.drawer[open] {
+  transform: none;
+}
+@starting-style {
+  dialog.drawer[open] {
+    transform: translateX(-100%);
+  }
+}
+dialog::backdrop {
+  background: rgb(8 7 6 / 0.72);
+  transition:
+    opacity 220ms ease,
+    overlay 220ms allow-discrete,
+    display 220ms allow-discrete;
+  opacity: 0;
+}
+dialog[open]::backdrop {
+  opacity: 1;
+}
+@starting-style {
+  dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+/* Modulation lab playhead: constant motion explains the bit-to-wave mapping. */
+.playhead {
+  animation: sweep var(--dur, 4s) linear infinite;
+}
+@keyframes sweep {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--w));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter,
+  .enter-next,
+  .enter-prev,
+  .stagger > * {
+    animation: fade 200ms ease both;
+  }
+  .trace {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .card-3d,
+  .ring-fill,
+  .bar-fill,
+  .tab-ind,
+  dialog,
+  dialog.drawer {
+    transition-duration: 0ms;
+  }
+  .pop,
+  .shake,
+  .playhead {
+    animation: none;
+  }
+  .press:active {
+    transform: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}

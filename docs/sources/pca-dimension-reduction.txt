@@ -1,0 +1,515 @@
+14: Dimensionality Reduction (PCA)
+Previous Next Index
+
+Q1. What are the Motivations for Dimensionality Reduction? …
+Q. By using a concrete 2D to 1D / 3D to 2D reduction example, explain how
+PCA can facilitate data compression and algorithmic efficiency.
+
+Motivation 1: Data compression
+   ●​ Start talking about a second type of unsupervised learning problem
+      - dimensionality reduction
+          o​ Why should we look at dimensionality reduction?
+
+Compression
+
+ ●​ Speeds up algorithms {this is the Major Motivation}
+  ●​ Reduces space used by data for them
+  ●​ What is dimensionality reduction?
+       o​ So you've collected MANY FEATURES - maybe more than you need
+               ▪​ Can you "simply" your data set in a rational and useful way?
+       o​ Example
+               ▪​ Redundant data set - different units for same attribute
+               ▪​ Reduce data to 1D (2D->1D)​
+
+
+
+
+                      ▪​ Example above isn't a perfect straight line because of round-off error
+
+                                                                                                  1
+      o​ Data redundancy can happen when different teams are working independently
+            ▪​ Often generates redundant data (especially if you don't control data
+               collection)
+      o​ Another example
+            ▪​ Helicopter flying - do a survey of pilots (x1 = skill, x2 = pilot enjoyment)
+                  ▪​ These features may be highly correlated
+                  ▪​ This correlation can be combined into a single attribute
+                      called aptitude (for example)
+
+●​ What does dimensionality reduction mean?
+     o​ In our example we plot a line
+     o​ Take exact example and record position on that line​
+
+
+
+
+      o​ So before x1 was a 2D feature vector (X and Y dimensions)
+      o​ Now we can represent x1 as a 1D number (Z dimension)
+
+●​ So we approximate original examples
+      o​ Allows us to half the amount of storage
+      o​ Gives lossy compression, but an acceptable loss (probably)
+            ▪​ The loss above comes from the rounding error in the measurement, however
+
+
+
+
+                                                                                              2
+●​ Another example 3D => 2D
+     o​ So here's our data​
+
+
+
+
+     o​ Maybe all the data lies almost in one plane
+          ▪​ This is sort of hard to explain in 2D graphics, but that plane may
+             be aligned with one of the axis
+                 ▪​ Or or may not...
+                 ▪​ Either way, the plane is a small, a constant 3D space
+
+
+
+
+                                                                                  3
+▪​ In the diagram below, imagine all our data points are sitting "inside" the blue
+   narrow tray (has a dark blue exterior face and a light blue inside)​
+
+
+
+
+▪​ Because they're all in this relative shallow area, we can basically ignore one
+   of the dimension, so we draw two new lines (z1 and z2) along the x and y
+   planes of the box, and plot the locations in that box
+▪​ i.e., we loose the data in the z-dimension of our "shallow box" (NB
+   "z-dimensions" here refers to the dimension relative to the box (i.e it's depth)
+   and NOT the z dimension of the axis we've got drawn above) but because the
+   box is shallow it's OK to lose this. Probably....
+
+
+
+
+                                                                                     4
+        o​ Plot values along those projections​
+
+
+
+
+         o​ So we've now reduced our 3D vector to a 2D vector
+  ●​ In reality we'd normally try and do 1000D => 100D
+
+Q. By using an example, explain how PCA can facilitate better data
+visualization without significant loss of information.
+Motivation 2: Visualization
+  ●​ It's hard to visualize highly dimensional data
+          o​ Dimensionality reduction can improve how we display information in a tractable
+             manner for human consumption
+          o​ Why do we care?
+                 ▪​ Often helps to develop algorithms if we can understand our data better
+                 ▪​ Dimensionality reduction helps us do this, see data in a helpful
+                 ▪​ Good for explaining something to someone if you can "show" it in the data
+  ●​ Example;
+
+
+
+
+                                                                                                5
+o​ Collect a large data set about many facts of a country around the world​
+
+
+
+
+      ▪​ So
+            ▪​ x1 = GDP
+            ▪​ ...
+            ▪​ x6 = mean household
+      ▪​ Say we have 50 features per country
+      ▪​ How can we understand this data better?
+            ▪​ Very hard to plot 50 dimensional data
+o​ Using dimensionality reduction, instead of each country being represented by a
+   50-dimensional feature vector
+      ▪​ Come up with a different feature representation (z values) which summarize
+         these features​
+
+
+
+
+                                                                                      6
+       o​ This gives us a 2-dimensional vector
+             ▪​ Reduce 50D => 2D
+             ▪​ Plot as a 2D plot
+       o​ Typically you don't generally ascribe meaning to the new features (so we have to
+          determine what these summary values mean)
+             ▪​ e.g. may find horizontal axis corresponds to overall country size/economic
+                 activity
+             ▪​ and y axis may be the per-person well-being/economic activity
+       o​ So despite having 50 features, there may be two "dimensions" of information, with
+          features associated with each of those dimensions
+             ▪​ It's up to you to assess what of the features can be grouped to form summary
+                 features, and how best to do that (feature scaling is probably important)
+       o​ Helps show the two main dimensions of variation in a way that's easy to understand
+
+
+Q. Explain the basic/central idea of the PCA algorithm.
+Principle Component Analysis (PCA): Problem Formulation
+ ●​ For the problem of dimensionality reduction the most commonly used algorithm is PCA
+       o​ Here, we'll start talking about how we formulate precisely what we want PCA to do
+       o​ Say we have a 2D data set which we wish to reduce to 1D​
+
+
+
+
+       o​ In other words, find a single line onto which to project this data
+              ▪​ How do we determine this line?
+
+
+
+                                                                                              7
+                   ▪​ The distance between each point and the projected version should be
+                       small (blue lines below are short). This distance is called “Projection
+                       error” which should be as LOW as possible.
+                   ▪​PCA tries to find a lower dimensional surface so the sum of squares
+                     onto that surface is minimized (i.e., Sum of Squares of projection Errors
+                     (SSE) has to be the minimum)
+                   ▪​ The blue lines are sometimes called the projection error
+                          ▪​ PCA tries to find the surface (a straight line in this case) which
+                              has the minimum projection error​
+
+
+
+
+                   ▪​ As an aside, you should normally do mean normalization and feature
+                      scaling on your data before PCA. This is why the Data points are so
+                      nicely placed on the 2D space (+ve and -ve sides of both x and y axis)
+●​ A more formal description is
+     o​ For 2D-1D, we must find a vector u(1), which is of some dimensionality
+     o​ Onto which you can project the data so as to minimize the projection error
+        (equivalent to saying: find the line that Captures the Maximum amount of variation
+
+
+
+
+                                                                                                  8
+          of the Data​
+
+
+
+
+       o​ u(1) can be positive or negative (-u(1)) which makes no difference
+               ▪​ Each of the vectors define the same red line
+●​ In the more general case
+       o​ To reduce from nD to kD we
+               ▪​ Find k orthogonal vectors (u(1), u(2), ... u(k)) onto which to project the data to
+                  minimize the projection error
+               ▪​ So lots of vectors onto which we project the data
+               ▪​ Find a set of vectors which we project the data onto the linear subspace
+                  spanned by that set of vectors
+                     ▪​ We can define a point in a plane with k vectors
+       o​ e.g. 3D->2D
+               ▪​ Find pair of orthogonal vectors which define a 2D plane (surface) onto which
+                  you're going to project your data
+               ▪​ Much like the "shallow box" example in compression, we're trying to create
+                  the shallowest box possible (by defining two of it's three dimensions, so the
+                  box' depth is minimized)​
+
+
+
+
+                                                                                                   9
+  Q. Compare the PCA algorithm with Linear regression.
+  ●​ How does PCA relate to linear regression?
+       o​ PCA is not linear regression
+             ▪​ Despite cosmetic similarities, very different
+       o​ For linear regression, fitting a straight line to minimize the straight line between a
+          point and a squared line
+             ▪​ NB - VERTICAL distance between point and the predicted line or plane
+       o​ For PCA minimizing the magnitude of the shortest orthogonal distance
+             ▪​ Gives very different effects
+       o​ More generally
+             ▪​ With linear regression we're trying to predict "y" {Supervised Learning
+                 problem}
+             ▪​ With PCA there is no "y" - instead we have a list of features and all features
+                 are treated equally {Unsupervised learning problem}
+                    ▪​ If we have 3D dimensional data 3D->2D
+                            ▪​ Have 3 features treated symmetrically
+
+Q. What are the two preprocessing steps before employing the PCA algorithm?
+PCA Algorithm
+  ●​ Before applying PCA must do data preprocessing
+        o​ Given a set of m unlabeled examples we must do
+               ▪​ Mean normalization
+                     ▪​ Replace each xji with xj - μj,
+                            ▪​ In other words, determine the mean of each feature set, and
+                                then for each feature subtract the mean from the value, so we
+                                re-scale the mean to be 0
+               ▪​ Feature scaling (depending on data)
+                     ▪​ If features have very different scales then scale so they all have a
+                        comparable range of values
+                            ▪​ e.g. xji is set to (xj - μj) / sj
+                                    ▪​ Where sj is some measure of the range, so could be
+                                            ▪​ Biggest – smallest (like Max-Min Normalization)
+                                            ▪​ Standard deviation (more commonly)
+  ●​ With preprocessing done, PCA finds the lower dimensional sub-space which minimizes the
+     sum of the square
+        o​ In summary, for 2D->1D we'd be doing something like this;
+
+
+
+
+                                                                                               10
+       o​ Need to compute two things;
+             ▪​ Compute the u vectors
+                    ▪​ The new planes, defined by Eigenvectors (New Term!)
+             ▪​ Need to compute the z vectors
+                    ▪​ z vectors are the new, lower dimensionality feature vectors
+  ●​ A mathematical derivation for the u vectors is very complicated
+       o​ But once you've done it, the procedure to find each u vector is not that hard
+
+
+
+Q. Write a formal description of the PCA algorithm. …
+Algorithm description
+
+  ●​ Reducing data from n-dimensional to k-dimensional
+       o​ Compute the covariance matrix Σ
+       o​ We have total m patterns/examples, each example with n features/columns
+       o​ Preprocessing: Convert each example/pattern by Mean Normalization (always) and
+          Feature Scaling (if necessary).
+       o​ The Complete Data Set, after Mean Normalization and (possibly) Feature
+          Scaling is represented as the Matrix X [m x n]. Each Row represents an
+          example with n features (columns), thus Total m rows / examples in matrix X
+       o​ Now, Compute the covariance matrix Σ
+
+
+
+
+                                                             [ (n x m) * (m x n) ==> (n x n) matrix ]
+
+               ▪​ This is commonly denoted as Σ (greek upper case sigma) - NOT summation
+                  symbol
+
+                                                                                                   11
+            ▪​ Σ = sigma
+                  ▪​ This is an [n x n] matrix
+                        ▪​ Remember than X' is a [n x m] matrix
+            ▪​ In MATLAB or octave we can implement this as follows;​
+
+
+
+      o​ Compute eigenvectors of matrix Σ (How to do this? See in another Tutorial File in
+         the same folder here !)
+            ▪​ [U, S, V] = SVD (sigma) OR EIG(sigma)
+                   ▪​ svd = singular value decomposition
+                          ▪​ More numerically stable than eig
+                   ▪​ eig = also gives eigenvector
+      o​ U,S and V are matrices
+            ▪​ U matrix is also an [n x n] matrix
+            ▪​ Turns out the columns of U are the u vectors we want!
+            ▪​ So to reduce a system from n-dimensions to k-dimensions
+                   ▪​ Just take the first k-vectors from U (first k columns)
+                   ▪​ Each of these columns are called “Principal Component” or PC
+                   ▪​ So, we are taking only the first k principal components (each
+                      component has n features/values)
+
+
+
+
+●​ Next we need to find some way to change x (which is n dimensional) to z (which is k
+   dimensional)
+      o​ (reduce the dimensionality)
+      o​ Take first k columns of the u matrix and stack in columns
+            ▪​ n x k matrix - call this Ureduce
+      o​ We calculate z as follows
+            ▪​ z = (Ureduce)T * x (Remember: x is an n x 1 vector)
+                    ▪​ So [ k x n ] * [ n x 1 ]
+                    ▪​ Generates a matrix which is
+                           ▪​ k * 1
+                    ▪​ If that's not witchcraft I don't know what is!
+
+
+                                                                                         12
+  ●​ Exactly the same as with supervised learning except we're now doing it with unlabeled data
+  ●​ So in summary
+        o​ Preprocessing
+        o​ Calculate sigma (covariance matrix)
+        o​ Calculate eigenvectors with svd
+        o​ Take k vectors from U (Ureduce= U(:,1:k);)
+        o​ Calculate z (z =Ureduce' * x;)
+  ●​ No mathematical derivation
+        o​ Very complicated
+        o​ But it works
+
+Q. Describe the reconstruction procedure from reduced data set
+back to the original data set. …
+Reconstruction from Compressed Representation
+  ●​ Earlier spoke about PCA as a compression algorithm
+        o​ If this is the case, is there a way to decompress the data from low dimensionality
+            back to a higher dimensionality format?
+  ●​ Reconstruction
+
+
+
+
+                                                                                                13
+      o​ Say we have an example as follows​
+
+
+
+
+      o​ We have our examples (x1, x2 etc.)
+      o​ Project onto z-surface
+      o​ Given a point z1, how can we go back to the 2D space?
+●​ Considering
+      o​ z (vector) = (Ureduce)T * x
+●​ To go in the opposite direction we must do
+      o​ xapprox = Ureduce * z
+             ▪​ To consider dimensions (and prove this really works)
+                    ▪​ Ureduce = [n x k]
+                    ▪​ z [k * 1]
+             ▪​ So
+                    ▪​ xapprox = [n x 1]
+
+
+
+
+                                                                       14
+                          ●​ So this creates the following representation​
+
+
+
+
+  ●​ We lose some of the information (i.e. everything is now perfectly on that line) but it is now
+     projected into 2D space
+
+
+Q. Describe how to choose an appropriate value for k (no. of
+principal components) for the PCA algorithm. …
+
+Choosing the number of Principle Components
+  ●​ How do we chose k ?
+        o​ k = number of principle components
+        o​ Guidelines about how to choose k for PCA
+  ●​ To choose k think about how PCA works
+        o​ PCA tries to minimize averaged squared projection error​
+
+
+
+        o​ Total variation in data can be defined as the average over data saying how far are
+           the training examples from the origin​
+
+
+
+
+                                                                                                15
+  ●​ When we're choosing k typical to use something like this​
+
+
+
+
+        o​ Ratio between averaged squared projection error with total variation in data
+                ▪​ Want ratio to be small - means we retain 99% of the variance
+        o​ If it's small (0) then this is because the numerator is small
+                ▪​ The numerator is small when xi = xapproxi
+                      ▪​ i.e. we lose very little information in the dimensionality reduction, so
+                           when we decompress we regenerate the same data
+  ●​ So we chose k in terms of this ratio
+  ●​ Often can significantly reduce data dimensionality while retaining the variance
+                                         ●​ How do you do this​
+
+
+
+
+Q. Explain how PCA can be used for speeding up supervised
+learning algorithms by using an example.
+Advice for Applying PCA
+  ●​ Can use PCA to speed up algorithm running time
+       o​ Explain how
+       o​ And give general advice
+
+Speeding up supervised learning algorithms
+
+
+                                                                                                    16
+  ●​ Say you have a supervised learning problem
+        o​ Input x and y
+              ▪​ x is a 10,000 dimensional feature vector
+              ▪​ e.g. 100 x 100 images = 10,000 pixels
+              ▪​ Such a huge feature vector will make the algorithm slow
+        o​ With PCA we can reduce the dimensionality and make it tractable
+        o​ How
+              ▪​ 1) Extract x’s
+                      ▪​ So we now have an unlabeled training set
+              ▪​ 2) Apply PCA to x vectors
+                      ▪​ So we now have a reduced dimensional feature vector z
+              ▪​ 3) This gives you a new training set
+                      ▪​ Each vector can be re-associated with the label
+              ▪​ 4) Take the reduced dimensionality data set and feed to a learning
+                  algorithm
+                      ▪​ Use y as labels and z as feature vector
+              ▪​ 5) If you have a new example map from higher dimensionality vector
+                  to lower dimensionality vector, then feed into learning algorithm
+  ●​ PCA maps one vector to a lower dimensionality vector
+        o​ x -> z
+        o​ Defined by PCA only on the training set
+        o​ The mapping computes a set of parameters
+              ▪​ Feature scaling values
+              ▪​ Ureduce
+                      ▪​ Parameter learned by PCA
+                      ▪​ Should be obtained only by determining PCA on your training
+                         set
+        o​ So we use those learned parameters for our
+              ▪​ Cross validation data
+              ▪​ Test set
+  ●​ Typically you can reduce data dimensionality by 5-10x without a major
+     hit to algorithm’s accuracy or performance
+
+Q. What are the applications of PCA / Dimensionality reduction algorithms?
+…
+Applications of PCA
+  ●​ Compression
+       o​ Why
+            ▪​ Reduce memory/disk needed to store data
+            ▪​ Speed up learning algorithms {this is the Major Application of PCA}
+
+                                                                                     17
+      o​ How do we chose k?
+            ▪​ % of variance retained
+●​ Visualization
+      o​ Typically chose k =2 or k = 3
+      o​ Because we can plot these values!
+●​ One thing often done wrong regarding PCA
+      o​ A bad use of PCA: Use it to prevent over-fitting. Q. Why is it a BAD
+         use?
+            ▪​ Reasoning
+                   ▪​ If we have xi we have n features, zi has k features which can be
+                       lower
+                   ▪​ If we only have k features then maybe we're less likely to over
+                       fit...
+            ▪​ This doesn't work
+                   ▪​ BAD APPLICATION … It’s like using a sword to shave your
+                       beard OR using the cannon to kill a mosquito
+                   ▪​ Might work OK, but not a good way to address over fitting
+                   ▪​ Better to use regularization
+            ▪​ PCA throws away some data without knowing what the values it's
+                losing
+                   ▪​ Probably OK if you're keeping most of the data
+                   ▪​ But if you're throwing away some crucial data bad
+                   ▪​ So you have to go to like 95-99% variance retained
+                           ▪​ So here regularization will give you AT LEAST as good
+                              a way to solve over fitting
+●​ A second PCA myth
+      o​ Used for compression or visualization --- good
+      o​ Sometimes used
+            ▪​ Design ML system with PCA from the outset
+                   ▪​ But, what if you did the whole thing without PCA
+            ▪​ See how a system performs without PCA
+                   ▪​ ONLY if you have a reason to believe PCA will help should you
+                       then add PCA
+            ▪​ PCA is easy enough to add on as a processing step, NOT a must-use
+                preprocessing step
+                   ▪​ Try without PCA first!
+
+
+
+
+                                                                                   18
+
