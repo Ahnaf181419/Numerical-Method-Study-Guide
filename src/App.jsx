@@ -4,6 +4,7 @@ import { useProgress } from './lib/useProgress.js';
 import { ModeTabs, SideNav } from './components/Nav.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import ExamPrep from './components/ExamPrep.jsx';
+import Syllabus from './components/Syllabus.jsx';
 import Learn from './components/Learn.jsx';
 import Examples from './components/Examples.jsx';
 import Flashcards from './components/Flashcards.jsx';
@@ -57,6 +58,7 @@ export default function App() {
       onHome={() => go({ view: 'home' })}
       onPick={(id) => openModule(id)}
       onExam={() => go({ view: 'exam' })}
+      onSyllabus={() => go({ view: 'syllabus' })}
       onSearch={() => (setNavOpen(false), setSearchOpen(true))}
     />
   );
@@ -86,7 +88,7 @@ export default function App() {
           <button onClick={() => setNavOpen(true)} className="press min-h-11 rounded-xl border border-line px-4 text-text">
             Menu
           </button>
-          <span className="min-w-0 flex-1 truncate text-sm text-ash">{view === 'module' ? `Ch ${mod.chapter}: ${mod.title}` : view === 'exam' ? 'Exam prep' : 'Overview'}</span>
+          <span className="min-w-0 flex-1 truncate text-sm text-ash">{view === 'module' ? `Ch ${mod.chapter}: ${mod.title}` : view === 'exam' ? 'Exam prep' : view === 'syllabus' ? 'Syllabus' : 'Overview'}</span>
           <button onClick={() => setSearchOpen(true)} aria-label="Search" className="press grid size-11 place-items-center rounded-xl border border-line text-ash">
             <svg viewBox="0 0 20 20" className="size-4" aria-hidden="true">
               <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
@@ -98,6 +100,8 @@ export default function App() {
         {view === 'home' && <Dashboard modules={modules} progress={progress} onOpen={(id) => openModule(id)} onExam={() => go({ view: 'exam' })} onContinue={() => openModule(mod.id)} />}
 
         {view === 'exam' && <ExamPrep modules={modules} progress={progress} onOpen={(id) => openModule(id)} onMockFinish={saveMock} />}
+
+        {view === 'syllabus' && <Syllabus />}
 
         {view === 'module' && (
           <>

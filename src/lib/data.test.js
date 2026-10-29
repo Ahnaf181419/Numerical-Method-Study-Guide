@@ -6,6 +6,7 @@ import modules from '../data/syllabusData.js';
 import checks from '../data/checks.js';
 import { likely, traps } from '../data/examPrep.js';
 import papers from '../data/pastPapers.js';
+import syllabusTopics from '../data/syllabusTopics.js';
 import { SOLVERS } from './solverConfigs.js';
 
 const tex = (s) => katex.renderToString(s, { throwOnError: true });
@@ -137,4 +138,17 @@ test('flat point lists are split into wrappable math spans', () => {
       const pairs = (m.match(/\),\s*\(/g) ?? []).length;
       assert.ok(pairs <= 3, `${where}: split the ${pairs}-pair list into smaller $...$ spans so it can wrap on a phone`);
     }
+});
+
+test('syllabus page reproduces Shuvo Sir topic pdf in order', () => {
+  assert.deepEqual(syllabusTopics.sections.map((x) => x.title), [
+    'Interpolation',
+    'Numerical Integrations',
+    'Numerical Differentiations',
+    'Regression Normal',
+    'Regression by Gradient Descent',
+  ]);
+  const urls = JSON.stringify(syllabusTopics).match(/https:[^"']+/g) ?? [];
+  assert.equal(urls.length, 12); // 9 youtube + 3 drive links
+  urls.forEach((u) => assert.ok(!u.includes(' '), u));
 });

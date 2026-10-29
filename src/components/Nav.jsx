@@ -10,7 +10,7 @@ export const MODES = [
 
 const item = (active) => `press flex min-h-12 w-full items-center gap-3 rounded-xl px-3 text-left ${active ? 'bg-raise text-text' : 'text-ash active:bg-raise'}`;
 
-export function SideNav({ modules, view, currentId, progress, onHome, onPick, onExam, onSearch }) {
+export function SideNav({ modules, view, currentId, progress, onHome, onPick, onExam, onSyllabus, onSearch }) {
   return (
     <nav aria-label="Course" className="grid gap-1">
       <button onClick={onSearch} className="press mb-3 flex min-h-12 items-center gap-3 rounded-xl border border-line bg-ink px-3 text-left text-ash">
@@ -42,6 +42,9 @@ export function SideNav({ modules, view, currentId, progress, onHome, onPick, on
           </button>
         );
       })}
+      <button onClick={onSyllabus} aria-current={view === 'syllabus' ? 'page' : undefined} className={item(view === 'syllabus')}>
+        <span className="w-10 text-center font-serif text-lg text-gold">§</span> Syllabus
+      </button>
       <button onClick={onExam} aria-current={view === 'exam' ? 'page' : undefined} className={`${item(view === 'exam')} mt-4 border border-red/30`}>
         <span className="w-10 text-center text-red">★</span>
         <span className={view === 'exam' ? 'text-red' : 'text-text/85'}>Exam prep</span>
