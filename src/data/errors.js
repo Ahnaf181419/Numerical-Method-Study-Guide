@@ -4,6 +4,30 @@
 // Balagurusamy Ch 4 (errors) is a scanned PDF with no extracted text yet, so nothing is quoted from it here.
 
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "Why does this chapter exist at all?",
+    options: ["Computers make arithmetic mistakes that must be corrected", "Every stored number is slightly wrong, so we must measure and control how wrong", "Exact answers are unfashionable in engineering", "Integration has no exact solution"],
+    answer: 1,
+    explain: "Finite precision means every computed or measured number is a neighbour of the truth, never the truth. The chapter's job is to bound that wrongness.",
+  },
+  "Start here: the core idea": {
+    q: "A measurement misses by exactly 1 cm. When is that most serious?",
+    options: ["Always equally serious, whatever the object", "When measuring a football pitch", "When measuring a pencil", "Only when working in metric units"],
+    answer: 2,
+    explain: "Same absolute error, very different relative error — and relative error is the one that says how much the measurement is worth.",
+  },
+  "Start here: reading the symbols": {
+    q: "Which of the two error measures is a unitless pure fraction?",
+    options: ["Absolute error $E_A$", "Relative error $E_R$", "Both", "Neither"],
+    answer: 1,
+    explain: "$E_R = E_A/|X|$ divides the miss by the size of the true value, so the units cancel.",
+  },
+  "Start here: your first walk-through": {
+    q: "$\\frac{22}{7}$ has $E_R \\approx 4\\times10^{-4}$ against $\\pi$. Roughly how many significant digits agree?",
+    options: ["1–2", "3–4", "6–7", "Exactly 7"],
+    answer: 1,
+    explain: "The rule $E_R \\le \\tfrac{1}{2}10^{-k}$ for $k$ correct digits gives $k \\approx 3$–$4$ here.",
+  },
   'Types of error': {
     q: 'Which of these is **not** one of the three types of error in Shanker Rao, Ch. 1?',
     options: ['Inherent error', 'Analytic error', 'Round-off error', 'Subtractive error'],
@@ -94,6 +118,57 @@ export default {
   sources: ['Shanker Rao Ch 1', 'Balagurusamy Ch 4'],
   flagged: true,
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "Type $4 \\div 3$ into any calculator and it answers $1.3333333$. The true value goes on forever — the calculator did not compute the answer, it stored a **close neighbour** of the answer. Every number a computer touches suffers the same fate." },
+        { type: "p", text: "A ruler read to the nearest millimetre, $\\pi$ squeezed into finite memory, a sensor with 2% noise: the true value never survives the journey. So a numerical method can never promise the exact answer. What it **can** promise is an answer whose wrongness is known and bounded." },
+        { type: "p", text: "That is this chapter's whole job: define 'how wrong' precisely, track how the wrongness grows when numbers are added, multiplied or pushed through formulas, and say how many digits of a final result you may actually trust." },
+        { type: "list", items: [
+          "Name the types of error (the papers ask for them by name).",
+          "Compute absolute and relative error for any approximation.",
+          "Propagate input errors through a formula to bound the output error.",
+          "Count trustworthy significant digits.",
+          "Spot an ill-conditioned problem, where a tiny input error becomes a huge output error.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "Two questions measure wrongness. **How far off is it?** — the absolute error. **How far off is it compared with the size of the thing?** — the relative error. You need both:" },
+        { type: "math", tex: "E_A = |X - x|, \\qquad E_R = \\left|\\frac{X - x}{X}\\right|" },
+        { type: "p", text: "where $X$ is the true value and $x$ is the approximation you actually have. Arriving 1 minute late to a lecture and 1 minute after a flight's gate closes are the **same absolute error** with wildly different consequences — proportion is what relative error captures." },
+        { type: "p", text: "A machine produces a wrong $x$ in two distinct ways: **chopping** simply drops the extra digits ($1.6666\\ldots \\to 1.6666$), while **rounding** moves to the nearest allowed value ($1.6666\\ldots \\to 1.6667$). Rounding keeps the error within half a unit of the last kept digit; chopping can be twice as bad." },
+        { type: "note", text: "'Correct to 4 significant digits' is a claim about **relative** error ($E_R \\le 0.5\\times10^{-4}$), not about how many digits happen to be printed." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "p", text: "The same handful of symbols repeats through every section of this chapter. Decode them once here and every later page reads easily." },
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$X$", "the true (exact) value", "capital letter = truth"],
+          ["$x$", "the approximation you actually have", "small letter = stored value"],
+          ["$E_A = |X - x|$", "absolute error", "distance from the truth; carries units"],
+          ["$E_R = E_A/|X|$", "relative error", "fraction of the truth; unitless"],
+          ["$\\delta x$", "a small error living in the input $x$", "say 'delta x'"],
+          ["$\\partial u/\\partial x$", "how fast the output $u$ changes when $x$ wiggles", "the sensitivity dial"],
+          ["$\\Delta u$", "the resulting error in the output", "say 'delta u'"],
+        ] },
+        { type: "p", text: "Two vocabulary words complete the decoder: **chopping** throws digits away, **rounding** picks the nearest allowed value. The rest of the chapter quantifies exactly what each choice costs." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "A famous fact says $\\frac{22}{7}$ approximates $\\pi$. It is the perfect first measurement of wrongness — small enough to check entirely by hand." },
+        { type: "math", tex: "E_A = \\left|\\pi - \\tfrac{22}{7}\\right| = |3.14159265 - 3.14285714| = 0.0012645" },
+        { type: "math", tex: "E_R = \\frac{E_A}{\\pi} = \\frac{0.0012645}{3.14159265} = 0.0004025 \\approx 4.0\\times10^{-4}" },
+        { type: "p", text: "Interpretation is the mark of understanding: $E_R \\approx 4\\times10^{-4}$, and the working rule '$k$ correct significant digits $\\Leftrightarrow E_R \\le \\tfrac{1}{2}10^{-k}$' says $\\frac{22}{7}$ agrees with $\\pi$ to about 3–4 significant digits. That is the entire method: **definition, substitute, interpret**." },
+        { type: "exam", text: "In the exam, write exactly this shape: quote the definitions of $E_A$ and $E_R$, substitute both values with all digits shown, and end with one sentence interpreting the relative error (here: about 4 significant figures agree)." },
+      ],
+    },
     {
       heading: 'Types of error',
       blocks: [

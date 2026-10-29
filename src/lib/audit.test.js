@@ -22,6 +22,13 @@ const has = (text, num, label) => assert.ok(text.includes(num), `${label}: expec
 
 const close = (a, b, tol = 1e-6) => assert.ok(Math.abs(a - b) < tol, `${a} != ${b}`);
 
+const sectionText = (id, heading) => {
+  const m = modules.find((x) => x.id === id);
+  const sec = m.sections.find((x) => x.heading === heading);
+  assert.ok(sec, `${id}: no section "${heading}"`);
+  return sec.blocks.flatMap((b) => [b.text, b.tex, ...(b.items ?? []), ...(b.head ?? []), ...(b.rows ?? []).flat()]).filter(Boolean).join('\n');
+};
+
 test('elimination examples match the engine', () => {
   const sys = { A: [[1, 1, 1], [2, 3, 1], [3, 4, 5]], b: [6, 13, 18] };
   const r = s.gaussEliminate(sys).result.x;
@@ -197,4 +204,14 @@ test('the S24 missing-values answer is the quadratic one', () => {
   const ys = [2, 5, 10, 17, 26, 37];
   const d2 = ys.slice(0, -2).map((_, i) => ys[i + 2] - 2 * ys[i + 1] + ys[i]);
   assert.ok(d2.every((v) => Math.abs(v - 2) < 1e-9), 'second differences must be constant at 2');
+});
+
+test('errors walk-through numbers match the math', () => {
+  const t = sectionText('errors', 'Start here: your first walk-through');
+  const ea = Math.abs(Math.PI - 22 / 7);
+  const er = ea / Math.PI;
+  close(ea, 0.0012645, 1e-7);
+  close(er, 0.0004025, 1e-7);
+  assert.ok(t.includes('0.0012645'), 'absolute error');
+  assert.ok(t.includes('0.0004025'), 'relative error');
 });
