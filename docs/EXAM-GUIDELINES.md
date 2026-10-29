@@ -16,14 +16,29 @@
 
 ## 2. Final syllabus (as given)
 
+**Credit 1**
+
 - Elimination methods (Gauss elimination, Gauss-Jordan)
 - Iterative methods (Jacobi, Gauss-Seidel)
 - LU method (LU decomposition)
 - PCA (Principal Component Analysis)
-- Regression (statistical and gradient descent)
-- Interpolation
-- Numerical Differentiation
-- Numerical Integration
+
+**Credit 2** (depth as given by the student: *derivation + math* or *math only*)
+
+1. **Regression** — Balagurusamy Ch 10 (`slides/Regression/`)
+   - Gradient descent: the three slide decks in `slides/Regression/` (videos 02, 03: batch and single mode)
+   - Linear regression — derivation + math
+   - Power-function regression — math
+   - Polynomial regression — math (§10.4)
+   - Multiple linear regression — math (§10.5)
+2. **Interpolation** — Shanker Rao, derivation + math for each formula
+   - Newton forward, Newton backward, Gauss forward, Gauss backward, Stirling, Lagrange, Newton's divided difference
+   - Inverse Lagrange interpolation (math), error calculation, missing values in a table,
+     the difference table, derivation of the difference-operator formulae
+3. **Numerical differentiation** — Balagurusamy, math only, $f'(x)$ and $f''(x)$ only:
+   forward, backward and central differences
+4. **Numerical integration** — Shanker Rao, all derivations + math: general quadrature formula,
+   trapezoidal, Simpson's 1/3, Simpson's 3/8, Weddle's rule, Romberg integration
 
 ### Topics the past papers add (in scope — every paper asks for them)
 
@@ -43,7 +58,8 @@ be covered:
 ### Explicitly out of scope
 
 - **Regularization is NOT in the syllabus.** Regression is the **statistical/least-squares
-  method from Balagurusamy**, and the regression derivation covers **linear regression only**.
+  method from Balagurusamy**, and the regression derivation covers **linear regression only**
+  (power-function, polynomial and multiple linear regression are math only).
   No ridge/lasso, no feature scaling for regularisation, no penalty terms.
 
 ## 3. Question pattern (Dr. Md Shafiul Alam — Shuvo)

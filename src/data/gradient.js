@@ -165,7 +165,7 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "From the **Gradient Descent slides (batch mode)**: training set $(1,1), (2,3), (4,3), (3,2), (5,5)$ with $\\theta_0 = \\theta_1 = 0$ and $\\alpha = 0.01$. Run one epoch." },
+        { type: "p", text: "From the **Gradient Descent slides (batch mode)**: training set $(1,1), (2,3), $$(4,3), (3,2), (5,5)$ with $\\theta_0 = \\theta_1 = 0$ and $\\alpha = 0.01$. Run one epoch." },
         { type: "p", text: "With both parameters zero every prediction $H_\\theta(x)$ is 0, so the error column is $-1, -3, -3, -2, -5$ and the error$\\times x$ column is $-1, -6, -12, -6, -25$." },
         { type: "math", tex: "\\text{PD}_{\\theta_0} = \\tfrac{-14}{5} = -2.8, \\qquad \\text{PD}_{\\theta_1} = \\tfrac{-50}{5} = -10" },
         { type: "p", text: "Update: $\\theta_0 = 0 - 0.01(-2.8) = 0.028$ and $\\theta_1 = 0 - 0.01(-10) = 0.1$ after one epoch. **Asked in:** the parameter-update derivation is Spring 2024 Q3(a) and the degree-2 demonstration is Spring 2024 Q3(b) — the same table method with one more column ($x^2$)." },
@@ -379,7 +379,7 @@ export default {
         },
         {
           type: 'p',
-          text: 'The Spring 2024 data for the quadratic case is $(x, y) = (0,0), (2,5), (3,6), (5,9), (4,7)$ with $\\theta_0 = 2$, $\\theta_1 = 1$, $\\theta_2 = 3$ and $\\alpha = 0.2$. With $H_\\theta(x) = 2 + x + 3x^2$ the epoch works out as',
+          text: 'The Spring 2024 data for the quadratic case is $(x, y) = (0,0), (2,5), $$(3,6), (5,9), (4,7)$ with $\\theta_0 = 2$, $\\theta_1 = 1$, $\\theta_2 = 3$ and $\\alpha = 0.2$. With $H_\\theta(x) = 2 + x + 3x^2$ the epoch works out as',
         },
         {
           type: 'table',
@@ -450,7 +450,7 @@ export default {
       title: 'Batch mode: the first epoch on the slides\' training set',
       type: 'Numerical — Gradient descent (batch)',
       question:
-        'The training set is $(x, y) = (1,1), (2,3), (4,3), (3,2), (5,5)$, so $m = 5$. Starting from $\\theta_0 = \\theta_1 = 0$ with learning rate $\\alpha = 0.01$, carry out one epoch of gradient descent in **batch** mode and update the parameters.',
+        'The training set is $(x, y) = (1,1), (2,3), $$(4,3), (3,2), (5,5)$, so $m = 5$. Starting from $\\theta_0 = \\theta_1 = 0$ with learning rate $\\alpha = 0.01$, carry out one epoch of gradient descent in **batch** mode and update the parameters.',
       source: 'Gradient Descent slides (Batch)',
       marks: 6,
       steps: [
@@ -487,7 +487,7 @@ export default {
       title: 'Single mode: the first epoch on the same training set',
       type: 'Numerical — Gradient descent (single)',
       question:
-        'Using the same training set $(x, y) = (1,1), (2,3), (4,3), (3,2), (5,5)$, $\\theta_0 = \\theta_1 = 0$ and $\\alpha = 0.01$, carry out one epoch of gradient descent in **single** mode.',
+        'Using the same training set $(x, y) = (1,1), (2,3), $$(4,3), (3,2), (5,5)$, $\\theta_0 = \\theta_1 = 0$ and $\\alpha = 0.01$, carry out one epoch of gradient descent in **single** mode.',
       source: 'Gradient Descent slides (Single)',
       marks: 6,
       steps: [
@@ -524,7 +524,7 @@ export default {
       title: 'Degree-2 polynomial regression: one batch epoch',
       type: 'Numerical — Gradient descent (batch)',
       question:
-        'Fit a second-degree polynomial $H_\\theta(x) = \\theta_0 + \\theta_1 x + \\theta_2 x^2$ to the data $(x, y) = (0,0), (2,5), (3,6), (5,9), (4,7)$ by gradient descent in batch mode. Take $\\theta_0 = 2$, $\\theta_1 = 1$, $\\theta_2 = 3$ and learning rate $\\alpha = 0.2$, and carry out one epoch.',
+        'Fit a second-degree polynomial $H_\\theta(x) = \\theta_0 + \\theta_1 x + \\theta_2 x^2$ to the data $(x, y) = (0,0), (2,5), $$(3,6), (5,9), (4,7)$ by gradient descent in batch mode. Take $\\theta_0 = 2$, $\\theta_1 = 1$, $\\theta_2 = 3$ and learning rate $\\alpha = 0.2$, and carry out one epoch.',
       source: 'Spring 2024',
       marks: 6,
       steps: [

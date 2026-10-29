@@ -27,7 +27,9 @@ function Example({ ex }) {
         <ol className="prose-read mt-4 space-y-2 border-l-2 border-gold/50 pl-9">
           {ex.steps.slice(0, shown).map((s, i) => (
             <li key={i} className="pl-1">
-              <span className="prose-read">{stepText(s)}</span>
+              <span className="prose-read">
+                <Rich text={stepText(s)} />
+              </span>
               {stepMarks(s) && <span className="ml-2 whitespace-nowrap rounded-md bg-line/60 px-1.5 py-0.5 font-sans text-xs text-ash">{stepMarks(s)}</span>}
             </li>
           ))}

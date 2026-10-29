@@ -136,6 +136,11 @@ test('interpolation examples match the engine', () => {
   has(exampleText('interpolation', 'f(7.5)'), '421.875', 'backward');
   has(exampleText('interpolation', 'Bessel'), '3250.875', 'bessel');
   has(exampleText('interpolation', 'Stirling'), '47691.8256', 'stirling');
+  has(exampleText('interpolation', 'y(30)'), '16.9216', 'gauss forward');
+  has(exampleText('interpolation', '1966'), '32.625', 'gauss backward');
+  has(exampleText('regression', 'Second-order polynomial'), 'y = 3 + 2x + x^2', 'polynomial regression');
+  const mr = exampleText('regression', 'Regression plane');
+  ['3.6512', '0.8546', '1.5063', '63.356'].forEach((n) => has(mr, n, 'multiple regression'));
 });
 
 test('differentiation and integration examples match the engine', () => {

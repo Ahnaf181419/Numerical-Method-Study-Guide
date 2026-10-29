@@ -118,3 +118,23 @@ test('titles and headings compile as inline math', () => {
     m.formulas.forEach((f) => inline(f.label) + inline(f.where));
   }
 });
+
+test('flat point lists are split into wrappable math spans', () => {
+  // A single $...$ span is one unbreakable box; a flat list of coordinate pairs
+  // inside it overflows the card. Split such lists into several spans.
+  const all = [];
+  const walk = (x, where) => {
+    if (typeof x === 'string') all.push([where, x]);
+    else if (Array.isArray(x)) x.forEach((v) => walk(v, where));
+    else if (x && typeof x === 'object') Object.entries(x).forEach(([k, v]) => walk(v, `${where}.${k}`));
+  };
+  modules.forEach((m) => walk(m, m.id));
+  walk(papers, 'papers');
+  walk(likely, 'likely');
+  walk(traps, 'traps');
+  for (const [where, text] of all)
+    for (const m of text.match(/\$[^$]+\$/g) ?? []) {
+      const pairs = (m.match(/\),\s*\(/g) ?? []).length;
+      assert.ok(pairs <= 3, `${where}: split the ${pairs}-pair list into smaller $...$ spans so it can wrap on a phone`);
+    }
+});

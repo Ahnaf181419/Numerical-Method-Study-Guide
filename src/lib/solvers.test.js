@@ -186,6 +186,35 @@ test('power law fit of y = 0.5 x^2 recovers a and b', () => {
   close(result.b, 2, 1e-6);
 });
 
+// ---- polynomial / multiple regression (Balagurusamy §10.4-10.5, Shanker Rao §14.13) ----
+test('polynomial regression reproduces Balagurusamy Example 10.4 (y = 3 + 2x + x^2)', () => {
+  const { result } = s.polyRegression({ xs: [1, 2, 3, 4], ys: [6, 11, 18, 27], degree: 2 });
+  [3, 2, 1].forEach((v, i) => close(result.a[i], v, 1e-9));
+  assert.throws(() => s.polyRegression({ xs: [1, 2], ys: [1, 2], degree: 2 }), /not possible/);
+});
+
+test('multiple regression reproduces Shanker Rao §14.13 Example 1', () => {
+  const { result } = s.multipleRegression({
+    xs: [57, 59, 49, 62, 51, 50, 55, 48, 52, 42, 61, 57],
+    zs: [8, 10, 6, 11, 8, 7, 10, 9, 10, 6, 12, 9],
+    ys: [64, 71, 53, 67, 55, 58, 77, 57, 56, 51, 76, 68],
+  });
+  [3.6512, 0.8546, 1.5063].forEach((v, i) => close(result.a[i], v, 5e-5));
+});
+
+test('multiple regression refuses collinear data (Balagurusamy Example 10.5 has z = x - 1)', () => {
+  assert.throws(() => s.multipleRegression({ xs: [1, 2, 3, 4], zs: [0, 1, 2, 3], ys: [12, 18, 24, 30] }), /dependent/);
+});
+
+// ---- central differences (Shanker Rao Ch 6) --------------------------------
+test('Gauss forward, Gauss backward and Stirling reproduce Shanker Rao Examples 6.1, 6.2, 6.8', () => {
+  const f = s.gaussInterp({ xs: [21, 25, 29, 33, 37], ys: [18.4708, 17.8144, 17.107, 16.3432, 15.5154], x: 30, formula: 'forward' }).result;
+  close(f.u, 0.25); close(f.y, 16.9216, 5e-5);
+  const b = s.gaussInterp({ xs: [1931, 1941, 1951, 1961, 1971, 1981], ys: [12, 15, 20, 27, 39, 52], x: 1966, formula: 'backward' }).result;
+  close(b.u, -0.5); close(b.y, 32.625, 1e-9);
+  close(s.gaussInterp({ xs: [20, 25, 30, 35, 40], ys: [49225, 48316, 47236, 45926, 44306], x: 28, formula: 'stirling' }).result.y, 47691.8256, 1e-6);
+});
+
 // ---- gradient descent (Gradient Descent slides) ---------------------------
 test('batch gradient descent reproduces the slide epochs', () => {
   const { result } = s.gradientDescent({

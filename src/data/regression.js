@@ -4,9 +4,11 @@
 // Shanker Rao Ch 12 (Curve Fitting — the least-squares derivation and the power-law fit).
 //
 // Every number here is reproducible with src/lib/solvers.js:
-//   leastSquares({ xs, ys }) -> { a, b, r2 }
-//   powerLawFit({ xs, ys })  -> { a, b }
-// Linear regression only — no penalty terms, no regularisation (not in the syllabus).
+//   leastSquares({ xs, ys })              -> { a, b, r2 }
+//   powerLawFit({ xs, ys })               -> { a, b }
+//   polyRegression({ xs, ys, degree })    -> { a: [a1..am] }
+//   multipleRegression({ xs, zs, ys })    -> { a: [a1, a2, a3] }
+// Least squares only — no penalty terms, no regularisation (not in the syllabus).
 
 export const checks = {
   "Start here: the problem this chapter solves": {
@@ -104,6 +106,30 @@ export const checks = {
     answer: 0,
     explain:
       'Taking logarithms turns the power law into a straight line in log-log space, so the normal equations apply directly to $(\\ln x, \\ln y)$; the slope of that line is $b$ and $a = e^{\\text{intercept}}$.',
+  },
+  'Polynomial regression': {
+    q: 'Fitting a second-degree polynomial $y = a_1 + a_2x + a_3x^2$ by least squares needs which sums?',
+    options: [
+      '$n, \\sum x, \\sum x^2, \\sum x^3, \\sum x^4$ and $\\sum y, \\sum yx, \\sum yx^2$',
+      '$n, \\sum x, \\sum x^2$ and $\\sum y, \\sum yx$ only',
+      '$\\sum \\ln x, \\sum \\ln y$ and $\\sum (\\ln x)^2$',
+      '$\\sum x^2$ and $\\sum y^2$ only',
+    ],
+    answer: 0,
+    explain:
+      'Three unknowns give three normal equations; the coefficient matrix is $C(j,k) = \\sum x^{j+k-2}$, so powers up to $x^{2m-2} = x^4$ appear, and the right-hand side is $\\sum yx^{j-1}$ for $j = 1, 2, 3$ (Balagurusamy Eq. 10.19).',
+  },
+  'Multiple linear regression': {
+    q: 'For $y = a_1 + a_2x + a_3z$, the third normal equation (from $\\partial Q/\\partial a_3 = 0$) is:',
+    options: [
+      '$(\\sum z)a_1 + (\\sum xz)a_2 + (\\sum z^2)a_3 = \\sum yz$',
+      '$(\\sum z)a_1 + (\\sum x^2)a_2 + (\\sum z^2)a_3 = \\sum yz$',
+      '$na_1 + (\\sum x)a_2 + (\\sum z)a_3 = \\sum y$',
+      '$(\\sum x)a_1 + (\\sum xz)a_2 + (\\sum z^2)a_3 = \\sum yx$',
+    ],
+    answer: 0,
+    explain:
+      'Differentiating $Q = \\sum (y_i - a_1 - a_2x_i - a_3z_i)^2$ with respect to $a_3$ brings down a factor $z_i$, so every term of the first equation is multiplied by $z$ (Balagurusamy Eq. 10.21).',
   },
   'Regression of y on x and of x on y': {
     q: 'When the roles of $x$ and $y$ are swapped to obtain the regression of $x$ on $y$, the normal equations become:',
@@ -203,7 +229,7 @@ export default {
         },
         {
           type: 'note',
-          text: '**Regularisation is not in this syllabus.** No ridge, lasso or elastic net, no $L_1/L_2$ penalty, no feature scaling for a penalty. The course covers the **statistical / least-squares method of Balagurusamy (Shanker Rao Ch 14) for linear regression only**. If a question ever asks for a penalty term, it is off-syllabus.',
+          text: '**Regularisation is not in this syllabus.** No ridge, lasso or elastic net, no $L_1/L_2$ penalty, no feature scaling for a penalty. The course covers the **statistical / least-squares method of Balagurusamy Ch 10** (linear, power-function, polynomial and multiple linear regression). If a question ever asks for a penalty term, it is off-syllabus.',
         },
         {
           type: 'exam',
@@ -346,7 +372,7 @@ export default {
         },
         {
           type: 'note',
-          text: 'This table is the Fall 2023 paper\'s data (the same example as Balagurusamy Ch 10, whose scan has **not** yet been transcribed into `docs/sources/`). The *method* used on it is fully covered by Shanker Rao Ch 12 and Ch 14, so only the dataset itself is outside the transcribed notes.',
+          text: 'This table is the Fall 2023 paper\'s data; it is not one of the worked examples in the scanned pages of Balagurusamy Ch 10. The *method* is Balagurusamy §10.2 (Eq. 10.8) and Shanker Rao Ch 12 and Ch 14.',
         },
         {
           type: 'exam',
@@ -400,6 +426,71 @@ export default {
       ],
     },
     {
+      heading: 'Polynomial regression',
+      blocks: [
+        {
+          type: 'p',
+          text: 'When the data do not look linear, Balagurusamy §10.4 fits a polynomial by the same least-squares technique. A polynomial of degree $m-1$ has $m$ coefficients:',
+        },
+        { type: 'math', tex: 'y = a_1 + a_2x + a_3x^2 + \\cdots + a_mx^{m-1} = f(x), \\qquad Q = \\sum_{i=1}^{n}\\left[\\, y_i - f(x_i) \\right]^2' },
+        {
+          type: 'p',
+          text: 'Set $\\partial Q/\\partial a_j = 0$ for $j = 1, \\dots, m$. Since $\\partial f(x_i)/\\partial a_j = x_i^{j-1}$, each condition is $\\sum [y_i - f(x_i)]\\,x_i^{j-1} = 0$, i.e. $\\sum x_i^{j-1}(a_1 + a_2x_i + \\cdots + a_mx_i^{m-1}) = \\sum y_ix_i^{j-1}$. Written out, these are the $m$ **normal equations** (Eq. 10.19):',
+        },
+        {
+          type: 'math',
+          tex: '\\begin{aligned} a_1n + a_2\\sum x_i + \\cdots + a_m\\sum x_i^{m-1} &= \\sum y_i \\\\ a_1\\sum x_i + a_2\\sum x_i^2 + \\cdots + a_m\\sum x_i^{m} &= \\sum y_ix_i \\\\ &\\;\\;\\vdots \\\\ a_1\\sum x_i^{m-1} + a_2\\sum x_i^{m} + \\cdots + a_m\\sum x_i^{2m-2} &= \\sum y_ix_i^{m-1} \\end{aligned}',
+        },
+        {
+          type: 'p',
+          text: 'In matrix form $\\mathbf{CA} = \\mathbf{B}$ with $C(j,k) = \\sum x_i^{j+k-2}$ and $B(j) = \\sum y_ix_i^{j-1}$, solved by the elimination methods of Chapter 3. For the **second-order** polynomial ($m = 3$) the three equations are',
+        },
+        {
+          type: 'math',
+          tex: '\\begin{aligned} a_1n + a_2\\sum x + a_3\\sum x^2 &= \\sum y \\\\ a_1\\sum x + a_2\\sum x^2 + a_3\\sum x^3 &= \\sum yx \\\\ a_1\\sum x^2 + a_2\\sum x^3 + a_3\\sum x^4 &= \\sum yx^2 \\end{aligned}',
+        },
+        {
+          type: 'note',
+          text: 'Balagurusamy\'s Algorithm 10.2: if $n \\le$ the order of the polynomial, "regression is not possible". And §10.6: the sums of high powers grow very fast, so for a large degree the normal equations become **ill-conditioned** — pivoting and higher precision help.',
+        },
+        {
+          type: 'exam',
+          text: 'Script: the sums table with columns $x, y, x^2, x^3, x^4, yx, yx^2$ and a $\\Sigma$ row (2 marks) $\\to$ the three normal equations with the numbers substituted (1 mark) $\\to$ solve them by Gauss elimination, showing each row operation with the row it produces (2 marks) $\\to$ box $y = a_1 + a_2x + a_3x^2$ (1 mark).',
+        },
+      ],
+    },
+    {
+      heading: 'Multiple linear regression',
+      blocks: [
+        {
+          type: 'p',
+          text: 'When $y$ depends on two or more variables — Balagurusamy\'s example is a salesperson\'s salary $y = 500 + 5x_1 + 8x_2$, with $x_1, x_2$ the units sold of two products — fit a linear function of all of them. For two independent variables (Balagurusamy §10.5):',
+        },
+        { type: 'math', tex: 'y = a_1 + a_2x + a_3z, \\qquad Q = \\sum_{i=1}^{n}(y_i - a_1 - a_2x_i - a_3z_i)^2' },
+        {
+          type: 'math',
+          tex: '\\frac{\\partial Q}{\\partial a_1} = -2\\sum(y_i - a_1 - a_2x_i - a_3z_i), \\quad \\frac{\\partial Q}{\\partial a_2} = -2\\sum(y_i - a_1 - a_2x_i - a_3z_i)\\,x_i, \\quad \\frac{\\partial Q}{\\partial a_3} = -2\\sum(y_i - a_1 - a_2x_i - a_3z_i)\\,z_i',
+        },
+        { type: 'p', text: 'Setting the three derivatives to zero gives the normal equations (Eq. 10.21):' },
+        {
+          type: 'math',
+          tex: '\\begin{bmatrix} n & \\sum x_i & \\sum z_i \\\\ \\sum x_i & \\sum x_i^2 & \\sum x_iz_i \\\\ \\sum z_i & \\sum x_iz_i & \\sum z_i^2 \\end{bmatrix}\\begin{bmatrix} a_1 \\\\ a_2 \\\\ a_3 \\end{bmatrix} = \\begin{bmatrix} \\sum y_i \\\\ \\sum y_ix_i \\\\ \\sum y_iz_i \\end{bmatrix}',
+        },
+        {
+          type: 'p',
+          text: 'This is a two-dimensional case, so the result is a regression **plane** rather than a line. It extends directly to $y = a_1 + a_2x_1 + a_3x_2 + \\cdots + a_{m+1}x_m$; Shanker Rao §14.13 writes the same equations as $y = a_0 + a_1x_1 + a_2x_2$.',
+        },
+        {
+          type: 'note',
+          text: '**Source errors.** In Balagurusamy\'s text $\\partial Q/\\partial a_3$ is printed with a factor $y_i$; it must be $z_i$. His Example 10.5 ($x = 1,2,3,4$, $z = 0,1,2,3$) also prints the normal equations with typos (the first should read $4a_1 + 10a_2 + 6a_3 = 84$), and its data have $z = x - 1$, so the three equations are **dependent** (determinant $0$): $y = 10 + 2x + 4z$ is one of infinitely many planes through the points ($y = 6 + 6x$ fits just as well). Review Exercise 14 has the same defect ($x_2 = 5 - x_1$). The worked example below therefore uses Shanker Rao\'s.',
+        },
+        {
+          type: 'exam',
+          text: 'Script: sums table with columns $x, z, y, x^2, z^2, xz, yx, yz$ and a $\\Sigma$ row (2 marks) $\\to$ the matrix or the three normal equations with numbers (1 mark) $\\to$ solve by elimination (2 marks) $\\to$ box the regression plane and, if asked, substitute the given $x, z$ (1 mark). Before solving, glance at the data: if one variable is a linear function of the other, say so — no unique plane exists.',
+        },
+      ],
+    },
+    {
       heading: 'Regression of y on x and of x on y',
       blocks: [
         {
@@ -416,7 +507,7 @@ export default {
         },
         {
           type: 'p',
-          text: 'The same machinery extends to a quadratic ($y = a + bx + cx^2$ gives three normal equations) and to several independent variables (multiple regression, Shanker Rao Ch 14 §14.13).',
+          text: 'The same machinery extends to a polynomial (three normal equations for a quadratic) and to several independent variables — see **Polynomial regression** and **Multiple linear regression** above.',
         },
         {
           type: 'note',
@@ -460,6 +551,16 @@ export default {
       label: 'Power law in log-log space',
       tex: '\\ln y = \\ln a + b\\ln x',
       where: 'power law fit',
+    },
+    {
+      label: 'Polynomial regression (normal equations)',
+      tex: '\\sum_{k=1}^{m} a_k\\sum x_i^{j+k-2} = \\sum y_ix_i^{j-1}, \\quad j = 1, \\dots, m',
+      where: 'Balagurusamy Eq. 10.19',
+    },
+    {
+      label: 'Multiple linear regression (normal equations)',
+      tex: '\\begin{bmatrix} n & \\sum x & \\sum z \\\\ \\sum x & \\sum x^2 & \\sum xz \\\\ \\sum z & \\sum xz & \\sum z^2 \\end{bmatrix}\\begin{bmatrix} a_1 \\\\ a_2 \\\\ a_3 \\end{bmatrix} = \\begin{bmatrix} \\sum y \\\\ \\sum yx \\\\ \\sum yz \\end{bmatrix}',
+      where: 'Balagurusamy Eq. 10.21',
     },
     {
       label: 'Coefficient of correlation',
@@ -539,6 +640,48 @@ export default {
       ],
     },
     {
+      title: 'Second-order polynomial fit by least squares',
+      type: 'Numerical — Polynomial regression',
+      question: 'Fit a second order polynomial to the data $x = 1.0, 2.0, 3.0, 4.0$; $y = 6.0, 11.0, 18.0, 27.0$.',
+      source: 'Balagurusamy Ch 10, Example 10.4',
+      marks: 6,
+      steps: [
+        { t: 'The order is 2, so $y = a_1 + a_2x + a_3x^2$ and there are 3 normal equations: $a_1n + a_2\\sum x + a_3\\sum x^2 = \\sum y$, $a_1\\sum x + a_2\\sum x^2 + a_3\\sum x^3 = \\sum yx$, $a_1\\sum x^2 + a_2\\sum x^3 + a_3\\sum x^4 = \\sum yx^2$.', m: '1 mark' },
+        { t: 'Sums: $n = 4$, $\\sum x = 10$, $\\sum y = 62$, $\\sum x^2 = 30$, $\\sum x^3 = 100$, $\\sum x^4 = 354$, $\\sum yx = 190$, $\\sum yx^2 = 644$.', m: '2 marks' },
+        { t: 'Normal equations: $4a_1 + 10a_2 + 30a_3 = 62$, $10a_1 + 30a_2 + 100a_3 = 190$, $30a_1 + 100a_2 + 354a_3 = 644$.', m: '1 mark' },
+        { t: '$R_2\' = R_2 - 2.5R_1 = [\\,0 \\;\\; 5 \\;\\; 25 \\mid 35\\,]$; $R_3\' = R_3 - 7.5R_1 = [\\,0 \\;\\; 25 \\;\\; 129 \\mid 179\\,]$; $R_3\'\' = R_3\' - 5R_2\' = [\\,0 \\;\\; 0 \\;\\; 4 \\mid 4\\,]$.', m: '1 mark' },
+        { t: 'Back substitution: $a_3 = 4/4 = 1$; $5a_2 + 25(1) = 35 \\Rightarrow a_2 = 2$; $4a_1 + 10(2) + 30(1) = 62 \\Rightarrow a_1 = 3$.', m: '1 mark' },
+      ],
+      answer: '$\\boxed{y = 3 + 2x + x^2}$',
+      note: 'Trap: stopping the sums at $\\sum x^2$. A quadratic needs powers up to $\\sum x^4$ on the left and $\\sum yx^2$ on the right — write all seven columns before you start.',
+      explanation: [
+        'The polynomial is still **linear in its coefficients** $a_1, a_2, a_3$, which is why least squares gives a set of linear normal equations, one per coefficient. The $j$-th equation comes from $\\partial Q/\\partial a_j = 0$ and is just the first equation multiplied term by term by $x^{j-1}$.',
+        'So the coefficient matrix is built from the power sums $\\sum x^0 = n$ up to $\\sum x^4$, each anti-diagonal holding the same sum, and the right-hand side from $\\sum y$, $\\sum yx$, $\\sum yx^2$.',
+        'Check: $3 + 2x + x^2$ gives $6, 11, 18, 27$ at $x = 1, 2, 3, 4$ — the data lie exactly on this parabola, so every residual is zero ("verify using table data", as the book says).',
+      ],
+    },
+    {
+      title: 'Regression plane for two independent variables',
+      type: 'Numerical — Multiple regression',
+      question: 'From the table find the least-squares regression equation of $x_0$ on $x_1$ and $x_2$, and find $x_0$ when $x_1 = 54$ and $x_2 = 9$: $x_0 = 64, 71, 53, 67, 55, 58, 77, 57, 56, 51, 76, 68$; $x_1 = 57, 59, 49, 62, 51, 50, 55, 48, 52, 42, 61, 57$; $x_2 = 8, 10, 6, 11, 8, 7, 10, 9, 10, 6, 12, 9$.',
+      source: 'Shanker Rao Ch 14 §14.13, Example 1',
+      marks: 6,
+      steps: [
+        { t: 'Model $x_0 = a_0 + a_1x_1 + a_2x_2$ with normal equations $na_0 + a_1\\sum x_1 + a_2\\sum x_2 = \\sum x_0$, $a_0\\sum x_1 + a_1\\sum x_1^2 + a_2\\sum x_1x_2 = \\sum x_0x_1$, $a_0\\sum x_2 + a_1\\sum x_1x_2 + a_2\\sum x_2^2 = \\sum x_0x_2$.', m: '1 mark' },
+        { t: 'Sums: $n = 12$, $\\sum x_0 = 753$, $\\sum x_1 = 643$, $\\sum x_2 = 106$, $\\sum x_1^2 = 34843$, $\\sum x_2^2 = 976$, $\\sum x_1x_2 = 5779$, $\\sum x_0x_1 = 40830$, $\\sum x_0x_2 = 6796$.', m: '2 marks' },
+        { t: 'Normal equations: $12a_0 + 643a_1 + 106a_2 = 753$, $643a_0 + 34843a_1 + 5779a_2 = 40830$, $106a_0 + 5779a_1 + 976a_2 = 6796$.', m: '1 mark' },
+        { t: '$R_2\' = R_2 - 53.5833R_1 = [\\,0 \\;\\; 388.9167 \\;\\; 99.1667 \\mid 481.75\\,]$; $R_3\' = R_3 - 8.8333R_1 = [\\,0 \\;\\; 99.1667 \\;\\; 39.6667 \\mid 144.5\\,]$; $R_3\'\' = R_3\' - 0.255R_2\' = [\\,0 \\;\\; 0 \\;\\; 14.381 \\mid 21.6625\\,]$. Back substitution: $a_2 = 1.5063$, $a_1 = 0.8546$, $a_0 = 3.6512$.', m: '1 mark' },
+        { t: '$x_0 = 3.6512 + 0.8546(54) + 1.5063(9) = 63.356$.', m: '1 mark' },
+      ],
+      answer: '$\\boxed{x_0 = 3.6512 + 0.8546\\,x_1 + 1.5063\\,x_2, \\qquad x_0(54, 9) = 63.356}$',
+      note: 'Trap: Shanker Rao\'s question table prints the ninth $x_2$ as $6$, but his working (and $\\sum x_2 = 106$) uses $10$; with $10$ the printed answer is reproduced exactly. His normal equations also misprint $5779$ as $577$ and $6796$ as $6.796$.',
+      explanation: [
+        'With two independent variables the fitted surface is a plane, and least squares again gives one normal equation per coefficient: the first is $\\sum$ of the model, the second is that equation multiplied by $x_1$, the third multiplied by $x_2$.',
+        'Every coefficient in the matrix is a sum you read off the table, so the table of products ($x_1^2, x_2^2, x_1x_2, x_0x_1, x_0x_2$) is where the marks are. The matrix is symmetric — $\\sum x_1x_2$ appears twice — which is a quick check on the arithmetic.',
+        'The three equations are solved by ordinary Gauss elimination; no pivoting is needed because no zero pivot appears. Substituting $x_1 = 54$, $x_2 = 9$ into the plane gives the estimate.',
+      ],
+    },
+    {
       title: 'The two regression lines for a table of paired observations',
       type: 'Numerical — Least squares',
       question:
@@ -583,7 +726,7 @@ export default {
           m: '1 mark',
         },
       ],
-      answer: '$\\boxed{\\text{Interpolation: through every point. \\quad Regression: least-squares best fit, needs more points than parameters.}}$',
+      answer: '$\\boxed{\\text{Interpolation: through every point.}}$ $\\boxed{\\text{Regression: least-squares best fit, needs more points than parameters.}}$',
       note: 'Trap: saying "interpolation is exact, regression is approximate" and stopping. The mark is in **why** — the number of points each method needs and what criterion regression minimises.',
       explanation: [
         'Interpolation and regression differ in what they are allowed to do with the data. An interpolant is required to reproduce the data exactly, which fixes the number of degrees of freedom: a degree-$n$ polynomial needs exactly $n+1$ points and no more (a $(n+1)$-th point would over-determine it).',
@@ -640,6 +783,18 @@ export default {
     {
       front: 'Surface-area data: the power-law fit.',
       back: '$A = 0.4149\\,W^{0.3799}$ ($b = 0.3799$ from the log-log table, $\\ln a = -0.8797$).',
+    },
+    {
+      front: 'Normal equations for $y = a_1 + a_2x + a_3x^2$.',
+      back: '$a_1n + a_2\\sum x + a_3\\sum x^2 = \\sum y$; $a_1\\sum x + a_2\\sum x^2 + a_3\\sum x^3 = \\sum yx$; $a_1\\sum x^2 + a_2\\sum x^3 + a_3\\sum x^4 = \\sum yx^2$.',
+    },
+    {
+      front: 'Normal equations for the plane $y = a_1 + a_2x + a_3z$.',
+      back: '$na_1 + a_2\\sum x + a_3\\sum z = \\sum y$; $a_1\\sum x + a_2\\sum x^2 + a_3\\sum xz = \\sum yx$; $a_1\\sum z + a_2\\sum xz + a_3\\sum z^2 = \\sum yz$.',
+    },
+    {
+      front: 'Balagurusamy Example 10.4: the least-squares quadratic.',
+      back: '$y = 3 + 2x + x^2$ for $x = 1..4$, $y = 6, 11, 18, 27$ (normal equations $4a_1 + 10a_2 + 30a_3 = 62$, …).',
     },
     {
       front: 'Relation between the regression coefficients and $r$.',
@@ -725,6 +880,18 @@ export default {
       explain: 'Both deviation-form lines pass through $(\\bar{x}, \\bar{y})$.',
     },
     {
+      q: 'How many normal equations does least-squares fitting of a polynomial of degree $3$ give?',
+      options: ['4', '3', '6', '2'],
+      answer: 0,
+      explain: 'Degree $m-1 = 3$ means $m = 4$ coefficients $a_1..a_4$, one normal equation for each.',
+    },
+    {
+      q: 'Multiple linear regression $y = a_1 + a_2x + a_3z$ fits ...',
+      options: ['a plane', 'a parabola', 'two separate straight lines', 'a power curve'],
+      answer: 0,
+      explain: 'With two independent variables the fitted function is linear in both, so it is a regression plane (Balagurusamy §10.5).',
+    },
+    {
       q: 'Which of these is **not** part of this course\'s regression syllabus?',
       options: [
         'ridge / lasso regularisation with a penalty term',
@@ -736,5 +903,5 @@ export default {
       explain: 'Regularisation is explicitly out of scope: the course is linear least squares only.',
     },
   ],
-  solvers: ['leastSquares', 'powerLaw'],
+  solvers: ['leastSquares', 'powerLaw', 'polyReg', 'multiReg'],
 };

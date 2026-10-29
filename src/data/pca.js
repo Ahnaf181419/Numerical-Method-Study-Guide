@@ -366,19 +366,19 @@ export default {
     {
       title: 'Full PCA on the tutorial dataset, keeping 95% of the variance',
       type: 'Numerical — PCA',
-      question: 'Perform Principal Component Analysis on the data set $\\{(2.5, 2.4), (0.5, 0.7), (2.2, 2.9), (1.9, 2.2), (3.1, 3.0), (2.3, 2.7), (2.0, 1.6), (1.0, 1.1), (1.5, 1.6), (1.1, 0.9)\\}$ using (i) mean normalisation with no scaling, (ii) the principal components and the data variances along them, (iii) reduce the dimensionality keeping at least 95% of the variance, (iv) recast the data points along the principal component, (v) reconstruct the original points and find the MAE, SSE and RMSE.',
+      question: 'Perform Principal Component Analysis on the data set $\\{(2.5, 2.4), $$((0.5, 0.7), $$((2.2, 2.9), $$((1.9, 2.2), $$((3.1, 3.0), $$((2.3, 2.7), $$((2.0, 1.6), $$((1.0, 1.1), $$((1.5, 1.6), $$((1.1, 0.9\\}$ using (i) mean normalisation with no scaling, (ii) the principal components and the data variances along them, (iii) reduce the dimensionality keeping at least 95% of the variance, (iv) recast the data points along the principal component, (v) reconstruct the original points and find the MAE, SSE and RMSE.',
       source: 'PCA Tutorial Step by Step (Math) — Q1',
       marks: 7,
       steps: [
-        { t: '**Step 1 — preprocessing.** $\\bar{x} = 1.81$, $\\bar{y} = 1.91$. Mean-normalised points: $(0.69, 0.49), (-1.31, -1.21), (0.39, 0.99), (0.09, 0.29), (1.29, 1.09), (0.49, 0.79), (0.19, -0.31), (-0.81, -0.81), (-0.31, -0.31), (-0.71, -1.01)$.', m: '1 mark' },
+        { t: '**Step 1 — preprocessing.** $\\bar{x} = 1.81$, $\\bar{y} = 1.91$. Mean-normalised points: $(0.69, 0.49), $$((-1.31, -1.21), $$((0.39, 0.99), $$((0.09, 0.29), $$((1.29, 1.09), $$((0.49, 0.79), $$((0.19, -0.31), $$((-0.81, -0.81), $$((-0.31, -0.31), $$((-0.71, -1.01$.', m: '1 mark' },
         { t: '**Step 2 — covariance matrix.** $\\Sigma = \\frac{1}{10}\\sum z^{(i)}z^{(i)T} = \\begin{bmatrix} 0.5549 & 0.5539 \\\\ 0.5539 & 0.6449 \\end{bmatrix}$.', m: '1 mark' },
         { t: '**Step 3 — eigenvalues.** $\\det(\\Sigma - \\lambda I) = 0$ gives $\\lambda_1 = 1.1556$ and $\\lambda_2 = 0.0442$.', m: '1 mark' },
         { t: '**Step 4 — eigenvectors and V.** $v_1 = (0.678, 0.735)$, $v_2 = (0.735, -0.678)$, so $V = \\begin{bmatrix} 0.678 & 0.735 \\\\ 0.735 & -0.678 \\end{bmatrix}$.', m: '1 mark' },
-        { t: '**Step 5 — reduce.** The variance percentages are $\\frac{1.1556}{1.1998}\\times 100 = 96.3\\%$ and $3.7\\%$. Since $96.3\\% \\ge 95\\%$, keep **one** component. Transform: $Y = XV$, giving $Y = (3.459, 0.854, 3.623, 2.905, 4.307, 3.544, 2.532, 1.487, 2.193, 1.407)$.', m: '2 marks' },
+        { t: '**Step 5 — reduce.** The variance percentages are $\\frac{1.1556}{1.1998}\\times 100 = 96.3\\%$ and $3.7\\%$. Since $96.3\\% \\ge 95\\%$, keep **one** component. Transform: $Y = XV$, giving $Y = (3.459, 0.854, 3.623, 2.905, 4.307,$ $3.544, 2.532, 1.487, 2.193, 1.407)$.', m: '2 marks' },
         { t: '**Step 6 — reconstruct.** $X_r = YV^T$, a $(10 \\times 1)(1 \\times 2) = 10 \\times 2$ product. The first point comes back as $3.459 \\times (0.678, 0.735) = (2.35, 2.54)$ against the original $(2.5, 2.4)$, so the errors are $(0.15, -0.14)$.', m: '1 mark' },
         { t: 'Over all ten points: $\\text{MAE} = (0.13, 0.12)$, $\\text{SSE} = (0.25, 0.21)$, $\\text{RMSE} = (0.157, 0.145)$.', m: '1 mark' },
       ],
-      answer: '$\\boxed{\\lambda_1 = 96.3\\% \\text{ (kept)},\\; \\lambda_2 = 3.7\\% \\text{ (discarded)};\\; \\text{MAE} = (0.13, 0.12),\\; \\text{SSE} = (0.25, 0.21)}$',
+      answer: '$\\boxed{\\lambda_1 = 96.3\\% \\text{ (kept)},}$ $\\lambda_2 = 3.7\\% \\text{ (discarded)};$ $\\text{MAE} = (0.13, 0.12),\\; \\text{SSE} = (0.25, 0.21)$',
       note: 'Trap: using the mean-normalised points for the projection and then comparing them with the original points. The tutorial projects the **original** points — write down which version you used.',
       explanation: [
         'The eigenvalues of the covariance matrix are the variances of the data along the principal component directions, so the percentage of variance carried by each component is its eigenvalue divided by the total variance (the trace of $\\Sigma$). Adding those percentages until you cross 95% tells you how many components to keep — here, one.',
@@ -399,7 +399,7 @@ export default {
         { t: '**Step 4 — variance percentages.** $\\dfrac{1.9259}{2}\\times 100 = 96.3\\%$ and $3.7\\%$ — the same split as without scaling.', m: '1 mark' },
         { t: '**Steps 5-6.** With 95% the first component is still kept alone; the reconstruction and the errors are then computed from the **scaled** points, so the errors are in scaled units and must be compared with the scaled data, not the original.', m: '1 mark' },
       ],
-      answer: '$\\boxed{\\Sigma_{scaled} = \\begin{bmatrix} 1 & 0.9259 \\\\ 0.9259 & 1 \\end{bmatrix},\\; \\lambda_1 = 96.3\\%,\\; \\lambda_2 = 3.7\\%}$ — the same one-component reduction',
+      answer: '$\\boxed{\\Sigma_{scaled} = \\begin{bmatrix} 1 & 0.9259 \\\\ 0.9259 & 1 \\end{bmatrix}}$ $\\lambda_1 = 96.3\\%,\\; \\lambda_2 = 3.7\\%$ — the same one-component reduction',
       note: 'Trap: reporting the errors of the scaled reconstruction as if they were errors on the original data. Either work in scaled units throughout, or undo the scaling on the reconstruction before comparing.',
       explanation: [
         'Scaling divides each column by its standard deviation, so the diagonal of the covariance matrix becomes 1 and the off-diagonal entries become the correlation coefficients. The covariance matrix then depends only on the shape of the data cloud, not on the units.',

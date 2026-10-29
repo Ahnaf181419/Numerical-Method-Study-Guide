@@ -481,6 +481,52 @@ export function dividedDifference({ xs, ys, x }) {
   return { result: { y: sum, table: cols }, steps };
 }
 
+// Central difference formulae (Shanker Rao Ch 6), formula: 'forward' | 'backward' | 'stirling'.
+// Term k of Gauss forward is C(u + ⌊(k-1)/2⌋, k) Δ^k y_{-⌊k/2⌋}; of Gauss backward
+// C(u + ⌊k/2⌋, k) Δ^k y_{-⌈k/2⌉}; Stirling is their mean. The series stops at the first
+// difference the table does not have.
+export function gaussInterp({ xs, ys, x, formula = 'forward' }) {
+  const h = xs[1] - xs[0];
+  const cols = diffTable(ys);
+  const p = (x - xs[0]) / h;
+  // origin: 0 < u < 1 for forward, -1 < u < 0 for backward, nearest point for Stirling
+  const o = formula === 'forward' ? Math.floor(p) : formula === 'backward' ? Math.ceil(p) : Math.round(p);
+  const u = p - o;
+  const binom = (t, k) => { let c = 1; for (let j = 0; j < k; j++) c *= (t - j) / (j + 1); return c; };
+  const fwd = (k) => ({ c: binom(u + Math.floor((k - 1) / 2), k), j: -Math.floor(k / 2) });
+  const bwd = (k) => ({ c: binom(u + Math.floor(k / 2), k), j: -Math.ceil(k / 2) });
+  const diff = (k, j) => cols[k]?.[o + j];
+  const has = (t, k) => diff(k, t.j) !== undefined;
+  const sub = (j) => (j === 0 ? '0' : String(j));
+  const steps = ['\\textbf{Difference table}'];
+  steps.push(
+    '\\begin{array}{c|' + 'c'.repeat(cols.length) + '} \\hline ' +
+    cols.map((_, k) => `\\Delta^{${k}}`).join(' & ') + ' \\\\ \\hline ' +
+    cols.map((c) => c.map((v) => fmt(v)).join(' & ')).join(' \\\\ ') + ' \\end{array}',
+  );
+  steps.push(`x_0 = ${fmt(xs[o])}, \\quad u = \\frac{x - x_0}{h} = \\frac{${fmt(x)} - ${fmt(xs[o])}}{${fmt(h)}} = ${fmt(u)}`);
+  let sum = ys[o];
+  const terms = [`y_0 = ${fmt(ys[o])}`];
+  for (let k = 1; k < cols.length; k++) {
+    const f = fwd(k), b = bwd(k);
+    if (formula === 'forward' ? !has(f, k) : formula === 'backward' ? !has(b, k) : !(has(f, k) && has(b, k))) break;
+    let t;
+    if (formula === 'stirling') {
+      t = (f.c * diff(k, f.j) + b.c * diff(k, b.j)) / 2;
+      terms.push(`\\tfrac{1}{2}\\left[${fmt(f.c)}(${fmt(diff(k, f.j))}) + ${fmt(b.c)}(${fmt(diff(k, b.j))})\\right]`);
+    } else {
+      const s = formula === 'forward' ? f : b;
+      t = s.c * diff(k, s.j);
+      terms.push(`${fmt(s.c)}\\,\\Delta^{${k}}y_{${sub(s.j)}} = ${fmt(s.c)}(${fmt(diff(k, s.j))})`);
+    }
+    sum += t;
+  }
+  const name = { forward: "Gauss's forward", backward: "Gauss's backward", stirling: "Stirling's" }[formula];
+  steps.push(`\\text{${name} formula: } y = ${terms.join(' + ')}`);
+  steps.push(`\\boxed{y(${fmt(x)}) = ${fmt(sum)}}`);
+  return { result: { y: sum, u, x0: xs[o], table: cols }, steps };
+}
+
 // ---------------------------------------------------------------- differentiation
 
 // method: 'forward2' | 'forward3' | 'backward2' | 'backward3' | 'central2' | 'central3'
@@ -661,6 +707,53 @@ export function powerLawFit({ xs, ys }) {
     `\\boxed{y = ${fmt(a)}\\,x^{${fmt(lb)}}}`,
   ];
   return { result: { a, b: lb }, steps };
+}
+
+// Solve normal equations C a = B with the course's own elimination, returning a_1..a_m.
+const solveNormal = (C, B) => {
+  const x = gaussEliminate({ A: C, b: B }).result.x;
+  if (!x.every(Number.isFinite)) throw new Error('the normal equations are dependent (one variable is a linear function of another): no unique fit');
+  return x;
+};
+
+// Least-squares polynomial y = a_1 + a_2 x + ... + a_m x^{m-1} (Balagurusamy §10.4, Eq. 10.19):
+// C(j,k) = Σ x^{j+k-2}, B(j) = Σ y x^{j-1}.
+export function polyRegression({ xs, ys, degree = 2 }) {
+  const m = degree + 1;
+  if (xs.length <= degree) throw new Error('regression is not possible: need more points than the degree');
+  const S = (p) => xs.reduce((s, x) => s + x ** p, 0);
+  const T = (p) => xs.reduce((s, x, i) => s + ys[i] * x ** p, 0);
+  const C = Array.from({ length: m }, (_, j) => Array.from({ length: m }, (_, k) => S(j + k)));
+  const B = Array.from({ length: m }, (_, j) => T(j));
+  const a = solveNormal(C, B);
+  const term = (v, j) => `${fmt(v)}a_{${j + 1}}`;
+  const steps = [
+    `\\textbf{Sums} \\; ${Array.from({ length: 2 * m - 1 }, (_, p) => p === 0 ? `n = ${xs.length}` : `\\sum x^{${p}} = ${fmt(S(p))}`).join(', \\; ')}`,
+    `${B.map((v, j) => `\\sum y x^{${j}} = ${fmt(v)}`).join(', \\; ')}`,
+    `\\textbf{Normal equations} \\; ${C.map((r, j) => r.map(term).join(' + ') + ` = ${fmt(B[j])}`).join(', \\quad ')}`,
+    `${a.map((v, j) => `a_{${j + 1}} = ${fmt(v)}`).join(', \\; ')}`,
+    `\\boxed{y = ${a.map((v, j) => (j === 0 ? fmt(v) : `${v < 0 ? '-' : '+'} ${fmt(Math.abs(v)) === '1' ? '' : fmt(Math.abs(v))}x${j > 1 ? `^{${j}}` : ''}`)).join(' ')}}`,
+  ];
+  return { result: { a }, steps };
+}
+
+// Multiple linear regression y = a_1 + a_2 x + a_3 z (Balagurusamy §10.5, Eq. 10.21).
+export function multipleRegression({ xs, zs, ys }) {
+  const n = xs.length;
+  const sum = (f) => xs.reduce((s, _, i) => s + f(i), 0);
+  const sx = sum((i) => xs[i]), sz = sum((i) => zs[i]), sy = sum((i) => ys[i]);
+  const sxx = sum((i) => xs[i] ** 2), szz = sum((i) => zs[i] ** 2), sxz = sum((i) => xs[i] * zs[i]);
+  const syx = sum((i) => ys[i] * xs[i]), syz = sum((i) => ys[i] * zs[i]);
+  const C = [[n, sx, sz], [sx, sxx, sxz], [sz, sxz, szz]];
+  const B = [sy, syx, syz];
+  const a = solveNormal(C, B);
+  const steps = [
+    `\\textbf{Sums} \\; n = ${n}, \\sum x = ${fmt(sx)}, \\sum z = ${fmt(sz)}, \\sum y = ${fmt(sy)}, \\sum x^2 = ${fmt(sxx)}, \\sum z^2 = ${fmt(szz)}, \\sum xz = ${fmt(sxz)}, \\sum yx = ${fmt(syx)}, \\sum yz = ${fmt(syz)}`,
+    `\\textbf{Normal equations} \\; ${C.map((r, j) => r.map((v, k) => `${fmt(v)}a_{${k + 1}}`).join(' + ') + ` = ${fmt(B[j])}`).join(', \\quad ')}`,
+    `a_1 = ${fmt(a[0])}, \\; a_2 = ${fmt(a[1])}, \\; a_3 = ${fmt(a[2])}`,
+    `\\boxed{y = ${fmt(a[0])} ${a[1] < 0 ? '-' : '+'} ${fmt(Math.abs(a[1]))}x ${a[2] < 0 ? '-' : '+'} ${fmt(Math.abs(a[2]))}z}`,
+  ];
+  return { result: { a }, steps };
 }
 
 // Gradient descent on a polynomial regression: mode 'batch' or 'single'.

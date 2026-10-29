@@ -160,6 +160,18 @@ export const SOLVERS = {
       run: (v) => s.newtonForward(v),
     },
   ],
+  gaussInterp: [
+    {
+      title: "Gauss forward / Gauss backward / Stirling — central differences",
+      fields: [
+        ['xs', 'x values (equally spaced)', 'nums', '21,25,29,33,37'],
+        ['ys', 'y values', 'nums', '18.4708,17.8144,17.1070,16.3432,15.5154'],
+        ['x', 'Point to evaluate at', 'any', '30'],
+        ['formula', 'Formula', 'select', 'forward', ['forward', 'backward', 'stirling']],
+      ],
+      run: (v) => s.gaussInterp(v),
+    },
+  ],
   lagrange: [
     {
       title: "Lagrange interpolation — unequal intervals",
@@ -303,6 +315,28 @@ export const SOLVERS = {
         ['ys', 'y values', 'nums', '0.5,4,13.5,32,62.5'],
       ],
       run: (v) => s.powerLawFit(v),
+    },
+  ],
+  polyReg: [
+    {
+      title: 'Polynomial regression y = a1 + a2 x + ... (least squares)',
+      fields: [
+        ['xs', 'x values', 'nums', '1,2,3,4'],
+        ['ys', 'y values', 'nums', '6,11,18,27'],
+        ['degree', 'Degree of the polynomial', 'num', '2'],
+      ],
+      run: (v) => s.polyRegression(v),
+    },
+  ],
+  multiReg: [
+    {
+      title: 'Multiple linear regression y = a1 + a2 x + a3 z',
+      fields: [
+        ['xs', 'x values', 'nums', '57,59,49,62,51,50,55,48,52,42,61,57'],
+        ['zs', 'z values', 'nums', '8,10,6,11,8,7,10,9,10,6,12,9'],
+        ['ys', 'y values', 'nums', '64,71,53,67,55,58,77,57,56,51,76,68'],
+      ],
+      run: (v) => s.multipleRegression(v),
     },
   ],
   gradBatch: [

@@ -365,7 +365,7 @@ export default [
           },
           {
             id: 'Q3(b)', type: 'Numerical — Gradient descent', marks: 7, module: 'gradient',
-            q: 'Demonstrate 2nd degree polynomial regression analysis (without variable conversion) by using gradient descent algorithm on the data $(x,y) = (0,0), (2,5), (3,6), (5,9), (4,7)$. Use batch update mode with the initial parameters $\\theta_0 = 2$, $\\theta_1 = 1$, $\\theta_2 = 3$, learning rate $\\alpha = 0.2$. Continue the process for one epoch only.',
+            q: 'Demonstrate 2nd degree polynomial regression analysis (without variable conversion) by using gradient descent algorithm on the data $(x,y) = (0,0), (2,5), $$(3,6), (5,9), (4,7)$. Use batch update mode with the initial parameters $\\theta_0 = 2$, $\\theta_1 = 1$, $\\theta_2 = 3$, learning rate $\\alpha = 0.2$. Continue the process for one epoch only.',
             answer: [
               '$H_\\theta(x) = \\theta_0 + \\theta_1 x + \\theta_2 x^2$ with $(2, 1, 3)$; $m = 5$, $\\alpha = 0.2$.',
               'With the initial parameters $H_\\theta(x) = 2 + x + 3x^2$ the predictions are $2,\\ 16,\\ 32,\\ 82,\\ 54$ and the errors (prediction $-$ actual) are $2,\\ 11,\\ 26,\\ 73,\\ 47$.',

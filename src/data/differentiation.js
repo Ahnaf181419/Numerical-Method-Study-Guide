@@ -956,11 +956,11 @@ export default {
           m: '1 mark',
         },
         {
-          t: 'Errors: forward $1.6 \\times 10^{-3}$, central $-9.0 \\times 10^{-4}$, Richardson $-1.1 \\times 10^{-7}$ — Richardson is about **four orders of magnitude** better than either raw difference. $\\boxed{R = \\frac{4D(h/2)-D(h)}{3} \\text{ has error } O(h^4), \\text{ while the three-point forward difference has error } O(h^2)}$',
+          t: 'Errors: forward $1.6 \\times 10^{-3}$, central $-9.0 \\times 10^{-4}$, Richardson $-1.1 \\times 10^{-7}$ — Richardson is about **four orders of magnitude** better than either raw difference. $\\boxed{R = \\frac{4D(h/2)-D(h)}{3} \\text{ has error } O(h^4),}$ $\\text{ while the three-point forward difference has error } O(h^2)$',
           m: '1 mark',
         },
       ],
-      answer: '$\\boxed{R = \\frac{4D(h/2)-D(h)}{3} = f\'(x) + O(h^4) \\quad\\text{vs}\\quad D_F = f\'(x) + \\frac{h^2}{3}f\'\'\'(x): \\text{ Richardson is } O(h^4), \\text{ the forward difference only } O(h^2)}$',
+      answer: '$\\boxed{R = \\frac{4D(h/2)-D(h)}{3} = f\'(x) + O(h^4)}$ $\\text{vs}\\; D_F = f\'(x) + \\frac{h^2}{3}f\'\'\'(x): \\text{ Richardson is } O(h^4), \\text{ the forward difference only } O(h^2)$',
       note: 'Trap: Richardson extrapolation needs the **central** difference, not the forward one — the forward formula has no symmetric $h$ and $h/2$ pair that cancels the $h^2$ term in this way.',
       explanation: [
         'Two reasons make Richardson better. First, order: the raw three-point formulas are only second order, while Richardson cancels the $h^2$ term and delivers a fourth-order estimate — the accuracy of a five-point central difference — using only the central difference evaluations.',
