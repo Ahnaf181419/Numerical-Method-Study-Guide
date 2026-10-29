@@ -9,6 +9,30 @@
 // Linear regression only — no penalty terms, no regularisation (not in the syllabus).
 
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "Why can't a regression line pass through every data point?",
+    options: ["Because lines are straight", "Because real data is noisy, so the points form a cloud, not a line", "Because there are always too few points", "Because least squares forbids it"],
+    answer: 1,
+    explain: "Measurement wobble and natural variation scatter the points; 'best fit' therefore needs a definition — least squares supplies one.",
+  },
+  "Start here: the core idea": {
+    q: "Why square the residuals before adding them?",
+    options: ["Tradition only", "To stop positive and negative misses cancelling and to punish large misses harder", "To keep the numbers small", "Because residuals can be negative and squares cannot be lost"],
+    answer: 1,
+    explain: "Squaring makes every miss count positively and weights big misses heavily — and it yields clean closed-form normal equations.",
+  },
+  "Start here: reading the symbols": {
+    q: "In $\\hat{y} = a + bx$, what does the hat on $\\hat{y}$ mark?",
+    options: ["An estimate error", "A value predicted by the fitted line", "The biggest data value", "A truncated number"],
+    answer: 1,
+    explain: "'Y-hat' is the model's prediction, as distinct from the measured $y_i$; their difference is the residual.",
+  },
+  "Start here: your first walk-through": {
+    q: "In the walk-through fit, the slope $b$ came from $\\frac{9}{6}$. The $9$ in the numerator is…",
+    options: ["$\\sum y - \\sum x$", "$n\\sum xy - \\sum x \\sum y = 69 - 60$", "The residual sum", "$\\sum x^2 - (\\sum x)^2$"],
+    answer: 1,
+    explain: "With $n\\sum xy = 3(23) = 69$ and $\\sum x\\sum y = 60$, the numerator is their difference, 9; the denominator $42 - 36 = 6$.",
+  },
   'Interpolation vs regression': {
     q: 'What is the essential difference between interpolation and regression?',
     options: [
@@ -103,6 +127,56 @@ export default {
   sources: ['Balagurusamy Ch 10', 'Shanker Rao Ch 14'],
   flagged: true,
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "Plot the height and weight of twenty people and the picture is a **cloud**, not a line. Real data is noisy — measurement wobble, person-to-person variation — so no straight line passes through all of it. Yet the trend is unmistakably there, and the question 'what is the trend line?' refuses to go away." },
+        { type: "p", text: "Regression answers it by first answering a sneakier question: **what does 'best-fitting line' even mean when no line fits?** The choice made here — least squares — defines best as 'smallest total squared miss', and that definition turns a vague wish into two solvable equations." },
+        { type: "p", text: "The same machinery, one logarithm later, fits power laws $y = a x^b$ — the past papers' surface-area-versus-weight question is exactly this." },
+        { type: "list", items: [
+          "Set up the totals table ($\\sum x, \\sum y, \\sum xy, \\sum x^2$).",
+          "Solve the two normal equations for slope and intercept.",
+          "Judge the fit with residuals.",
+          "Linearise $y = ax^b$ with logarithms and fit it the same way.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "For any candidate line, each point misses vertically by a **residual** $e_i = y_i - \\hat{y}_i$. Squaring every residual does two jobs at once: it stops misses above and below the line from cancelling, and it punishes big misses far more than small ones. **Least squares** picks the line whose squared residuals add up least:" },
+        { type: "math", tex: "J = \\sum_{i=1}^{n} e_i^2 = \\sum (y_i - a - b x_i)^2 \\;\\longrightarrow\\; \\text{minimise over } a, b" },
+        { type: "p", text: "Minimising (the chapter's derivation does it with $\\partial J/\\partial a = 0$ and $\\partial J/\\partial b = 0$) collapses into the two **normal equations**, two straight-line equations in $a$ and $b$ — after which fitting any data set is just arithmetic." },
+        { type: "math", tex: "na + b\\sum x = \\sum y, \\qquad a\\sum x + b\\sum x^2 = \\sum xy" },
+        { type: "note", text: "Why squares and not plain distances? Absolute misses can cancel (+3 and $-3$ look 'perfect') and are mathematically awkward; squares are always positive, smooth, and give closed-form normal equations." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$x_i, y_i$", "the $i$-th data point", "what was measured"],
+          ["$\\hat{y} = a + bx$", "the fitted (predicted) line", "'y-hat' — the model's guess"],
+          ["$a$", "intercept of the fitted line", "where the line meets $x = 0$"],
+          ["$b$", "slope of the fitted line", "change in $\\hat{y}$ per unit $x$"],
+          ["$e_i = y_i - \\hat{y}_i$", "residual: the $i$-th point's miss", "the part the line can't explain"],
+          ["$\\sum x, \\sum xy, \\sum x^2$", "the four column totals", "the normal equations' raw material"],
+          ["$R^2$", "fraction of variation the line explains", "1 = perfect, 0 = no trend"],
+        ] },
+        { type: "p", text: "Everything in a least-squares answer flows from four column totals: $n$, $\\sum x$, $\\sum y$, $\\sum xy$, $\\sum x^2$. Build them first, and the rest is substitution." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Fit the best straight line to three points: $(1,2)$, $(2,3)$, $(3,5)$ — small enough that every number can be checked in your head." },
+        { type: "p", text: "**Totals table first:** $n = 3$, $\\sum x = 6$, $\\sum y = 10$, $\\sum xy = 1(2) + 2(3) + 3(5) = 23$, $\\sum x^2 = 1 + 4 + 9 = 14$. Substituting into the normal equations $3a + 6b = 10$ and $6a + 14b = 23$:" },
+        { type: "math", tex: "b = \\frac{n\\sum xy - \\sum x \\sum y}{n \\sum x^2 - (\\sum x)^2} = \\frac{3(23) - (6)(10)}{3(14) - 36} = \\frac{9}{6} = 1.5" },
+        { type: "math", tex: "a = \\bar{y} - b\\bar{x} = \\frac{10}{3} - 1.5(2) = 0.3333" },
+        { type: "p", text: "The fitted line is $\\hat{y} = 0.3333 + 1.5x$. Residual check: predictions $1.8333, 3.3333, 4.8333$ against actuals $2, 3, 5$ give misses $+0.1667, -0.3333, +0.1667$ — small, and summing to (almost) zero, the least-squares signature." },
+        { type: "exam", text: "Exam shape: the totals table (with the $xy$ and $x^2$ columns shown), both normal equations written out, then $b$ and $a$ substituted with the formulas named, and the final line boxed — the mark scheme follows exactly these stations." },
+      ],
+    },
     {
       heading: 'Interpolation vs regression',
       blocks: [

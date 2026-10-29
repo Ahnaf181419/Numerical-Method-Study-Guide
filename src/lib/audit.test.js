@@ -279,3 +279,12 @@ test('integration walk-through numbers match the engine', () => {
   close(r.result.value, 3, 1e-9);
   assert.ok(t.includes('2.6667'), 'exact value for comparison');
 });
+
+test('regression walk-through numbers match the engine', () => {
+  const t = sectionText('regression', 'Start here: your first walk-through');
+  const r = s.leastSquares({ xs: [1, 2, 3], ys: [2, 3, 5] });
+  close(r.result.b, 1.5, 1e-9);
+  close(r.result.a, 1 / 3, 1e-4);
+  assert.ok(t.includes('1.5'), 'slope');
+  assert.ok(t.includes('0.3333'), 'intercept');
+});
