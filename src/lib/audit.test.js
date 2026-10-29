@@ -238,3 +238,11 @@ test('iterative walk-through numbers match the engine', () => {
   close(r.result.table[1].x[1], 2.5, 1e-9);
   ['1.6667', '2.5', '0.8333', '1.6667'].forEach((n) => assert.ok(t.includes(n), `iterative missing ${n}`));
 });
+
+test('lu walk-through numbers match the engine', () => {
+  const t = sectionText('lu', 'Start here: your first walk-through');
+  const r = s.luSolve({ A: [[2, 1], [6, 4]], b: [3, 8] });
+  close(r.result.x[0], 2); close(r.result.x[1], -1);
+  assert.ok(t.includes('x = 2'), 'x value');
+  assert.ok(t.includes('y = -1'), 'y value');
+});

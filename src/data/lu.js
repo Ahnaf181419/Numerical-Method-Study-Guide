@@ -1,6 +1,30 @@
 // LU decomposition — Do-Little and Crout.
 // Source: LU Decomposition slides (Tasnuva Binte Rahman), Medha's class notes (p.24), past papers.
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "When is LU decomposition clearly worth it over plain elimination?",
+    options: ["When the system has no solution", "When the same matrix must be solved for many right-hand sides", "When the matrix is 2×2", "When only integer answers are allowed"],
+    answer: 1,
+    explain: "Factor once into $L$ and $U$; every new right-hand side then costs two cheap triangular sweeps instead of full elimination.",
+  },
+  "Start here: the core idea": {
+    q: "Where do the entries of $L$ come from?",
+    options: ["They are the multipliers used during elimination", "They are copied from $A$'s diagonal", "They are the right-hand side values", "They are computed by back substitution"],
+    answer: 0,
+    explain: "Each elimination multiplier is recorded in $L$ at the position of the zero it created — with 1s on the diagonal.",
+  },
+  "Start here: reading the symbols": {
+    q: "In $A\\mathbf{x} = \\mathbf{b}$ with $A = LU$, what is $\\mathbf{y}$?",
+    options: ["The final answer", "The intermediate solution of $L\\mathbf{y} = \\mathbf{b}$", "The transpose of $\\mathbf{b}$", "Another name for the pivot"],
+    answer: 1,
+    explain: "Split the solve: $L\\mathbf{y} = \\mathbf{b}$ forwards, then $U\\mathbf{x} = \\mathbf{y}$ backwards.",
+  },
+  "Start here: your first walk-through": {
+    q: "In the walk-through, which multiplier entered $L$, and where?",
+    options: ["3, at position (2,1)", "3, at position (1,2)", "2, at position (2,2)", "-1, at position (2,1)"],
+    answer: 0,
+    explain: "$R_2' = R_2 - 3R_1$ used multiplier 3 to kill $a_{21}$, so 3 sits in $L$'s (2,1) slot.",
+  },
   'Why decompose at all': {
     q: 'The main reason for using LU decomposition is that',
     options: [
@@ -55,6 +79,51 @@ export default {
   wave: 'lu',
   sources: ['LU Decomposition slides (Tasnuva)', "Medha's class notes (p.24)", 'Past papers'],
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "An engineer designs a bridge and computes the forces by solving $A\\mathbf{x} = \\mathbf{b}$. Then the load changes — same bridge, same stiffness matrix $A$, new right-hand side $\\mathbf{b}$. And again, for a hundred different loads." },
+        { type: "p", text: "Plain elimination redoes **all** the work for every new $\\mathbf{b}$, even though $A$ never changed. That waste is the problem LU decomposition exists to kill." },
+        { type: "p", text: "The fix: do elimination on $A$ **once**, store the result as two triangular matrices $L$ and $U$, and afterwards solve each new load with two quick triangular sweeps instead of a full re-elimination." },
+        { type: "list", items: [
+          "Factor a matrix into $A = LU$ by elimination.",
+          "Read off $L$ (the multipliers) and $U$ (the resulting triangle).",
+          "Solve $L\\mathbf{y} = \\mathbf{b}$ forwards, then $U\\mathbf{x} = \\mathbf{y}$ backwards.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "Every elimination step is 'subtract a multiple of a row from a later row'. The multiplier used at each step is cheap to record — and those recorded multipliers, laid out in a lower triangle, **are** the $L$ factor. The upper triangle the elimination produces **is** $U$. Nothing new is computed; the work is just being saved instead of thrown away." },
+        { type: "math", tex: "A = LU, \\qquad A\\mathbf{x} = \\mathbf{b} \\;\\Longleftrightarrow\\; L\\,\\mathbf{y} = \\mathbf{b} \\;\\;\\text{then}\\;\\; U\\,\\mathbf{x} = \\mathbf{y}" },
+        { type: "p", text: "Why that helps: triangular systems are the easy ones. $L\\mathbf{y} = \\mathbf{b}$ is solved top-down (each row hands you the next unknown), $U\\mathbf{x} = \\mathbf{y}$ bottom-up — no elimination left to do. Same $A$, new $\\mathbf{b}$: two sweeps, done." },
+        { type: "note", text: "Decomposing stores elimination's by-products; solving reuses them. If you re-eliminate for each right-hand side, you are paying full price a hundred times for work already done once." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$L$", "lower triangular factor — the stored multipliers, 1s on its diagonal", "'L' for lower"],
+          ["$U$", "upper triangular factor — elimination's staircase result", "'U' for upper"],
+          ["$\\mathbf{y}$", "intermediate unknown: $A\\mathbf{x} = L U \\mathbf{x} = L\\mathbf{y} = \\mathbf{b}$", "the halfway answer"],
+          ["forward substitution", "solving $L\\mathbf{y} = \\mathbf{b}$ top-down", "walk down the stairs"],
+          ["back substitution", "solving $U\\mathbf{x} = \\mathbf{y}$ bottom-up", "walk back up"],
+        ] },
+        { type: "p", text: "The multipliers in $L$ sit where the zeros were created: eliminating $a_{21}$ with multiplier $m$ puts $m$ into $L$'s $(2,1)$ slot." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Factor $A = \\begin{bmatrix} 2 & 1 \\\\ 6 & 4 \\end{bmatrix}$ and solve $A\\mathbf{x} = \\begin{bmatrix} 3 \\\\ 8 \\end{bmatrix}$ in the LU way." },
+        { type: "p", text: "**Eliminate once:** pivot $a_{11} = 2$ is nonzero — no swap. One step, $R_2' = R_2 - 3R_1$ (the multiplier 3 goes into $L$), giving the resulting row $[\\,0 \\;\\; 1\\,]$ — that is $U$'s second row. So $L = \\begin{bmatrix} 1 & 0 \\\\ 3 & 1 \\end{bmatrix}$ and $U = \\begin{bmatrix} 2 & 1 \\\\ 0 & 1 \\end{bmatrix}$." },
+        { type: "p", text: "**Forward substitution** $L\\mathbf{y} = \\mathbf{b}$, top-down: $y_1 = 3$, then $3(3) + y_2 = 8$ so $y_2 = -1$. **Back substitution** $U\\mathbf{x} = \\mathbf{y}$, bottom-up: $x_2 = -1$, then $2x_1 + (-1) = 3$ so $x_1 = 2$. The solution is $x = 2$, $y = -1$." },
+        { type: "p", text: "Check: $A\\begin{bmatrix} 2 \\\\ -1 \\end{bmatrix} = \\begin{bmatrix} 2(2) + 1(-1) \\\\ 6(2) + 4(-1) \\end{bmatrix} = \\begin{bmatrix} 3 \\\\ 8 \\end{bmatrix}$ ✓. And if the load changes to any other $\\mathbf{b}$, only the two sweeps rerun — $L$ and $U$ are already on the page." },
+        { type: "exam", text: "Write the three stages as three labelled blocks: the elimination that produces $U$ (with the resulting rows shown), the $L$ you read off from the multipliers, then the forward and back substitutions — the papers mark each stage separately." },
+      ],
+    },
     {
       heading: 'Why decompose at all',
       blocks: [
