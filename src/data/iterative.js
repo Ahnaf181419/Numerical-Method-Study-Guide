@@ -1,6 +1,30 @@
 // Iterative methods — Jacobi and Gauss-Seidel.
 // Source: Iterative Solution of Linear Equations slides (CSE2201), Medha's class notes (pp.18-20), past papers.
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "What do iterative methods trade away compared with elimination?",
+    options: ["They only work for 2 unknowns", "The guarantee of reaching the exact answer — convergence must be checked", "They cannot use decimals", "Nothing; they are strictly better"],
+    answer: 1,
+    explain: "Iteration buys cheap, early, improving answers at the price of a convergence condition (diagonal dominance) that must hold.",
+  },
+  "Start here: the core idea": {
+    q: "The practical difference between Jacobi and Gauss-Seidel is…",
+    options: ["Gauss-Seidel uses new values the moment they are available", "Jacobi converges quadratically", "They solve different equations", "Gauss-Seidel needs no starting guess"],
+    answer: 0,
+    explain: "Jacobi updates everything from last round's values; Gauss-Seidel reuses fresh values immediately, which usually speeds convergence.",
+  },
+  "Start here: reading the symbols": {
+    q: "In $x^{(k)}$, the superscript $(k)$ means…",
+    options: ["x raised to the power k", "the k-th derivative", "the guess at iteration k", "the k-th unknown"],
+    answer: 2,
+    explain: "Round brackets mark an iteration counter — a numbering label, not arithmetic.",
+  },
+  "Start here: your first walk-through": {
+    q: "The walk-through values $1.6667, 0.8333, 1.1111$ for $x$ show…",
+    options: ["divergence — the answer is running away", "convergence — oscillation around 1 with shrinking swings", "a wrong dominance check", "exact answers at every step"],
+    answer: 1,
+    explain: "Swinging either side of the true value 1 with shrinking amplitude is exactly what healthy convergence looks like.",
+  },
   'When do you use an iterative method': {
     q: 'Which of these is NOT a reason to prefer an iterative method over a direct one?',
     options: [
@@ -76,6 +100,56 @@ export default {
   wave: 'iter',
   sources: ['Iterative Solution of Linear Equations slides', "Medha's class notes (pp.18-20)", 'Past papers'],
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "A power grid, a national economy, a building's frame — real systems have thousands of unknowns. Gaussian elimination still works, but its cost grows with the **cube** of the size, and it marches straight to the exact answer even when 'close enough, quickly' would do." },
+        { type: "p", text: "Iterative methods take the opposite bet: start from a crude guess and **refine it repeatedly**, letting the answer emerge step by step. Each round is cheap, you can stop as soon as the answer is good enough, and a halfway answer is available at any moment." },
+        { type: "p", text: "The catch: refinement is not guaranteed to converge. Knowing **when** an iteration can be trusted (diagonal dominance) is as much a part of this chapter as running the iteration itself — and it is the teacher's favourite theory question." },
+        { type: "list", items: [
+          "Rearrange a system into updating formulas.",
+          "Run Jacobi (update all at once) and Gauss-Seidel (update immediately).",
+          "State and check the convergence condition before iterating.",
+          "Recognise a diverging iteration from its numbers.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "Take each equation and solve it for **its own** diagonal unknown. That turns the system into a set of update formulas: feed in a guess for all variables, read out improved values, feed those back in, repeat." },
+        { type: "math", tex: "x_1 = \\frac{1}{a_{11}}\\left(b_1 - a_{12}x_2 - a_{13}x_3\\right), \\quad \\ldots \\quad \\text{(one formula per unknown)}" },
+        { type: "p", text: "Two timing strategies give the chapter's two methods. **Jacobi** is the weekly report: every variable updates from last round's values only. **Gauss-Seidel** is the group chat: the moment a new value appears, everyone after it uses it — which usually converges faster." },
+        { type: "note", text: "Refinement converges only when each equation is dominated by its own diagonal term: $|a_{ii}| > \\sum_{j \\ne i} |a_{ij}|$ for every row (**diagonal dominance**). The teacher's rule: check this **before** writing a single iteration — and if a system is not dominant, rearrange the equations so it becomes dominant." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "p", text: "The one symbol that trips beginners is the superscript in $x^{(k)}$: it counts **iterations**, it is not a power." },
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$x^{(k)}$", "the guess after $k$ iterations", "'x at iteration k' — not x to the power k"],
+          ["$x^{(0)}$", "the starting guess (often all zeros)", "x nought"],
+          ["$|x^{(k+1)} - x^{(k)}| < \\varepsilon$", "stopping rule: changes are tiny", "converged, stop iterating"],
+          ["$|a_{ii}| > \\sum_{j \\ne i} |a_{ij}|$", "diagonal dominance of row $i$", "the convergence ticket"],
+        ] },
+        { type: "p", text: "An iteration whose values blow up or oscillate ever wider is **diverging** — a sign the dominance check was skipped." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Refine the solution of $3x + y = 5$, $x + 2y = 5$ by Jacobi iteration from the flat start $(0, 0)$. (The exact answer is $(1, 1)$ — watching the iteration homes in on it is the whole point.)" },
+        { type: "p", text: "**Dominance check first:** $|3| > |1|$ ✓ and $|2| > |1|$ ✓ — both rows are diagonally dominant, so the iteration may be trusted. Rearranged: $x = \\frac{5 - y}{3}$ and $y = \\frac{5 - x}{2}$." },
+        { type: "table", head: ["$k$", "$x^{(k)}$", "$y^{(k)}$"], rows: [
+          ["1", "1.6667", "2.5"],
+          ["2", "0.8333", "1.6667"],
+          ["3", "1.1111", "2.0833"],
+        ] },
+        { type: "p", text: "Read the table like an iterationist: the values swing either side of $(1, 1)$ but the swings shrink — $1.6667 \\to 0.8333 \\to 1.1111$ brackets $1$ ever more tightly. That shrinking oscillation **is** convergence; keep iterating until $|x^{(k+1)} - x^{(k)}|$ falls below the tolerance, then stop." },
+        { type: "exam", text: "Exam shape: state the dominance check (one line), show the rearranged formulas, then a column table of iterations — the papers award the method marks to the table, not to the final decimals." },
+      ],
+    },
     {
       heading: 'When do you use an iterative method',
       blocks: [

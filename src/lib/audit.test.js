@@ -230,3 +230,11 @@ test('elimination walk-through numbers match the engine', () => {
   assert.ok(t.includes('x = 2'), 'x value');
   assert.ok(t.includes('y = 1'), 'y value');
 });
+
+test('iterative walk-through numbers match the engine', () => {
+  const t = sectionText('iterative', 'Start here: your first walk-through');
+  const r = s.jacobi({ A: [[3, 1], [1, 2]], b: [5, 5], x0: [0, 0] });
+  close(r.result.table[1].x[0], 5 / 3, 1e-9);
+  close(r.result.table[1].x[1], 2.5, 1e-9);
+  ['1.6667', '2.5', '0.8333', '1.6667'].forEach((n) => assert.ok(t.includes(n), `iterative missing ${n}`));
+});
