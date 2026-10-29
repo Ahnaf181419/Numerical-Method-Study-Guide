@@ -2,6 +2,30 @@
 // Every number in `examples` was checked against src/lib/solvers.js.
 
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "Numerical differentiation exists because…",
+    options: ["derivatives are too hard to compute exactly", "data often arrives as tables, so no formula exists to differentiate", "tables are always more accurate", "the chain rule fails for polynomials"],
+    answer: 1,
+    explain: "Rules like the power rule need a formula; a position-time table has none, so slopes must be built from the data itself.",
+  },
+  "Start here: the core idea": {
+    q: "Why is the central difference preferred in a table's interior?",
+    options: ["It uses fewer data points", "Its leading error cancels, giving $O(h^2)$ accuracy instead of $O(h)$", "It works without knowing $h$", "It never overestimates"],
+    answer: 1,
+    explain: "Balancing the slope on both sides cancels the curve-bend error's leading term — same data, better league of accuracy.",
+  },
+  "Start here: reading the symbols": {
+    q: "An $O(h^2)$ formula's error when $h$ is halved becomes…",
+    options: ["half as large", "a quarter as large", "twice as large", "unchanged"],
+    answer: 1,
+    explain: "Error scales with $h^2$: halving $h$ multiplies the error by $(1/2)^2 = 1/4$.",
+  },
+  "Start here: your first walk-through": {
+    q: "For $y = x^2$ at $x = 2$ with $h = 1$, the forward slope gave 5. Why too big?",
+    options: ["Rounding in the table", "The one-sided chord leans on the curve's steepening side", "The wrong $h$ was used", "Forward formulas always halve the answer"],
+    answer: 1,
+    explain: "The chord from $(2,4)$ to $(3,9)$ rides the curve's right-hand steepening; the central slope cancels that lean and returns the exact 4.",
+  },
   'Why numerical differentiation': {
     q: 'Numerical differentiation is needed when …',
     options: [
@@ -123,6 +147,53 @@ export default {
   sources: ['Balagurusamy Ch 11', 'Shanker Rao Ch 8'],
   flagged: true,
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "Velocity is the derivative of position. Acceleration is the derivative of velocity. But a flight recorder hands you **positions sampled every few seconds** — no formula $s(t)$ anywhere — and the exam still asks: how fast was it going at $t = 50$ s? How hard was it accelerating?" },
+        { type: "p", text: "Differentiation by rules needs a formula. When only a table exists, the derivative is estimated from the data's **slopes**: that is numerical differentiation, and it is the bridge between any position-time table and the velocity-acceleration questions built on it." },
+        { type: "p", text: "The whole chapter is three slope formulas (forward, backward, central — each knowing its place), their second-derivative partners, and the Richardson trick that squeezes two rough estimates into a much better one." },
+        { type: "list", items: [
+          "Pick the correct formula for a row's position in the table (edge vs interior).",
+          "Estimate first and second derivatives from tabulated data.",
+          "Know why central differences beat one-sided ones.",
+          "Use Richardson extrapolation to sharpen an estimate.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "A derivative is a slope, and the slope most visible in a table is the **rise over run between neighbouring rows**: $\\frac{y_{i+1} - y_i}{h}$. With equal spacing $h$, that single fraction is the atom the whole chapter is built from." },
+        { type: "p", text: "At the **top edge** of a table only the row below exists — use the forward slope. At the **bottom edge** only the row above exists — use the backward slope. In the **interior**, average the two into the central difference:" },
+        { type: "math", tex: "f'(x_i) \\approx \\frac{y_{i+1} - y_i}{h} \\;(\\text{forward}), \\qquad \\frac{y_i - y_{i-1}}{h} \\;(\\text{backward}), \\qquad \\frac{y_{i+1} - y_{i-1}}{2h} \\;(\\text{central})" },
+        { type: "note", text: "Why prefer central when you can: the one-sided slopes lean on the curve's bend on one side only, giving $O(h)$ error; the central slope balances the two sides and the leading error cancels, leaving $O(h^2)$. Same data, dramatically better answer." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$h$", "equal spacing between table rows", "step size"],
+          ["$y_i$", "the table value at row $i$", "the ordinate"],
+          ["$\\frac{y_{i+1} - y_i}{h}$", "forward-difference slope", "looks down the table"],
+          ["$\\frac{y_i - y_{i-1}}{h}$", "backward-difference slope", "looks up the table"],
+          ["$\\frac{y_{i+1} - y_{i-1}}{2h}$", "central-difference slope", "straddles the row"],
+          ["$\\frac{y_{i+1} - 2y_i + y_{i-1}}{h^2}$", "central second derivative", "slope of the slope"],
+          ["$O(h)$, $O(h^2)$", "how the error shrinks as $h$ shrinks", "the accuracy league table"],
+        ] },
+        { type: "p", text: "Smaller $h$ means closer rows — and (up to rounding noise) smaller error; the $O(\\cdot)$ tag tells you how much smaller per halving: $O(h)$ halves the error, $O(h^2)$ quarters it." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Estimate the derivative of $y = x^2$ at $x = 2$ from three rows: $(1,1)$, $(2,4)$, $(3,9)$, spaced $h = 1$. The true answer is $y' = 2x = 4$ — so the table can be graded." },
+        { type: "p", text: "**Forward slope** (uses the row below): $\\frac{9 - 4}{1} = 5$ — an overestimate, because the chord leans against the curve's steepening right side. **Central slope** (straddles the row): $\\frac{9 - 1}{2} = 4$ — **exact**, because the left undershoot and right overshoot cancel." },
+        { type: "p", text: "**Second derivative** (slope of the slope): $\\frac{9 - 2(4) + 1}{1^2} = 2$ — again exact, since $y'' = 2$ everywhere. For a quadratic every central formula is exact; for anything curvier the $O(h^2)$ tag says how fast the error falls as the rows tighten." },
+        { type: "exam", text: "Exam habit: name which formula you use and **why** ('$t = 0$ is the first row, so the forward three-point formula'), then substitute with $h$ shown — the justification line carries marks of its own." },
+      ],
+    },
     {
       heading: 'Why numerical differentiation',
       blocks: [

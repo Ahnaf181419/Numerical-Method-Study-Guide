@@ -264,3 +264,11 @@ test('interpolation walk-through numbers match the engine', () => {
   close(r.result.y, 6.5, 1e-9);
   assert.ok(t.includes('6.5'), 'interpolated value');
 });
+
+test('differentiation walk-through numbers match the engine', () => {
+  const t = sectionText('differentiation', 'Start here: your first walk-through');
+  const r = s.differentiate({ xs: [1, 2, 3], ys: [1, 4, 9], x: 2, method: 'central2' });
+  close(r.result.derivative, 4, 1e-9);
+  assert.ok(t.includes('9 - 4'), 'forward estimate shown');
+  assert.ok(t.includes('9 - 1'), 'central estimate shown');
+});
