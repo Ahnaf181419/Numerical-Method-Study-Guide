@@ -20,6 +20,9 @@ export function SideNav({ modules, view, currentId, progress, onHome, onPick, on
         </svg>
         Search lessons
       </button>
+      <button onClick={onSyllabus} aria-current={view === 'syllabus' ? 'page' : undefined} className={`${item(view === 'syllabus')} mb-3 border border-gold/30`}>
+        <span className="w-10 text-center font-serif text-lg text-gold">§</span> Syllabus
+      </button>
       <button onClick={onHome} aria-current={view === 'home' ? 'page' : undefined} className={item(view === 'home')}>
         <span className="w-10 text-center font-serif text-lg text-gold">⌂</span> Overview
       </button>
@@ -42,9 +45,6 @@ export function SideNav({ modules, view, currentId, progress, onHome, onPick, on
           </button>
         );
       })}
-      <button onClick={onSyllabus} aria-current={view === 'syllabus' ? 'page' : undefined} className={item(view === 'syllabus')}>
-        <span className="w-10 text-center font-serif text-lg text-gold">§</span> Syllabus
-      </button>
       <button onClick={onExam} aria-current={view === 'exam' ? 'page' : undefined} className={`${item(view === 'exam')} mt-4 border border-red/30`}>
         <span className="w-10 text-center text-red">★</span>
         <span className={view === 'exam' ? 'text-red' : 'text-text/85'}>Exam prep</span>
