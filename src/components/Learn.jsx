@@ -112,7 +112,9 @@ export default function Learn({ module, index, learned, onIndex, onLearned, onDo
 
             {check && (
               <section aria-label="Check yourself" className="mt-10 rounded-2xl border border-line bg-panel p-5 sm:p-6">
-                <p className="mb-3 font-sans text-sm font-semibold text-gold">Check yourself</p>
+                <p className="mb-3 font-sans text-sm font-semibold text-gold">
+                  Check yourself <span className="ml-1 font-normal text-ash">— a study check for learning, not a Question Bank question</span>
+                </p>
                 <Choice key={`${module.id}-${i}`} item={check} />
               </section>
             )}

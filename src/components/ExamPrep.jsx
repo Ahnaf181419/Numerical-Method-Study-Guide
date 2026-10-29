@@ -150,7 +150,7 @@ export default function ExamPrep({ modules, progress, onOpen, onMockFinish }) {
                     <span className="text-sm text-ash">{set.rule}</span>
                   </h3>
                   {set.items.map((it) => (
-                    <Likely key={it.id} q={{ ...it, flag: `${it.marks} marks${it.flagged ? ', not in your slides/notes' : ''}` }} mod={byId[it.module]} onOpen={onOpen} />
+                    <Likely key={it.id} q={{ ...it, flag: `${it.marks} marks · ${it.type}${it.flagged ? ' · not in your slides/notes' : ''}` }} mod={byId[it.module]} onOpen={onOpen} />
                   ))}
                 </section>
               ))}
