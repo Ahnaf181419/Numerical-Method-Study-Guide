@@ -30,11 +30,13 @@ const sectionText = (id, heading) => {
 };
 
 test('elimination examples match the engine', () => {
-  const sys = { A: [[1, 1, 1], [2, 3, 1], [3, 4, 5]], b: [6, 13, 18] };
+  // board notes Example 1: x + y + z = 6, 2x + 3y + z = 13, 3x + 2y + 5z = 18
+  const sys = { A: [[1, 1, 1], [2, 3, 1], [3, 2, 5]], b: [6, 13, 18] };
   const r = s.gaussEliminate(sys).result.x;
   const t = exampleText('elimination', 'no pivoting');
-  ['5.6667', '0.6667', '-0.3333'].forEach((n, i) => has(t, n, 'naive'));
-  close(r[0], 17 / 3);
+  ['3x + 2y + 5z = 18', 'x = 3', 'y = 2', 'z = 1'].forEach((n) => has(t, n, 'naive'));
+  [3, 2, 1].forEach((v, i) => close(r[i], v));
+  has(exampleText('elimination', 'Gauss-Jordan on the same system'), 'x = 3', 'board Gauss-Jordan');
   const f24 = s.gaussEliminate({ A: [[1, 2, -3], [-9, 8, 7], [4, 5, 6]], b: [-4, 28, 32], pivot: 'on' });
   const tf = exampleText('elimination', 'partial pivoting');
   ['tfrac{26}{9}', 'tfrac{77}{9}', 'tfrac{408}{77}'].forEach((n) => has(tf, n, 'F24 pivoting'));
@@ -156,9 +158,11 @@ test('differentiation and integration examples match the engine', () => {
   ['1.25', '0.75', '10.25', '1.0'].forEach((n) => has(v, n, 'vehicle'));
   close(s.differentiate({ xs: [0.49, 0.5, 0.51], ys: [1 / 1.2401, 0.8, 1 / 1.2601], x: 0.5, method: 'secondCentral' }).result.derivative, -0.256078, 1e-5);
   has(exampleText('differentiation', '1/(1 + x'), '-0.256078', 'second derivative');
-  close(s.romberg({ expr: 'exp(-x^2)', a: 0, b: 1, n: 8 }).result.value, 0.7468241, 1e-6);
+  close(s.romberg({ expr: 'exp(-x^2)', a: 0, b: 1, n: 8 }).result.value, 0.746816, 1e-6);
   const r2 = exampleText('integration', 'from 0 to 1');
-  has(r2, '0.746824', 'romberg e^-x^2');
+  has(r2, '0.746816', 'romberg e^-x^2');
+  const r3 = exampleText('integration', '1/(1 + x) from 0 to 1.2');
+  ['0.8113', '0.7943', '0.7899', '0.7886', '0.7884', '0.7883'].forEach((n) => has(r3, n, 'Shanker Ex 9.14'));
   const T = [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75].map((x2) => 3.2 + 12 * x2 - 28 * x2 ** 2 + 32 * x2 ** 3 - 16 * x2 ** 4 + 3 * x2 ** 5);
   // Fall 2024 A2(e): Simpson 1/3 on 4 strips + Simpson 3/8 on 3 strips
   const I1 = s.integrate({ xs: [0, 0.25, 0.5, 0.75, 1], ys: T.slice(0, 5), method: 'simpson13' }).result.value;
@@ -218,19 +222,54 @@ test('past-paper model answers match the engine', () => {
   has(paperText('Spring 2023', 'Q2(h)'), 'y(0.04) \\approx 1.0406', 'S23 Q2(h) euler');
 });
 
+test('LU slides: both solve examples match the engine', () => {
+  const a = s.luSolve({ A: [[1, 1, 1], [4, 3, -1], [3, 5, 3]], b: [1, 6, 4] }).result;
+  [1, 0.5, -0.5].forEach((v, i) => close(a.x[i], v, 1e-12));
+  [1, 2, 5].forEach((v, i) => close(a.d[i], v, 1e-12));
+  ['u_{33} = 3 - (3)(1) - (-2)(-5) = -10', 'd_3 = 4 - 3 + 4 = 5'].forEach((n) => has(exampleText('lu', 'Example 1 from the slides'), n, 'LU slide Ex 1'));
+  const b = s.luSolve({ A: [[3, 2, 1], [2, 3, 2], [1, 2, 3]], b: [10, 14, 14] }).result;
+  [1, 2, 3].forEach((v, i) => close(b.x[i], v, 1e-9));
+  [10, 22 / 3, 24 / 5].forEach((v, i) => close(b.d[i], v, 1e-9));
+  ['\\frac{24}{5}', 'x_3 = 3}'].forEach((n) => has(exampleText('lu', 'using Gauss elimination'), n, 'LU slide Gauss'));
+});
+
+test('elimination slides: pivoting and Gauss-Jordan examples match the engine', () => {
+  const e2 = s.gaussEliminate({ A: [[3, 5, 1], [3, 2, 5], [6, 4, 2]], b: [0, 10, 12], pivot: 'on' }).result;
+  [3, -2, 1].forEach((v, i) => close(e2.x[i], v, 1e-12));
+  ['[\\ 0 \\quad 0 \\quad 4 \\mid 4\\ ]', 'y = -2'].forEach((n) => has(exampleText('elimination', 'Board Example 2'), n, 'board Ex 2'));
+  const p = s.gaussEliminate({ A: [[2, 1, 1], [4, -6, 0], [-2, 7, 2]], b: [5, -2, 9], pivot: 'on' }).result;
+  [1, 1, 2].forEach((v, i) => close(p.x[i], v, 1e-12));
+  ['[\\ 0 \\quad 4 \\quad 1 \\mid 6\\ ]', 'x_3 = 2}'].forEach((n) => has(exampleText('elimination', 'Partial pivoting on the slides'), n, 'slide pivoting'));
+  const g = s.gaussJordan({ A: [[2, 4, 6], [4, 5, 6], [3, 1, -2]], b: [18, 24, 4] }).result;
+  [4, -2, 3].forEach((v, i) => close(g.x[i], v, 1e-12));
+  ['-12', '-23', 'x_2 = -2'].forEach((n) => has(exampleText('elimination', 'Gauss-Jordan on the slides'), n, 'slide Gauss-Jordan'));
+});
+
+test('gradient-descent slides: later epochs match the engine', () => {
+  const xs = [1, 2, 4, 3, 5], ys = [1, 3, 3, 2, 5];
+  const run = (mode, epochs) => s.gradientDescent({ xs, ys, theta0: [0, 0], alpha: 0.01, epochs, mode }).result.theta;
+  [0.1109, 0.3948].forEach((v, i) => close(run('batch', 5)[i], v, 5e-5));
+  [0.2309, 0.7904].forEach((v, i) => close(run('single', 4)[i], v, 5e-5));
+  const expl = (t) => modules.find((x) => x.id === 'gradient').examples.find((e) => e.title.includes(t)).explanation.join('\n');
+  has(expl('Batch mode'), '(0.1109, 0.3948)', 'batch epochs');
+  ['0.2309', '0.7904'].forEach((n) => has(expl('Single mode'), n, 'single epochs'));
+});
+
 test('corrected past-paper answers are reproduced by the engine', () => {
   // F23 / S23 Q1(d): maximum relative error of u = 5xy^2/z^3 with all deltas 1
   close((5 + 10 + 15) / 5, 6);
   ['Fall 2023', 'Spring 2023'].forEach((p) => has(paperText(p, 'Q1(d)'), 'e_r = 6', `${p} Q1(d)`));
   // F24 A2(f) and S23 Q2(d): Romberg tables
   const rf = s.romberg({ expr: '(2*x^2+x)*exp(-x)', a: 1, b: 3, n: 8 }).result.table;
-  close(rf[3][0], 2.516737, 1e-6);
-  close(rf[3][3], 2.522645, 1e-6);
-  ['2.516737', '2.522804', '2.522645'].forEach((n) => has(paperText('Fall 2024', 'A2(f)'), n, 'F24 A2(f)'));
+  close(rf[0][0], 2.427936, 1e-6);
+  close(rf[1][1], 2.522683, 1e-6);
+  close(rf[2][2], 2.522639, 1e-6);
+  ['2.427936', '2.522683', '2.522650', '2.522639'].forEach((n) => has(paperText('Fall 2024', 'A2(f)'), n, 'F24 A2(f)'));
+  ['2.522683', '2.522639'].forEach((n) => has(exampleText('integration', 'from 1 to 3'), n, 'F24 Romberg example'));
   const rs = s.romberg({ expr: 'exp(-x^2)', a: 0, b: 1, n: 8 }).result.table;
-  close(rs[1][1], 0.747180, 1e-6);
-  close(rs[2][2], 0.746834, 1e-6);
-  ['0.747180', '0.746834', '0.7468}'].forEach((n) => has(paperText('Spring 2023', 'Q2(d)'), n, 'S23 Q2(d)'));
+  close(rs[1][1], 0.746855, 1e-6);
+  close(rs[2][2], 0.746816, 1e-6);
+  ['0.746855', '0.746826', '0.746816', 'I = 0.7468}'].forEach((n) => has(paperText('Spring 2023', 'Q2(d)'), n, 'S23 Q2(d)'));
   // F23 Q3(d): Jacobi 17 iterations, Gauss-Seidel 7, to 0.005
   const A = [[5, 2, 1], [1, 4, 2], [1, 2, 5]], b = [12, 15, 20], x0 = [0, 0, 0];
   assert.equal(s.jacobi({ A, b, x0, tol: 0.005, maxIter: 50 }).result.table.length - 1, 17);
@@ -263,11 +302,9 @@ test('roots walk-through uses the sourced S24 Q2(a) numbers', () => {
 
 test('elimination walk-through uses the sourced board-notes system', () => {
   const t = sectionText('elimination', 'Start here: your first walk-through');
-  const r = s.gaussEliminate({ A: [[1, 1, 1], [2, 3, 1], [3, 4, 5]], b: [6, 13, 18] });
-  close(r.result.x[0], 17 / 3, 1e-9);
-  close(r.result.x[1], 2 / 3, 1e-9);
-  close(r.result.x[2], -1 / 3, 1e-9);
-  ['5.6667', '0.6667', '-0.3333', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `elimination missing ${n}`));
+  const r = s.gaussEliminate({ A: [[1, 1, 1], [2, 3, 1], [3, 2, 5]], b: [6, 13, 18] });
+  [3, 2, 1].forEach((v, i) => close(r.result.x[i], v, 1e-9));
+  ['3x + 2y + 5z = 18', 'y = 1 + z = 2', 'x = 6 - y - z = 3', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `elimination missing ${n}`));
 });
 
 test('iterative walk-through uses the sourced slides system', () => {
@@ -359,4 +396,11 @@ test('every module opens with the four Start-here sections', () => {
     const wt = sectionText(m.id, 'Start here: your first walk-through');
     assert.ok(wt.includes('Asked in:'), `${m.id}: walk-through must list the Question Bank refs`);
   }
+});
+
+test('Shanker Ex 5.2 divided difference table: recomputed values match the engine', () => {
+  const tb = s.dividedDifference({ xs: [1, 3, 4, 6, 10], ys: [0, 18, 58, 190, 920], x: 2 }).result.table;
+  [[1, 0, 9], [1, 2, 66], [2, 0, 10.3333], [3, 0, -0.3333], [3, 1, 1.5357], [4, 0, 0.2077]].forEach(([i, j, v]) => close(tb[i][j], v, 1e-4));
+  const text = exampleText('interpolation', 'x = 1, 3, 4, 6, 10');
+  ['= 66', '= 182.5', '= 0.2077'].forEach((n) => has(text, n, 'Ex 5.2'));
 });

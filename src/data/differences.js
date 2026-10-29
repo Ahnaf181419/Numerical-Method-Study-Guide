@@ -296,6 +296,23 @@ export default {
           ],
         },
         {
+          type: 'p',
+          text: 'The teacher’s handwritten sheet proves four more (proofs 10–13). Each one is “apply both sides to $f_n$ and show they give the same value”:',
+        },
+        {
+          type: 'list',
+          items: [
+            '**Proof 10, $E^{1/2} \\equiv \\mu + \\tfrac{1}{2}\\delta$.** $E^{1/2}f_n = f_{n+\\frac12}$. And $\\left(\\mu + \\tfrac{1}{2}\\delta\\right)f_n = \\tfrac{1}{2}\\left[f_{n+\\frac12} + f_{n-\\frac12}\\right] + \\tfrac{1}{2}\\left[f_{n+\\frac12} - f_{n-\\frac12}\\right] = \\tfrac{1}{2}\\left(2f_{n+\\frac12}\\right) = f_{n+\\frac12}$. So $E^{1/2} \\equiv \\mu + \\tfrac{1}{2}\\delta$.',
+            '**Proof 11, $(1 + \\Delta)(1 - \\nabla) \\equiv 1$.** $(1+\\Delta)(1-\\nabla)f_n = f_n + \\Delta f_n - \\nabla f_n - \\Delta[f_n - f_{n-1}] = f_n - \\nabla f_n + \\Delta f_{n-1} = f_n - (f_n - f_{n-1}) + (f_n - f_{n-1}) = f_n$. So $(1+\\Delta)(1-\\nabla) \\equiv 1$.',
+            '**Proof 12, $\\nabla \\equiv E^{-1}\\Delta$.** $\\nabla f_n = f_n - f_{n-1}$, and $E^{-1}\\Delta f_n = E^{-1}[f_{n+1} - f_n] = E^{-1}f_{n+1} - E^{-1}f_n = f_n - f_{n-1}$. So $\\nabla \\equiv E^{-1}\\Delta$.',
+            '**Proof 13, $\\delta \\equiv E^{-1/2}\\Delta$.** $\\delta f_n = f_{n+\\frac12} - f_{n-\\frac12}$, and $E^{-1/2}\\Delta f_n = E^{-1/2}(f_{n+1} - f_n) = f_{n+\\frac12} - f_{n-\\frac12}$. So $\\delta \\equiv E^{-1/2}\\Delta$.',
+          ],
+        },
+        {
+          type: 'note',
+          text: 'On the board, the middle line of proof 10 is written as $\\tfrac{1}{2}\\left(f_{\\frac12} + f_{-\\frac12}\\right)$, which is a slip: the two brackets add to $\\tfrac{1}{2}\\left(2f_{\\frac12}\\right) = f_{\\frac12}$, as written above. The conclusion is the same. The teacher’s boxed tip: for proofs 9 and 10, work at a general $f_n$ rather than at $f_0$.',
+        },
+        {
           type: 'note',
           text: '**Source discrepancy — write the pair the way Chapra does it.** The course summary lists "$\\mu = \\tfrac{1}{2}(\\Delta + \\nabla)$". Chapra Ch.2 Q9(h),(i) and the operator algebra both give **$2\\mu\\delta \\equiv \\Delta + \\nabla$**, i.e. $\\mu\\delta = \\tfrac{1}{2}(\\Delta+\\nabla)$ — the factor $\\delta$ is missing from the summary line. Check it yourself with $f(x) = x^2$, $h = 1$: $\\tfrac{1}{2}(\\Delta+\\nabla)f = 2x$, but $\\mu f = x^2 + \\tfrac{1}{4}$. The paper-ready statements are the three boxed identities above.',
         },
@@ -386,6 +403,8 @@ export default {
     { label: '2μδ = Δ + ∇', tex: '2\\mu\\delta \\equiv \\Delta + \\nabla', where: 'Chapra operator list, Ch.2 Q9(h)' },
     { label: 'E^{1/2} = μ + ½δ', tex: 'E^{1/2} \\equiv \\mu + \\tfrac{1}{2}\\delta', where: "teacher's proof 10" },
     { label: '(1 + Δ)(1 − ∇) = 1', tex: '(1+\\Delta)(1-\\nabla) \\equiv 1', where: "teacher's proof 11" },
+    { label: '∇ = E⁻¹Δ', tex: '\\nabla \\equiv E^{-1}\\Delta', where: "teacher's proof 12" },
+    { label: 'δ = E^{−1/2}Δ', tex: '\\delta \\equiv E^{-1/2}\\Delta', where: "teacher's proof 13" },
     { label: 'Error in a difference table', tex: '\\text{Error} = \\dfrac{\\text{largest value in the column}}{\\text{coefficient of } \\varepsilon \\text{ in that column}}', where: 'Chapra §2.2' },
   ],
   examples: [

@@ -154,9 +154,18 @@ test('composite trapezoid on 1/(1+x^2) with five subintervals (Fall 2023 Q2d)', 
   close(result.value, 0.7837315, 1e-6);
 });
 
-test('romberg integrates e^(-x^2) from 0 to 1 (Spring 2023 Q2d)', () => {
-  const { result } = s.romberg({ expr: 'exp(-x^2)', a: 0, b: 1, n: 8 });
+test('romberg integrates e^(-x^2) from 0 to 1 (Spring 2023 Q2d), standard 4^j - 1 form', () => {
+  const { result } = s.romberg({ expr: 'exp(-x^2)', a: 0, b: 1, n: 8, rule: 'standard' });
   close(result.value, 0.74682413, 1e-6);
+});
+
+test('romberg, Shanker Rao form, reproduces Example 9.14 (h = 0.6, 0.3, 0.15)', () => {
+  const { table } = s.romberg({ expr: '1/(1+x)', a: 0, b: 1.2, n: 8 }).result;
+  // the book works with 4-decimal ordinates, so its trapezoid values are good to about 1e-4
+  [0.8113, 0.7943, 0.7899].forEach((v, k) => close(table[k][0], v, 1e-4));
+  // the book carries 4 decimals: (4 x 0.7884 - 0.7886)/3 = 0.7883
+  close((4 * 0.7884 - 0.7886) / 3, 0.7883, 5e-5);
+  close(table[2][2], 0.78841, 5e-5);
 });
 
 test('simpson 1/3 on a parabola is exact', () => {

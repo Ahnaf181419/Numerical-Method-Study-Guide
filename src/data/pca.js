@@ -263,6 +263,10 @@ export default {
           type: 'exam',
           text: 'Give the covariance matrix in the form $\\frac{1}{n}\\sum z^{(i)}z^{(i)T}$ and then the numbers. One mark for the formula, one for the matrix.',
         },
+        {
+          type: 'note',
+          text: 'Sources differ on the divisor. The tutorial’s numbers ($\\lambda_1 = 1.1556$) divide by $n = 10$; in class both sets of notes (Raiyan p. 22, Medha p. 30) divide by $m - 1 = 9$: $\\Sigma = \\frac{1}{m-1}X^TX = \\begin{bmatrix} 0.6166 & 0.6154 \\\\ 0.6154 & 0.7166 \\end{bmatrix}$, giving $\\lambda^2 - 1.3332\\lambda + 0.0631 = 0$, $\\lambda_1 = 1.2840$, $\\lambda_2 = 0.0492$. Every entry and eigenvalue is just scaled by $\\frac{10}{9}$, so the eigenvectors, the variance percentages ($96.3\\%$ / $3.7\\%$), the projections and the errors are identical. State the divisor you use in the first line.',
+        },
       ],
     },
     {

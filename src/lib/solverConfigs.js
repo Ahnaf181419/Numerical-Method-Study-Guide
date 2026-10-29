@@ -293,6 +293,7 @@ export const SOLVERS = {
         ['a', 'Lower limit', 'any', '0'],
         ['b', 'Upper limit', 'any', '1'],
         ['n', 'Subintervals (a power of 2)', 'num', '8'],
+        ['rule', 'Extrapolation', 'select', 'shanker', ['shanker', 'standard']],
       ],
       run: (v) => s.romberg(v),
     },

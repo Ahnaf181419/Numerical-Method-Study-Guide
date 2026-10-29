@@ -103,13 +103,13 @@ export const checks = {
     q: 'Romberg integration …',
     options: [
       'is Newton’s method applied to integration',
-      'starts from the trapezoidal rule and improves it by Richardson extrapolation at each level, gaining one power of $h$ per column',
+      'starts from the trapezoidal rule and improves it by Richardson extrapolation at each level',
       'is Simpson’s rule applied repeatedly',
       'is a Gaussian quadrature with unequal weights',
     ],
     answer: 1,
     explain:
-      'Romberg starts with the trapezoidal rule (error $\\propto h^2$) and applies Richardson extrapolation to each column, so the first column is $O(h^2)$, the second $O(h^4)$, the third $O(h^6)$ and so on. The recurrence is $R_{k,j} = R_{k,j-1} + \\frac{R_{k,j-1}-R_{k-1,j-1}}{4^j-1}$.',
+      'Romberg starts with the trapezoidal rule (error $\\propto h^2$) at $h, h/2, h/4, \\dots$ and combines neighbouring values by Richardson extrapolation, $\\frac{4I_{\\text{fine}} - I_{\\text{coarse}}}{3}$, level after level (Shanker Rao §9.10).',
   },
 
   'Choosing a rule and estimating the error': {
@@ -405,41 +405,44 @@ export default {
         },
         {
           type: 'p',
-          text: 'Applying this several times, each time to the results of the previous step, is **Romberg integration**. The values are laid out in the classic table:',
+          text: 'Applying this formula again and again — each time to the two latest results — is **Romberg integration** (Shanker Rao §9.10, and the way it was worked in class). Take the trapezoidal rule at $h$, $h/2$, $h/4$ (start with at least two strips), call the results $I(h)$, $I(h/2)$, $I(h/4)$, and combine neighbours:',
         },
         {
           type: 'math',
-          tex: "\\begin{array}{cccc} A_1 & A_2 & A_3 & A_4 \\\\ B_1 & B_2 & B_3 & \\\\ C_1 & C_2 & & \\\\ D_1 & & & \\end{array}",
+          tex: "I\\left(h, \\tfrac{h}{2}\\right) = \\frac{4I\\left(\\frac{h}{2}\\right) - I(h)}{3}, \\qquad I\\left(\\tfrac{h}{2}, \\tfrac{h}{4}\\right) = \\frac{4I\\left(\\frac{h}{4}\\right) - I\\left(\\frac{h}{2}\\right)}{3}, \\qquad I\\left(h, \\tfrac{h}{2}, \\tfrac{h}{4}\\right) = \\frac{4I\\left(\\frac{h}{2}, \\frac{h}{4}\\right) - I\\left(h, \\frac{h}{2}\\right)}{3}",
         },
         {
           type: 'p',
-          text: 'where the $A$ row is the trapezoidal rule with $1, 2, 4, 8$ subintervals, the $B$ row is Richardson applied to the $A$ row, the $C$ row is Richardson applied to the $B$ row, and so on. In index form the recurrence is',
+          text: 'The values are laid out in a triangle — each new entry sits between the two it came from:',
         },
         {
           type: 'math',
-          tex: "R_{k,j} = R_{k,j-1} + \\frac{R_{k,j-1} - R_{k-1,j-1}}{4^{j} - 1}, \\qquad R_{k,0} = \\text{trapezoidal rule with } 2^k \\text{ subintervals}",
+          tex: "\\begin{array}{ccc} I(h) & & \\\\ & I(h, h/2) & \\\\ I(h/2) & & I(h, h/2, h/4) \\\\ & I(h/2, h/4) & \\\\ I(h/4) & & \\end{array}",
         },
         {
           type: 'p',
-          text: 'Each column gains one power of $h$: the first column is $O(h^2)$, the second $O(h^4)$, the third $O(h^6)$, the fourth $O(h^8)$. The bottom-right entry is the answer. Here is the table for $\\int_0^1 e^{-x^2}dx$:',
+          text: 'Shanker Rao’s Example 9.14, $\\int_0^{1.2}\\frac{dx}{1+x}$ correct to 4 decimal places with $h = 0.6, 0.3, 0.15$:',
         },
         {
           type: 'table',
-          head: ['subintervals', '$R_{k,0}$ (trapezoid)', '$R_{k,1}$', '$R_{k,2}$', '$R_{k,3}$'],
+          head: ['$h$', 'trapezoid $I(h)$', 'first level', 'second level'],
           rows: [
-            ['1', '0.683940', '—', '—', '—'],
-            ['2', '0.731370', '0.747180', '—', '—'],
-            ['4', '0.742984', '0.746855', '0.746834', '—'],
-            ['8', '0.745866', '0.746826', '0.746824', '0.746824'],
+            ['0.6', '0.8113', '—', '—'],
+            ['0.3', '0.7943', '$\\frac{4(0.7943) - 0.8113}{3} = 0.7886$', '—'],
+            ['0.15', '0.7899', '$\\frac{4(0.7899) - 0.7943}{3} = 0.7884$', '$\\frac{4(0.7884) - 0.7886}{3} = 0.7883$'],
           ],
         },
         {
           type: 'p',
-          text: 'The computation is stopped when two successive entries in a row agree to the required accuracy.',
+          text: 'The computation is stopped when two successive values are very close to each other — here $0.7884$ and $0.7883$, so $I = 0.7883$ (the exact value is $\\ln 2.2 = 0.78846$).',
+        },
+        {
+          type: 'note',
+          text: 'Two forms of Romberg exist. Shanker Rao and the class notes use $\\frac{4I_{\\text{fine}} - I_{\\text{coarse}}}{3}$ at **every** level. The standard form (Chapra and most other books) divides the $j$-th column by $4^j - 1$: $R_{k,j} = R_{k,j-1} + \\frac{R_{k,j-1} - R_{k-1,j-1}}{4^j - 1}$ — 3 for the first column, exactly as above, then 15, 63, …, because each column removes one more power of $h^2$. Beyond the first column the standard form is a little more accurate (Example 9.14 gives $0.7884$ instead of $0.7883$). Write the class form in the exam; the first extrapolated column is identical in both.',
         },
         {
           type: 'exam',
-          text: 'Write the trapezoidal value in the first column for $1, 2, 4, 8$ subintervals; then work across each row with $R_{k,j} = R_{k,j-1} + \\frac{R_{k,j-1}-R_{k-1,j-1}}{4^{j}-1}$. Show at least one substitution, e.g. $R_{1,1} = 0.731370 + \\frac{0.731370-0.683940}{3} = 0.747180$, so the examiner can see the recurrence being used. Box the bottom-right entry.',
+          text: 'Write the trapezoidal values for $h$, $h/2$, $h/4$ (add $h/8$ if the required accuracy is not reached) down the first column, then every later entry as $\\frac{4 \\times \\text{lower} - \\text{upper}}{3}$. Show each substitution, e.g. $I(0.6, 0.3) = \\frac{4 \\times 0.7943 - 0.8113}{3} = 0.7886$, and box the last entry.',
         },
       ],
     },
@@ -513,9 +516,9 @@ export default {
       where: 'Removes the $O(h^2)$ error of the trapezoidal rule',
     },
     {
-      label: 'Romberg recurrence',
-      tex: "R_{k,j} = R_{k,j-1} + \\frac{R_{k,j-1} - R_{k-1,j-1}}{4^{j} - 1}",
-      where: 'Column 0 is the trapezoidal rule with $2^k$ subintervals; each column gains one power of $h$',
+      label: 'Romberg (Shanker Rao)',
+      tex: "I\\left(h, \\tfrac{h}{2}\\right) = \\frac{4I\\left(\\frac{h}{2}\\right) - I(h)}{3}, \\quad I\\left(h, \\tfrac{h}{2}, \\tfrac{h}{4}\\right) = \\frac{4I\\left(\\frac{h}{2}, \\frac{h}{4}\\right) - I\\left(h, \\frac{h}{2}\\right)}{3}",
+      where: 'first column = trapezoidal rule at $h, h/2, h/4, \\dots$; the same $(4 \\cdot \\text{fine} - \\text{coarse})/3$ at every level',
     },
   ],
 
@@ -599,31 +602,31 @@ export default {
       marks: 6,
       steps: [
         {
-          t: '$f(x) = (2x^2+x)e^{-x}$; $f(1) = 1.103638$, $f(2) = 1.353353$, $f(3) = 1.045529$, $f(1.5) = 1.338781$, $f(2.5) = 1.231275$.',
+          t: '$f(x) = (2x^2+x)e^{-x}$; take $h = 1, 0.5, 0.25$. Ordinates: $f(1) = 1.103638$, $f(1.5) = 1.338781$, $f(2) = 1.353353$, $f(2.5) = 1.231275$, $f(3) = 1.045529$ (and the quarter points for $h = 0.25$).',
           m: '1 mark',
         },
         {
-          t: 'First column (trapezoidal): $R_{0,0} = \\frac{2}{2}(1.103638 + 1.045529) = 2.149167$; $R_{1,0} = \\frac{1}{2}(1.103638 + 2(1.353353) + 1.045529) = 2.427936$; $R_{2,0} = 2.498996$; $R_{3,0} = 2.516737$.',
+          t: 'Trapezoidal rule: $I(1) = \\frac{1}{2}[1.103638 + 2(1.353353) + 1.045529] = 2.427936$; $I(0.5) = \\frac{0.5}{2}[1.103638 + 2(1.338781 + 1.353353 + 1.231275) + 1.045529] = 2.498996$; $I(0.25) = 2.516737$.',
           m: '2 marks',
         },
         {
-          t: 'Richardson on each row: $R_{1,1} = R_{1,0} + \\frac{R_{1,0}-R_{0,0}}{3} = 2.427936 + \\frac{0.278769}{3} = 2.520859$; $R_{2,1} = 2.522683$, $R_{2,2} = 2.522804$, $R_{3,1} = 2.522650$, $R_{3,2} = 2.522648$, $R_{3,3} = 2.522645$.',
+          t: 'First level: $I(1, 0.5) = \\frac{4(2.498996) - 2.427936}{3} = 2.522683$; $I(0.5, 0.25) = \\frac{4(2.516737) - 2.498996}{3} = 2.522650$.',
           m: '1 mark',
         },
         {
-          t: 'The bottom-right entry is the answer: $I \\approx 2.522645$. Compare with the true value: $2.5226$. The error is $2.522645 - 2.5226 = 0.000045$, so the value is correct to 4 decimal places.',
+          t: 'Second level: $I(1, 0.5, 0.25) = \\frac{4(2.522650) - 2.522683}{3} = 2.522639$. The last two values agree to 4 decimal places.',
           m: '1 mark',
         },
         {
-          t: '$\\boxed{I \\approx 2.5226}$',
+          t: '$\\boxed{I \\approx 2.5226}$; against the true value $2.5226$ the error is $|2.522639 - 2.5226| \\approx 0.00004$.',
           m: '1 mark',
         },
       ],
-      answer: '$\\boxed{I \\approx 2.5226 \\text{ (Romberg gives } 2.522645;\\; \\text{true value } 2.5226)}$',
-      note: 'Trap: the trapezoidal values alone ($2.1492$, $2.4279$, $2.4990$, $2.5167$) are NOT the answer. The answer is the bottom-right entry of the table, after the Richardson extrapolation.',
+      answer: '$\\boxed{I \\approx 2.5226 \\text{ (Romberg gives } 2.522639;\\ \\text{true value } 2.5226)}$',
+      note: 'Trap: the trapezoidal values alone ($2.4279$, $2.4990$, $2.5167$) are NOT the answer — the answer is the last entry, after the extrapolation. The standard $4^j - 1$ form (see the lesson note) gives $2.522645$ here; both round to $2.5226$.',
       explanation: [
-        'Romberg is the trapezoidal rule plus Richardson extrapolation at every level. Because the trapezoidal error is proportional to $h^2$, the first Richardson column is $O(h^4)$ and the next is $O(h^6)$ — that is why eight subintervals already give four correct decimal places here.',
-        'The table to write in the exam is: first column $R_{k,0}$ (trapezoid with $1, 2, 4, 8$ subintervals), then $R_{k,1} = R_{k,0} + (R_{k,0}-R_{k-1,0})/3$, then $R_{k,2} = R_{k,1} + (R_{k,1}-R_{k-1,1})/15$, and so on. Show one substitution so the recurrence is visible.',
+        'Romberg is the trapezoidal rule plus Richardson extrapolation at every level. The trapezoidal error is proportional to $h^2$, so halving $h$ cuts it by four, and $\\frac{4I(h/2) - I(h)}{3}$ cancels it.',
+        'This is Shanker Rao’s layout (Example 9.14): three trapezoidal values at $h, h/2, h/4$, two first-level values, one second-level value. Show every substitution so the examiner sees the formula being used.',
       ],
     },
 
@@ -636,31 +639,67 @@ export default {
       marks: 6,
       steps: [
         {
-          t: '$f(x) = e^{-x^2}$; $f(0) = 1$, $f(0.25) = 0.939413$, $f(0.5) = 0.778801$, $f(0.75) = 0.569783$, $f(1) = 0.367879$.',
+          t: '$f(x) = e^{-x^2}$; take $h = 0.5, 0.25, 0.125$. $f(0) = 1$, $f(0.25) = 0.939413$, $f(0.5) = 0.778801$, $f(0.75) = 0.569783$, $f(1) = 0.367879$ (and the eighth points for $h = 0.125$).',
           m: '1 mark',
         },
         {
-          t: 'Trapezoidal column: $R_{0,0} = \\frac{1}{2}(1 + 0.367879) = 0.683940$; $R_{1,0} = 0.731370$; $R_{2,0} = 0.742984$; $R_{3,0} = 0.745866$.',
+          t: 'Trapezoidal rule: $I(0.5) = \\frac{0.5}{2}[1 + 2(0.778801) + 0.367879] = 0.731370$; $I(0.25) = \\frac{0.25}{2}[1 + 2(0.939413 + 0.778801 + 0.569783) + 0.367879] = 0.742984$; $I(0.125) = 0.745866$.',
           m: '2 marks',
         },
         {
-          t: 'Richardson: $R_{1,1} = 0.731370 + \\frac{0.731370-0.683940}{3} = 0.747180$; $R_{2,1} = 0.746855$; $R_{2,2} = 0.746834$; $R_{3,1} = 0.746826$; $R_{3,2} = 0.746824$; $R_{3,3} = 0.746824$.',
+          t: 'First level: $I(0.5, 0.25) = \\frac{4(0.742984) - 0.731370}{3} = 0.746855$; $I(0.25, 0.125) = \\frac{4(0.745866) - 0.742984}{3} = 0.746826$.',
           m: '1 mark',
         },
         {
-          t: '$I \\approx 0.746824$, so $I = 0.7468$ correct to 4 decimal places (the exact value is $0.7468241$).',
+          t: 'Second level: $I(0.5, 0.25, 0.125) = \\frac{4(0.746826) - 0.746855}{3} = 0.746816$; the last two values agree to 4 decimal places.',
           m: '1 mark',
         },
         {
-          t: '$\\boxed{I \\approx 0.7468}$',
+          t: '$\\boxed{I \\approx 0.7468}$ (the exact value is $0.7468241$).',
           m: '1 mark',
         },
       ],
-      answer: '$\\boxed{I \\approx 0.7468 \\text{ (Romberg gives } 0.746824;\\; \\text{exact } 0.7468241)}$',
+      answer: '$\\boxed{I \\approx 0.7468 \\text{ (Romberg gives } 0.746816;\\ \\text{exact } 0.7468241)}$',
       note: 'Trap: the trapezoidal column alone would give only $0.7459$ to 4 decimal places — the extrapolation is what earns the accuracy.',
       explanation: [
         'The integrand has no elementary antiderivative ($\\int e^{-x^2}dx$ is the error function), which is exactly why the question asks for a numerical method.',
-        'Note how the columns converge: $0.6839 \\to 0.7314 \\to 0.7430 \\to 0.7459$ in the trapezoidal column, but $0.7472$, $0.7469$, $0.7468$ once Richardson extrapolation is applied. The rule of thumb for Romberg is to stop when two successive entries in the last row agree to the required number of decimal places.',
+        'Note how the values converge: $0.7314 \\to 0.7430 \\to 0.7459$ in the trapezoidal column, but $0.7469$, $0.7468$, $0.7468$ once Richardson extrapolation is applied. Stop when two successive values agree to the required number of decimal places.',
+      ],
+    },
+
+    {
+      title: 'Romberg integration of 1/(1 + x) from 0 to 1.2',
+      type: 'Numerical — Romberg',
+      question: 'Using Romberg’s method compute $I = \\int_0^{1.2} \\dfrac{dx}{1 + x}$ correct to 4 decimal places.',
+      source: 'Shanker Rao Ch 9, Ex. 9.14 (worked in class)',
+      marks: 6,
+      steps: [
+        {
+          t: 'Take $h = 0.6, 0.3, 0.15$. $f(x) = \\frac{1}{1+x}$ at $x = 0, 0.15, \\dots, 1.2$: $1,\\ 0.8696,\\ 0.7692,\\ 0.6897,\\ 0.6250,\\ 0.5714,\\ 0.5263,\\ 0.4878,\\ 0.4545$.',
+          m: '1 mark',
+        },
+        {
+          t: 'Trapezoidal rule: $I(0.6) = \\frac{0.6}{2}[1 + 0.4545 + 2(0.6250)] = 0.8113$; $I(0.3) = \\frac{0.3}{2}[1 + 0.4545 + 2(0.7692 + 0.6250 + 0.5263)] = 0.7943$; $I(0.15) = \\frac{0.15}{2}[1 + 0.4545 + 2(0.8696 + 0.7692 + 0.6897 + 0.6250 + 0.5714 + 0.5263 + 0.4878)] = 0.7899$.',
+          m: '2 marks',
+        },
+        {
+          t: 'First level: $I(0.6, 0.3) = \\frac{4(0.7943) - 0.8113}{3} = 0.7886$; $I(0.3, 0.15) = \\frac{4(0.7899) - 0.7943}{3} = 0.7884$.',
+          m: '1 mark',
+        },
+        {
+          t: 'Second level: $I(0.6, 0.3, 0.15) = \\frac{4(0.7884) - 0.7886}{3} = 0.7883$.',
+          m: '1 mark',
+        },
+        {
+          t: '$\\boxed{I \\approx 0.7883}$',
+          m: '1 mark',
+        },
+      ],
+      answer: '$\\boxed{I = \\int_0^{1.2}\\frac{dx}{1+x} \\approx 0.7883}$ (exact $\\ln 2.2 = 0.78846$)',
+      note: 'Trap: the book’s printed table shows $0.7948$ for $I(0.3)$ — a misprint; its own working gives $0.7943$, and that is the value the rest of the table uses.',
+      explanation: [
+        'Each trapezoidal value reuses the previous ordinates and adds the new midpoints, so halving $h$ is cheap.',
+        'The class worked this exact example (Medha’s notes, page 33–34) with the same layout: $I(h)$, $I(h/2)$, $I(h/4)$, then $I(h, h/2)$, $I(h/2, h/4)$, then $I(h, h/2, h/4)$.',
       ],
     },
 
@@ -837,7 +876,7 @@ export default {
     },
     {
       front: 'What is the Romberg recurrence?',
-      back: "$R_{k,j} = R_{k,j-1} + \\frac{R_{k,j-1}-R_{k-1,j-1}}{4^{j}-1}$, with $R_{k,0}$ the trapezoidal rule on $2^k$ subintervals. Each column gains one power of $h$: $O(h^2), O(h^4), O(h^6), \\dots$",
+      back: "Shanker Rao / class form: $I(h, h/2) = \\frac{4I(h/2) - I(h)}{3}$, and the same $(4 \\cdot \\text{fine} - \\text{coarse})/3$ at every later level. The standard (Chapra) form divides column $j$ by $4^j - 1$: 3, then 15, 63, …",
     },
     {
       front: 'Richardson extrapolation for the trapezoidal rule',
@@ -916,7 +955,7 @@ export default {
       q: 'The first column of a Romberg table contains …',
       options: [
         'Simpson’s one-third rule values',
-        'the trapezoidal rule values for 1, 2, 4, 8 … subintervals',
+        'the trapezoidal rule values for $h, h/2, h/4, \\dots$',
         'Newton–Cotes weights',
         'the values of the integrand only',
       ],
@@ -925,16 +964,16 @@ export default {
         'Romberg starts from the trapezoidal rule and improves it by Richardson extrapolation in each successive column.',
     },
     {
-      q: 'In a Romberg table, the recurrence used to fill a row is …',
+      q: 'In Shanker Rao’s Romberg method, $I(h, h/2, h/4)$ is …',
       options: [
-        "$R_{k,j} = R_{k,j-1} + \\frac{R_{k,j-1}-R_{k-1,j-1}}{4^{j}-1}$",
-        "$R_{k,j} = R_{k,j-1} + \\frac{R_{k,j-1}-R_{k-1,j-1}}{4^{j}+1}$",
-        "$R_{k,j} = \\frac{R_{k,j-1}+R_{k-1,j-1}}{2}$",
-        "$R_{k,j} = R_{k,j-1} + \\frac{R_{k,j-1}-R_{k-1,j-1}}{j}$",
+        "$\\frac{4I(h/2, h/4) - I(h, h/2)}{3}$",
+        "$\\frac{I(h/2, h/4) + I(h, h/2)}{2}$",
+        "$\\frac{4I(h, h/2) - I(h/2, h/4)}{3}$",
+        "$\\frac{4I(h/4) - I(h)}{3}$",
       ],
       answer: 0,
       explain:
-        'The denominator is $4^{j}-1$: 3 for the first Richardson column, 15 for the second, 63 for the third.',
+        'Every level uses the same weights: four times the finer value minus the coarser one, divided by 3 (Shanker Rao §9.10, Example 9.14). The standard textbook form would divide this level by 15 instead.',
     },
     {
       q: 'Which rule is exact for a polynomial of degree 5?',

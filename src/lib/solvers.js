@@ -644,25 +644,29 @@ const oddOrEven = (ys, n, odd) =>
   ys.slice(1, n - 1).filter((_, i) => (i + 1) % 2 === (odd ? 1 : 0)).map((v) => fmt(v)).join(' + ');
 
 // Romberg integration: trapezoidal rule refined, then Richardson on each column.
-export function romberg({ expr, a, b, n = 8 }) {
+// rule 'shanker' (Shanker Rao §9.10, as taught in class): trapezoid with 2, 4, … n strips, and
+// I = (4·I_fine − I_coarse)/3 at every level. rule 'standard' (Chapra): 1, 2, … n strips and
+// R_kj = R_k,j-1 + (R_k,j-1 − R_k-1,j-1)/(4^j − 1).
+export function romberg({ expr, a, b, n = 8, rule = 'shanker' }) {
   const f = compile(expr);
   const steps = [];
   const table = [];
-  for (let k = 0; k <= Math.log2(n); k++) {
-    const m = 2 ** k;
+  for (let m = rule === 'shanker' ? 2 : 1; m <= n; m *= 2) {
     const h = (b - a) / m;
     let s = (f(a) + f(b)) / 2;
     for (let i = 1; i < m; i++) s += f(a + i * h);
-    table[k] = [h * s];
-    if (k > 0) {
-      for (let j = 1; j <= k; j++) {
-        const prev = table[k - 1][j - 1];
-        const cur = table[k][j - 1];
-        table[k][j] = cur + (cur - prev) / (4 ** j - 1);
-      }
+    const row = [h * s];
+    const k = table.length;
+    for (let j = 1; j <= k; j++) {
+      const prev = table[k - 1][j - 1];
+      const cur = row[j - 1];
+      row[j] = cur + (cur - prev) / (rule === 'shanker' ? 3 : 4 ** j - 1);
     }
+    table.push(row);
   }
-  steps.push('\\textbf{Romberg table} (first column = trapezoidal, each later column = Richardson extrapolation)');
+  steps.push(rule === 'shanker'
+    ? '\\textbf{Romberg table}\\text{ (trapezoid with } h, \\tfrac{h}{2}, \\tfrac{h}{4}, \\dots\\text{; every later entry } = \\tfrac{4I_{\\text{fine}} - I_{\\text{coarse}}}{3}\\text{)}'
+    : '\\textbf{Romberg table}\\text{ (trapezoid with 1, 2, 4, \\dots\\ strips; column } j \\text{ divides by } 4^j - 1\\text{)}');
   steps.push(
     '\\begin{array}{c|' + 'c'.repeat(table.length) + '} \\hline ' +
     table.map((_, k) => `R_{${k}}`).join(' & ') + ' \\\\ \\hline ' +

@@ -481,6 +481,7 @@ export default {
         'Batch mode is the least-squares method run by search instead of by algebra. The two columns of the table are exactly the two partial derivatives of the cost: because $H_\\theta$ contains $\\theta_0$ as a constant and $\\theta_1$ multiplied by $x$, differentiating gives the average error and the average of error $\\times x$.',
         'The update is simultaneous: both new parameters are computed from the **same** old parameters and the same averages, so $\\theta_0$ and $\\theta_1$ are both "one epoch old" at the moment they are written down.',
         'Each epoch the cost falls: the average error goes from $-2.8$ to $-2.472$ and keeps shrinking, and the parameters creep towards the least-squares solution of the same data. That is the whole point of the algorithm — it converges to the answer Ch. 10 gets in one line of algebra.',
+        'The slides continue the same table for five epochs: $(\\theta_0, \\theta_1) = (0.028, 0.1) \\to (0.0527, 0.1882) \\to (0.0745, 0.2659) \\to (0.0938, 0.3344) \\to (0.1109, 0.3948)$. Each later epoch is the same five rows, two averages and one simultaneous update, starting from the previous epoch\'s $\\theta$s.',
       ],
     },
     {
@@ -518,6 +519,7 @@ export default {
         'Single mode drops the $\\sum$ and the $1/m$: the derivative is the error of the single row in front of you. Each row therefore produces its own update, and five rows produce five updates in one epoch.',
         'The error used at each row is computed with the parameters as they stand at that row. That is why the predictions in the table (0, 0.03, 0.3173, 0.5966, 1.1746) keep growing: the hypothesis is being corrected as it goes.',
         'Because five updates happen per epoch, single mode moves much further than batch mode for the same $\\alpha$ — after one epoch it has reached $\\theta_0 = 0.1188$, $\\theta_1 = 0.4101$, where batch mode has only reached $0.028$ and $0.1$.',
+        'The slides run four epochs (20 updates): after epoch 2 $(\\theta_0, \\theta_1) = (0.1809, 0.6229)$, after epoch 3 $(0.2135, 0.7332)$, and the final result after epoch 4 is $\\theta_0 = 0.2309$, $\\theta_1 = 0.7904$. Each new epoch starts from the $\\theta$s left by row 5 of the previous one.',
       ],
     },
     {

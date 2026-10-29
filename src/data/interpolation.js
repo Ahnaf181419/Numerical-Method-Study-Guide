@@ -549,6 +549,25 @@ export default {
       ],
     },
     {
+      title: 'Divided difference table for $x = 1, 3, 4, 6, 10$',
+      type: 'Numerical — Divided differences',
+      question: 'Prepare the divided difference table for the data $x = 1, 3, 4, 6, 10$ with $f(x) = 0, 18, 58, 190, 920$.',
+      source: 'Shanker Rao Ch.5, Example 5.2 (marked "** Math" in class)',
+      marks: 5,
+      steps: [
+        { t: 'First divided differences: $\\dfrac{18-0}{3-1} = 9$, $\\dfrac{58-18}{4-3} = 40$, $\\dfrac{190-58}{6-4} = 66$, $\\dfrac{920-190}{10-6} = 182.5$.', m: '2 marks' },
+        { t: 'Second: $\\dfrac{40-9}{4-1} = 10.3333$, $\\dfrac{66-40}{6-3} = 8.6667$, $\\dfrac{182.5-66}{10-4} = 19.4167$.', m: '1 mark' },
+        { t: 'Third: $\\dfrac{8.6667-10.3333}{6-1} = -0.3333$, $\\dfrac{19.4167-8.6667}{10-3} = 1.5357$.', m: '1 mark' },
+        { t: 'Fourth: $\\dfrac{1.5357-(-0.3333)}{10-1} = 0.2077$.', m: '1 mark' },
+      ],
+      answer: '$\\boxed{f[x_0,x_1] = 9,\\ f[x_0,x_1,x_2] = 10.3333,\\ f[x_0,\\dots,x_3] = -0.3333,\\ f[x_0,\\dots,x_4] = 0.2077}$',
+      note: 'Trap: each divided difference divides by the gap between the two outermost arguments it spans, not by the gap of its neighbours: the third difference uses $6 - 1$, the fourth $10 - 1$.',
+      explanation: [
+        'Source discrepancy: the book (and Medha’s copy of it, p.25) prints the third first difference as $\\frac{58-190}{4-6} = 61$; it is $66$. That one slip carries through the rest of the printed table ($7$, $10.25$, $0.6660$, $0.4643$, $0.1248$). The table above is recomputed from the data; check any table you copy by redoing one entry per column.',
+        'The leading divided differences (the top of each column) are what Newton’s divided difference formula uses: $f(x) = 0 + (x-1)\\,9 + (x-1)(x-3)\\,10.3333 + (x-1)(x-3)(x-4)(-0.3333) + (x-1)(x-3)(x-4)(x-6)\\,0.2077$.',
+      ],
+    },
+    {
       title: "Lagrange's interpolation formula for unequal intervals, and $f(2)$",
       type: 'Numerical — Lagrange',
       question: 'Derive Lagrange\'s interpolation formula for unequally spaced points $x_0, x_1, \\dots, x_n$, and use it to find $f(2)$ from $x = 0, 1, 3, 4$ with $f(x) = 5, 6, 50, 105$.',
