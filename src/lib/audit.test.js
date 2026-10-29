@@ -297,3 +297,12 @@ test('gradient walk-through numbers match the engine', () => {
   close(two.result.theta[0], 0.18, 1e-9);
   assert.ok(t.includes('0.18'), 'second epoch shown');
 });
+
+test('pca walk-through numbers match the engine', () => {
+  const t = sectionText('pca', 'Start here: your first walk-through');
+  const r = s.pca({ points: [[2, 0], [-2, 0]], threshold: 95 });
+  close(r.result.eigvals[0], 4, 1e-9);
+  assert.equal(r.result.keep, 1);
+  assert.ok(t.includes('100%'), 'all variance on one axis');
+  assert.ok(t.includes('4'), 'largest eigenvalue');
+});

@@ -1,6 +1,30 @@
 // Principal Component Analysis — dimensionality reduction.
 // Source: "14 Dimensionality Reduction (PCA)" slides, "(02) PCA Tutorial Step by Step (Math)", Medha's class notes (pp.29-31, 35-36).
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "PCA's compression works because…",
+    options: ["it deletes the largest columns", "columns often overlap, so a few new directions carry most of the variation", "dimensions are imaginary", "eigenvalues are always small"],
+    answer: 1,
+    explain: "Redundant columns vary together; the top eigenvector directions absorb that shared variation, and the rest can be dropped.",
+  },
+  "Start here: the core idea": {
+    q: "The first principal component is the eigenvector of the covariance matrix with…",
+    options: ["the smallest eigenvalue", "the largest eigenvalue", "zero eigenvalue", "negative eigenvalue"],
+    answer: 1,
+    explain: "Largest eigenvalue = most variance explained = the widest direction of the cloud = PC1.",
+  },
+  "Start here: reading the symbols": {
+    q: "Why mean-centre before building $C$?",
+    options: ["To make the numbers smaller", "So covariance measures spread around the cloud's centre, not the origin", "Because eigenvalues need integers", "To sort the columns"],
+    answer: 1,
+    explain: "Covariance is about deviation from the mean; centring moves that reference point to the origin so the matrix sees the cloud's true shape.",
+  },
+  "Start here: your first walk-through": {
+    q: "In the walk-through, why could the second component be dropped with zero loss?",
+    options: ["Its eigenvalue was 4", "Its eigenvalue was 0 — no variance along it at all", "The threshold was 50%", "Two points cannot have two components"],
+    answer: 1,
+    explain: "$\\lambda_2 = 0$ says the data has no spread along the $y$-axis; keeping only PC1 at 100% loses nothing.",
+  },
   'Why reduce the dimension': {
     q: 'The PCA slides name two motivations for dimensionality reduction. They are',
     options: [
@@ -82,6 +106,53 @@ export default {
   wave: 'pca',
   sources: ['Dimensionality Reduction (PCA) slides', 'PCA Tutorial Step by Step (Math)', "Medha's class notes (pp.29-31, 35-36)"],
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "A dataset with twenty columns is a cloud of points floating in twenty-dimensional space. Nobody can see twenty dimensions, no plot can show them, and most of those columns are probably saying overlapping things — height in cm and height in inches are two columns carrying one fact." },
+        { type: "p", text: "**Principal Component Analysis (PCA)** asks: along which *new* directions does this cloud actually vary? Rotate the axes to those directions, keep the few that carry real spread, drop the rest — and a twenty-column problem becomes a two- or three-column one with almost nothing lost." },
+        { type: "p", text: "It is the course's bridge from linear algebra to data: means and covariances build a matrix, eigen-stuff finds the directions, projections rewrite the data in the new coordinates." },
+        { type: "list", items: [
+          "Mean-centre the data and build the covariance matrix.",
+          "Find eigenvalues and eigenvectors (Jacobi's method for bigger sets).",
+          "Rank components by explained variance and choose how many to keep.",
+          "Project the data onto the kept components.",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "Think of photographing a cloud of smoke. Some camera angles show a wide, dramatic cloud; others show a thin line. **Variance is visibility**: the direction along which the data spreads most is the direction that carries the most information — and that direction is exactly the eigenvector of the covariance matrix with the **largest eigenvalue**." },
+        { type: "p", text: "The recipe: subtract the mean from every point (centre the cloud), build the covariance matrix $C$, compute its eigenpairs, sort by eigenvalue. Each eigenvalue is the variance its eigenvector 'explains'; dividing by the total gives the percentage. Keep components until say 95% is covered, then project the points onto them — the projection **is** the compressed data." },
+        { type: "note", text: "PCA rotates and compresses; it does not classify or predict. It answers 'what are the real axes of variation?', handing a cleaner, smaller dataset to whatever comes next." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$\\bar{x}$", "the mean of each column", "centre of the cloud"],
+          ["mean-centring", "subtracting $\\bar{x}$ from every point", "move the cloud onto the origin"],
+          ["$C = \\mathrm{cov}(X)$", "the covariance matrix of the centred data", "the spread in every direction pair"],
+          ["$\\lambda_i$, $\\mathbf{v}_i$", "eigenvalue and eigenvector pair of $C$", "variance carried, and its direction"],
+          ["PC1, PC2", "principal components: eigenvectors ranked by $\\lambda$", "the new axes, best first"],
+          ["$\\frac{\\lambda_i}{\\sum \\lambda}$", "explained-variance share of component $i$", "its percentage of the story"],
+          ["projection", "dot products of points onto a component", "the rewritten, compressed coordinates"],
+        ] },
+        { type: "p", text: "Covariance generalises variance to pairs of columns: how two columns rise and fall together. Diagonal entries are plain variances; off-diagonal ones are the pairwise 'togetherness'." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Run PCA on the smallest interesting cloud: two points, $(2, 0)$ and $(-2, 0)$. Everything computes by inspection — which is what makes it a teacher." },
+        { type: "p", text: "**Centre:** the mean is $(0,0)$, so the points are already centred. **Covariance:** both points vary along $x$ (values $2, -2$) and not at all along $y$ (values $0, 0$), so $C = \\begin{bmatrix} 4 & 0 \\\\ 0 & 0 \\end{bmatrix}$." },
+        { type: "p", text: "**Eigenpairs:** the eigenvalues are $\\lambda_1 = 4$ (eigenvector: the $x$-axis) and $\\lambda_2 = 0$ (the $y$-axis). Explained variance: $\\frac{4}{4+0} = 100%$ on PC1. **Decision:** keeping one component at a 95% threshold loses nothing — $\\lambda_2 = 0$ means the $y$-axis carries no information at all." },
+        { type: "p", text: "**Project:** each point's coordinate on PC1 is just its $x$-value — scores $2$ and $-2$. Two two-dimensional points have become two **numbers**, with literally zero information discarded: compression in its purest form." },
+        { type: "exam", text: "Exam shape: the centred data and $C$ (a small table), the eigenvalues with their percentages, the keep-decision against the threshold, and the projected scores — exactly the stations above, in that order." },
+      ],
+    },
     {
       heading: 'Why reduce the dimension',
       blocks: [
