@@ -173,11 +173,11 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Measure $\\int_0^2 x^2\\,dx$ with the trapezoidal rule and two strips — the exact answer $\\frac{x^3}{3}\\Big|_0^2 = \\frac{8}{3} = 2.6667$ is waiting to grade us." },
-        { type: "p", text: "Two strips of width $h = 1$ need three ordinates: $y_0 = 0$, $y_1 = 1$, $y_2 = 4$. Trapezoid with straight tops between them:" },
-        { type: "math", tex: "T = \\frac{1}{2}\\left[\\,0 + 2(1) + 4\\,\\right] = \\frac{6}{2} = 3" },
-        { type: "p", text: "The estimate 3 overshoots the truth 2.6667 — exactly as expected, because $x^2$ bends upward and every straight chord rides **above** the curve. That bend is the whole error story: more strips (or Simpson's curved tops) shrink it, and the $O(h^2)$ tag says how fast." },
-        { type: "exam", text: "Exam shape: a small table of $x$ and $y$ with $h$ stated, the rule's weight pattern shown substituted, then the total — and if the exact value exists, one comparison line with the error, as this walk-through does." },
+        { type: "p", text: "From **Shanker Rao, Ex. 9.4**: evaluate $\\int_0^{0.6} e^x\\,dx$ by Simpson's one-third rule with six strips — $h = 0.1$, seven ordinates." },
+        { type: "p", text: "Ordinates: $1,\\ 1.1052,\\ 1.2214,\\ 1.3499,\\ 1.4918,\\ 1.6487,\\ 1.8221$. Simpson's weights run $1, 4, 2, 4, 2, 4, 1$:" },
+        { type: "math", tex: "I = \\tfrac{0.1}{3}\\left[\\,1 + 4(1.1052 + 1.3499 + 1.6487) + 2(1.2214 + 1.4918) + 1.8221\\right] = 0.82212" },
+        { type: "p", text: "The exact value is $e^{0.6} - 1 = 0.8221$ — five-figure agreement from seven numbers. **Asked in:** composite Trapezoid + Simpson is Fall 2023 Q2(d); Romberg is Fall 2024 A2(f) and Spring 2023 Q2(d); Weddle is Spring 2024 Q2(h); the derivation of the rule is Fall 2024 A1(c) and Spring 2024 Q1(f)." },
+        { type: "exam", text: "Ordinates table with $h$ stated, the weight pattern shown substituted, the total — and a comparison line against the exact value when it exists." },
       ],
     },
     {

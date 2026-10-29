@@ -128,12 +128,11 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Solve the tea-and-cake system the elimination way: $x + y = 3$ and $x - y = 1$ (you already know the answer — that is why this is the right place to learn the moves)." },
-        { type: "math", tex: "\\left[\\begin{array}{cc|c} 1 & 1 & 3 \\\\ 1 & -1 & 1 \\end{array}\\right]" },
-        { type: "p", text: "**Pivot check:** the first pivot is $a_{11} = 1$ — nonzero, so no swap is needed. Eliminate $x$ from row 2: $R_2' = R_2 - R_1$. Write the resulting row: $[\\,0 \\;\\; -2 \\,|\\, -2\\,]$." },
-        { type: "math", tex: "\\left[\\begin{array}{cc|c} 1 & 1 & 3 \\\\ 0 & -2 & -2 \\end{array}\\right] \\quad \\text{(upper triangular)}" },
-        { type: "p", text: "Back-substitute upwards: row 2 says $-2y = -2$, so $y = 1$. Row 1 then gives $x + 1 = 3$, so $x = 2$. Check in the original equations: $2 + 1 = 3$ ✓ and $2 - 1 = 1$ ✓. Every bigger system in the chapter is exactly this loop, repeated." },
-        { type: "exam", text: "Habit to carry into every answer: after each row operation print the full new row (or the whole matrix), and check each pivot before dividing by it — the marks are attached to the shown steps, not the final numbers alone." },
+        { type: "p", text: "From the **class board notes (Elimination Methods)**: solve $x + y + z = 6$, $2x + 3y + z = 13$, $3x + 4y + 5z = 18$ — the teacher's chosen system, because no pivot ever turns zero." },
+        { type: "p", text: "**Pivot check:** $a_{11} = 1 \\ne 0$, so no swap. $R_2' = R_2 - 2R_1$ gives the resulting row $[\\,0 \\;\\; 1 \\;\\; -1 \\,|\\, 1\\,]$; $R_3' = R_3 - 3R_1$ gives $[\\,0 \\;\\; 1 \\;\\; 2 \\,|\\, 0\\,]$ — write both new rows out." },
+        { type: "p", text: "**Pivot check:** $a_{22}' = 1 \\ne 0$. One more step: $R_3'' = R_3' - R_2' = [\\,0 \\;\\; 0 \\;\\; 3 \\,|\\, -1\\,]$ — upper triangular, done." },
+        { type: "p", text: "Back-substitute: $z = -\\frac{1}{3} = -0.3333$, then row 2 says $y - z = 1$, so $y = 1 + z = 0.6667$, and $x = 6 - y - z = 5.6667$. Check row 1: $5.6667 + 0.6667 - 0.3333 = 6$ ✓. **Asked in:** Gauss elimination returns as Fall 2024 A2(b) (with partial pivoting), Spring 2023 Q2(f) (the tourist system, all steps shown) and Spring 2024 Q2(c) (matrix inversion)." },
+        { type: "exam", text: "The marks ride on the shown steps: every resulting row printed, every pivot checked before use — the two habits this walk-through just demonstrated." },
       ],
     },
     {

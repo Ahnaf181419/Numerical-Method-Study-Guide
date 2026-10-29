@@ -161,15 +161,15 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Compute $\\\\sqrt{10}$ with no square-root key, using bisection on $f(x) = x^2 - 10$." },
-        { type: "math", tex: "f(3) = -1 < 0, \\qquad f(4) = 6 > 0 \\quad \\Longrightarrow \\quad \\text{the root lies in } (3, 4)" },
-        { type: "table", head: ["It", "$c$ (midpoint)", "$f(c)$", "Keep the half where the sign changes"], rows: [
-          ["1", "$3.5$", "$2.25$", "$(3, 3.5)$"],
-          ["2", "$3.25$", "$0.5625$", "$(3, 3.25)$"],
-          ["3", "$3.125$", "$-0.2344$", "$(3.125, 3.25)$"],
+        { type: "p", text: "From **Spring 2024 Q2(a)**: find the largest root of $x^2 - 4x - 10 = 0$ using the bisection method. The exact answer is $2 + \\sqrt{14} = 5.7417$, so every step can be graded." },
+        { type: "p", text: "$f(5) = -5$ and $f(6) = +2$: the sign changes, so the root is trapped in $(5, 6)$." },
+        { type: "table", head: ["It", "$c$ (midpoint)", "$f(c)$", "Keep the half with the sign change"], rows: [
+          ["1", "$5.5$", "$-1.75$", "$(5.5,\\ 6)$"],
+          ["2", "$5.75$", "$+0.0625$", "$(5.5,\\ 5.75)$"],
+          ["3", "$5.625$", "$-0.859$", "$(5.625,\\ 5.75)$"],
         ] },
-        { type: "p", text: "After three halvings the root is trapped in $(3.125, 3.25)$, and the true value $\\\\sqrt{10} = 3.1623$ indeed sits inside. The trap width went $1 \\\\to 0.5 \\\\to 0.25 \\\\to 0.125$: halved every step, which is exactly why bisection always converges — slowly, but surely." },
-        { type: "exam", text: "Layout for the exam: verify the sign change first (one line), then a neat iteration table with columns $c$ and $f(c)$, and close by naming the final bracket and the root it pins down." },
+        { type: "p", text: "Each row halves the trap — $1 \\to 0.5 \\to 0.25 \\to 0.125$ — and the exact root $5.7417$ never escapes it. **Asked in:** bisection to a stated accuracy is Fall 2023 Q2(a) ($x^3 - 9x + 1$, 2 significant digits) and Spring 2023 Q2(a) ($e^x - 3x$, 2 decimals); the relatives appear as Spring 2024 Q1(b) (derive the secant formula) and the Fall 2023 Q3(b) tank problem." },
+        { type: "exam", text: "One line verifying the sign change, the iteration table with $c$ and $f(c)$ columns, then name the final bracket and the root it pins down." },
       ],
     },
     {

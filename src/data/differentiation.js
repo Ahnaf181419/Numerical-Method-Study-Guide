@@ -188,10 +188,10 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Estimate the derivative of $y = x^2$ at $x = 2$ from three rows: $(1,1)$, $(2,4)$, $(3,9)$, spaced $h = 1$. The true answer is $y' = 2x = 4$ — so the table can be graded." },
-        { type: "p", text: "**Forward slope** (uses the row below): $\\frac{9 - 4}{1} = 5$ — an overestimate, because the chord leans against the curve's steepening right side. **Central slope** (straddles the row): $\\frac{9 - 1}{2} = 4$ — **exact**, because the left undershoot and right overshoot cancel." },
-        { type: "p", text: "**Second derivative** (slope of the slope): $\\frac{9 - 2(4) + 1}{1^2} = 2$ — again exact, since $y'' = 2$ everywhere. For a quadratic every central formula is exact; for anything curvier the $O(h^2)$ tag says how fast the error falls as the rows tighten." },
-        { type: "exam", text: "Exam habit: name which formula you use and **why** ('$t = 0$ is the first row, so the forward three-point formula'), then substitute with $h$ shown — the justification line carries marks of its own." },
+        { type: "p", text: "From **Fall 2024 Q2(c)**: a rocket's distance is tabulated every 25 s — $t = 0, 25, \\ldots, 125$ against $s = 0, 32, 58, 78, 92, 100$ km. Estimate the velocity and acceleration at $t = 0$ s and $t = 50$ s." },
+        { type: "p", text: "**$t = 0$ is the first row** — no data above it, so forward formulas: $v(0) = \\frac{-3s(0) + 4s(25) - s(50)}{2h} = \\frac{0 + 128 - 58}{50} = 1.4$ km/s, and the four-point forward second derivative gives $a(0) = \\frac{2(0) - 5(32) + 4(58) - 78}{625} = -0.0096$ km/s²." },
+        { type: "p", text: "**$t = 50$ is an interior row** — central formulas: $v(50) = \\frac{s(75) - s(25)}{2h} = \\frac{78 - 32}{50} = 0.92$ km/s. Position by position the table dictates the formula, and saying so earns the justification marks. **Asked in:** the same table question returns as Spring 2024 Q2(g) (vehicle) and Spring 2023 Q2(g) (jet fighter); the formula derivations are Fall 2023 Q1(e) and Spring 2023 Q1(e)." },
+        { type: "exam", text: "For each requested instant, name the row's position in the table and therefore the formula chosen — then substitute with $h$ shown." },
       ],
     },
     {

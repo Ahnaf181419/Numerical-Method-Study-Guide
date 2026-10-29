@@ -146,11 +146,10 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Run PCA on the smallest interesting cloud: two points, $(2, 0)$ and $(-2, 0)$. Everything computes by inspection — which is what makes it a teacher." },
-        { type: "p", text: "**Centre:** the mean is $(0,0)$, so the points are already centred. **Covariance:** both points vary along $x$ (values $2, -2$) and not at all along $y$ (values $0, 0$), so $C = \\begin{bmatrix} 4 & 0 \\\\ 0 & 0 \\end{bmatrix}$." },
-        { type: "p", text: "**Eigenpairs:** the eigenvalues are $\\lambda_1 = 4$ (eigenvector: the $x$-axis) and $\\lambda_2 = 0$ (the $y$-axis). Explained variance: $\\frac{4}{4+0} = 100\\%$ on PC1. **Decision:** keeping one component at a 95% threshold loses nothing — $\\lambda_2 = 0$ means the $y$-axis carries no information at all." },
-        { type: "p", text: "**Project:** each point's coordinate on PC1 is just its $x$-value — scores $2$ and $-2$. Two two-dimensional points have become two **numbers**, with literally zero information discarded: compression in its purest form." },
-        { type: "exam", text: "Exam shape: the centred data and $C$ (a small table), the eigenvalues with their percentages, the keep-decision against the threshold, and the projected scores — exactly the stations above, in that order." },
+        { type: "p", text: "From the **PCA Tutorial (Math), Q1**: ten two-dimensional points beginning $(2.5, 2.4), (0.5, 0.7), (2.2, 2.9), \\ldots$ Reduce the data to one dimension while keeping at least 95% of the variance." },
+        { type: "p", text: "Mean-centre, build the covariance matrix, eigen-decompose (the tutorial's own steps): the eigenvalues come out $1.1556$ and $0.0492$, so the first component explains $\\frac{1.1556}{1.1556 + 0.0492} = 96.3\\% \\ge 95\\%$ — **keep one component**, exactly the tutorial's threshold rule." },
+        { type: "p", text: "Project onto that first eigenvector: the opening scores are $3.459,\\ 2.35,\\ 2.54, \\ldots$ — ten pairs have become ten numbers with 96.3% of the story intact. **Asked in:** none of the four available papers has set a PCA question yet — the teacher's tutorial worksheets are the source, and the exam-prep tab flags PCA as expected." },
+        { type: "exam", text: "The stations in order: centred data and covariance matrix, eigenvalues with percentages, the keep-decision against the threshold, the projected scores." },
       ],
     },
     {

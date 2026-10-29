@@ -162,11 +162,11 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "A famous fact says $\\frac{22}{7}$ approximates $\\pi$. It is the perfect first measurement of wrongness — small enough to check entirely by hand." },
-        { type: "math", tex: "E_A = \\left|\\pi - \\tfrac{22}{7}\\right| = |3.14159265 - 3.14285714| = 0.0012645" },
-        { type: "math", tex: "E_R = \\frac{E_A}{\\pi} = \\frac{0.0012645}{3.14159265} = 0.0004025 \\approx 4.0\\times10^{-4}" },
-        { type: "p", text: "Interpretation is the mark of understanding: $E_R \\approx 4\\times10^{-4}$, and the working rule '$k$ correct significant digits $\\Leftrightarrow E_R \\le \\tfrac{1}{2}10^{-k}$' says $\\frac{22}{7}$ agrees with $\\pi$ to about 3–4 significant digits. That is the entire method: **definition, substitute, interpret**." },
-        { type: "exam", text: "In the exam, write exactly this shape: quote the definitions of $E_A$ and $E_R$, substitute both values with all digits shown, and end with one sentence interpreting the relative error (here: about 4 significant figures agree)." },
+        { type: "p", text: "From **Shanker Rao, Ex. 1.14** — the same computation pattern the papers reuse: the number $X = 2.536$ is stored to two decimal places. Find the absolute and relative error when it is (a) rounded off, (b) chopped." },
+        { type: "p", text: "**(a) Rounded off:** the stored value is $x = 2.54$, so $E_A = |2.536 - 2.54| = 0.004$ and $E_R = \\frac{0.004}{2.536} = 1.5772 \\times 10^{-3}$." },
+        { type: "p", text: "**(b) Chopped:** the stored value is $x = 2.53$, so $E_A = |2.536 - 2.53| = 0.006$ and $E_R = \\frac{0.006}{2.536} = 2.3659 \\times 10^{-3}$." },
+        { type: "p", text: "Chopping is the worse half of the pair — its error can reach a full unit of the last digit, while rounding stays within half a unit. **Asked in:** this computation is the direct pattern of Fall 2023 Q1(d) and Spring 2023 Q1(d) (relative maximum error of $u = \\frac{5xy^2}{z^3}$); the same vocabulary is examined in Fall 2024 A1(a) (round-off vs chopping) and Spring 2024 Q1(a) (definitions plus the product error rule)." },
+        { type: "exam", text: "Write the two definitions first, substitute each stored value in turn, and finish with the comparison sentence — that is exactly how the module's exam-format example earns its 5 marks." },
       ],
     },
     {

@@ -169,12 +169,11 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Fit the best straight line to three points: $(1,2)$, $(2,3)$, $(3,5)$ — small enough that every number can be checked in your head." },
-        { type: "p", text: "**Totals table first:** $n = 3$, $\\sum x = 6$, $\\sum y = 10$, $\\sum xy = 1(2) + 2(3) + 3(5) = 23$, $\\sum x^2 = 1 + 4 + 9 = 14$. Substituting into the normal equations $3a + 6b = 10$ and $6a + 14b = 23$:" },
-        { type: "math", tex: "b = \\frac{n\\sum xy - \\sum x \\sum y}{n \\sum x^2 - (\\sum x)^2} = \\frac{3(23) - (6)(10)}{3(14) - 36} = \\frac{9}{6} = 1.5" },
-        { type: "math", tex: "a = \\bar{y} - b\\bar{x} = \\frac{10}{3} - 1.5(2) = 0.3333" },
-        { type: "p", text: "The fitted line is $\\hat{y} = 0.3333 + 1.5x$. Residual check: predictions $1.8333, 3.3333, 4.8333$ against actuals $2, 3, 5$ give misses $+0.1667, -0.3333, +0.1667$ — small, and summing to (almost) zero, the least-squares signature." },
-        { type: "exam", text: "Exam shape: the totals table (with the $xy$ and $x^2$ columns shown), both normal equations written out, then $b$ and $a$ substituted with the formulas named, and the final line boxed — the mark scheme follows exactly these stations." },
+        { type: "p", text: "From **Fall 2023 Q3(c)**: the surface area $A$ of eight people against their weights $W$ ($W = 70, 75, 77, 80, 82, 84, 87, 90$; $A = 2.1, 2.12, 2.15, 2.2, 2.22, 2.23, 2.26, 2.3$ m²). Fit the least-squares straight line." },
+        { type: "p", text: "Column totals: $n = 8$, $\\sum W = 645$, $\\sum A = 17.58$, $\\sum W^2 = 52303$, $\\sum WA = 1420.53$. The normal equations: $8a + 645b = 17.58$ and $645a + 52303b = 1420.53$." },
+        { type: "math", tex: "b = \\frac{8(1420.53) - (645)(17.58)}{8(52303) - (645)^2} = \\frac{25.14}{2399} = 0.010479, \\qquad a = 2.1975 - 0.010479(80.625) = 1.3526" },
+        { type: "p", text: "The fitted line is $A = 1.3526 + 0.010479\\,W$ — every later regression question is this loop with different columns. **Asked in:** the same table is Spring 2023 Q3(c); the power-law version is Spring 2024 Q2(e); the interpolation-vs-regression discussion is Spring 2024 Q1(g)." },
+        { type: "exam", text: "Totals table (with $WA$ and $W^2$ columns), both normal equations written out, then $b$ and $a$ by the named formulas, and the line boxed." },
       ],
     },
     {

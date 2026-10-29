@@ -139,15 +139,15 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Refine the solution of $3x + y = 5$, $x + 2y = 5$ by Jacobi iteration from the flat start $(0, 0)$. (The exact answer is $(1, 2)$ — check: $3(1) + 1(2) = 5$ and $1 + 2(2) = 5$ — and watching the iteration home in on it is the whole point.)" },
-        { type: "p", text: "**Dominance check first:** $|3| > |1|$ ✓ and $|2| > |1|$ ✓ — both rows are diagonally dominant, so the iteration may be trusted. Rearranged: $x = \\frac{5 - y}{3}$ and $y = \\frac{5 - x}{2}$." },
-        { type: "table", head: ["$k$", "$x^{(k)}$", "$y^{(k)}$"], rows: [
-          ["1", "1.6667", "2.5"],
-          ["2", "0.8333", "1.6667"],
-          ["3", "1.1111", "2.0833"],
+        { type: "p", text: "From the **Iterative Solution slides' worked example**: solve $5x + 2y + z = 12$, $x + 4y + 2z = 15$, $x + 2y + 5z = 20$ by Jacobi iteration from $(0, 0, 0)$." },
+        { type: "p", text: "**Dominance check first:** $5 > 2 + 1$, $4 > 1 + 2$, $5 > 1 + 2$ — every row dominated, safe to iterate. Rearranged: $x = \\frac{12 - 2y - z}{5}$, $y = \\frac{15 - x - 2z}{4}$, $z = \\frac{20 - x - 2y}{5}$." },
+        { type: "table", head: ["$k$", "$x^{(k)}$", "$y^{(k)}$", "$z^{(k)}$"], rows: [
+          ["1", "2.40", "3.75", "4.00"],
+          ["2", "0.10", "1.15", "2.02"],
+          ["3", "1.536", "2.715", "3.52"],
         ] },
-        { type: "p", text: "Read the table like an iterationist: $x$ swings either side of $1$ and $y$ either side of $2$, but the swings shrink — $1.6667 \\to 0.8333 \\to 1.1111$ brackets $1$ ever more tightly, and $2.5 \\to 1.6667 \\to 2.0833$ brackets $2$. That shrinking oscillation **is** convergence; keep iterating until $|x^{(k+1)} - x^{(k)}|$ falls below the tolerance, then stop." },
-        { type: "exam", text: "Exam shape: state the dominance check (one line), show the rearranged formulas, then a column table of iterations — the papers award the method marks to the table, not to the final decimals." },
+        { type: "p", text: "The columns oscillate toward the exact solution $(1,\\ 2,\\ 3)$ — check: $5(1) + 2(2) + 3 = 12$ — with shrinking swings, the healthy convergence signature. **Asked in:** Jacobi for exactly four iterations is Fall 2023 Q2(b); Gauss-Seidel to 2 decimals is Spring 2023 Q2(b); the convergence-rate discussion is Fall 2023 Q3(d)." },
+        { type: "exam", text: "Dominance check (one line), the three rearranged formulas, then a column table of iterations — the method marks live in the table." },
       ],
     },
     {

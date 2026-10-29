@@ -206,110 +206,103 @@ test('the S24 missing-values answer is the quadratic one', () => {
   assert.ok(d2.every((v) => Math.abs(v - 2) < 1e-9), 'second differences must be constant at 2');
 });
 
-test('errors walk-through numbers match the math', () => {
+test('errors walk-through uses the sourced Shanker Rao Ex 1.14 numbers', () => {
   const t = sectionText('errors', 'Start here: your first walk-through');
-  const ea = Math.abs(Math.PI - 22 / 7);
-  const er = ea / Math.PI;
-  close(ea, 0.0012645, 1e-7);
-  close(er, 0.0004025, 1e-7);
-  assert.ok(t.includes('0.0012645'), 'absolute error');
-  assert.ok(t.includes('0.0004025'), 'relative error');
+  ['0.004', '1.5772', '0.006', '2.3659', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `errors missing ${n}`));
 });
 
-test('roots walk-through numbers match the engine', () => {
+test('roots walk-through uses the sourced S24 Q2(a) numbers', () => {
   const t = sectionText('roots', 'Start here: your first walk-through');
-  const r = s.bisection({ expr: 'x^2 - 10', a: 3, b: 4, tol: 1e-4 });
-  close(r.result.root, 3.1623, 1e-3);
-  ['3.5', '3.25', '3.125', '3.1623'].forEach((n) => assert.ok(t.includes(n), `roots walk-through missing ${n}`));
+  const r = s.bisection({ expr: 'x^2 - 4*x - 10', a: 5, b: 6, tol: 1e-6 });
+  close(r.result.root, 5.741657, 1e-5);
+  ['5.5', '5.75', '5.625', '5.7417', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `roots missing ${n}`));
 });
 
-test('elimination walk-through numbers match the engine', () => {
+test('elimination walk-through uses the sourced board-notes system', () => {
   const t = sectionText('elimination', 'Start here: your first walk-through');
-  const r = s.gaussEliminate({ A: [[1, 1], [1, -1]], b: [3, 1] });
-  close(r.result.x[0], 2); close(r.result.x[1], 1);
-  assert.ok(t.includes('x = 2'), 'x value');
-  assert.ok(t.includes('y = 1'), 'y value');
+  const r = s.gaussEliminate({ A: [[1, 1, 1], [2, 3, 1], [3, 4, 5]], b: [6, 13, 18] });
+  close(r.result.x[0], 17 / 3, 1e-9);
+  close(r.result.x[1], 2 / 3, 1e-9);
+  close(r.result.x[2], -1 / 3, 1e-9);
+  ['5.6667', '0.6667', '-0.3333', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `elimination missing ${n}`));
 });
 
-test('iterative walk-through numbers match the engine', () => {
+test('iterative walk-through uses the sourced slides system', () => {
   const t = sectionText('iterative', 'Start here: your first walk-through');
-  const r = s.jacobi({ A: [[3, 1], [1, 2]], b: [5, 5], x0: [0, 0], maxIter: 60, tol: 1e-9 });
-  close(r.result.table[1].x[0], 5 / 3, 1e-9);
-  close(r.result.table[1].x[1], 2.5, 1e-9);
+  const r = s.jacobi({ A: [[5, 2, 1], [1, 4, 2], [1, 2, 5]], b: [12, 15, 20], x0: [0, 0, 0], maxIter: 60, tol: 1e-6 });
+  close(r.result.table[1].x[0], 2.4, 1e-9);
+  close(r.result.table[1].x[1], 3.75, 1e-9);
   close(r.result.x[0], 1, 1e-6);
-  close(r.result.x[1], 2, 1e-6); // the exact solution is (1, 2): 3(1)+2=5 and 1+2(2)=5
-  ['1.6667', '2.5', '0.8333', '1.6667'].forEach((n) => assert.ok(t.includes(n), `iterative missing ${n}`));
-  assert.ok(t.includes('(1, 2)'), 'exact solution stated correctly');
+  close(r.result.x[1], 2, 1e-6);
+  close(r.result.x[2], 3, 1e-6); // exact solution of the slides' system: (1, 2, 3)
+  ['2.40', '3.75', '4.00', '(1,\\ 2,\\ 3)', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `iterative missing ${n}`));
 });
 
-test('lu walk-through numbers match the engine', () => {
+test('lu walk-through uses the sourced slides Do-Little matrix', () => {
   const t = sectionText('lu', 'Start here: your first walk-through');
-  const r = s.luSolve({ A: [[2, 1], [6, 4]], b: [3, 8] });
-  close(r.result.x[0], 2); close(r.result.x[1], -1);
-  assert.ok(t.includes('x = 2'), 'x value');
-  assert.ok(t.includes('y = -1'), 'y value');
+  const r = s.luSolve({ A: [[2, 1, 1], [-4, 3, 2], [6, 5, 7]], b: [9, 20, 35] });
+  [1, 10, -3].forEach((v, i) => close(r.result.x[i], v, 1e-9));
+  ['38', '-7.2', 'z = -3', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `lu missing ${n}`));
 });
 
-test('differences walk-through numbers are self-consistent', () => {
+test('differences walk-through uses the sourced Chapra x^4 table', () => {
   const t = sectionText('differences', 'Start here: your first walk-through');
-  const ys = [0, 1, 4, 9]; // y = x^2 at x = 0..3
-  const d1 = ys.slice(0, -1).map((_, i) => ys[i + 1] - ys[i]);
-  const d2 = d1.slice(0, -1).map((_, i) => d1[i + 1] - d1[i]);
-  assert.deepEqual(d1, [1, 3, 5]);
-  assert.ok(d2.every((v) => v === 2));
-  assert.ok(t.includes('1, 3, 5'), 'first differences');
-  assert.ok(t.includes('2, 2'), 'constant second differences');
+  const ys = [16, 1, 0, 1, 16, 81, 256]; // f(x) = x^4 at x = -2..4
+  const d = (a) => a.slice(0, -1).map((_, i) => a[i + 1] - a[i]);
+  const d4 = d(d(d(d(ys))));
+  assert.ok(d4.every((v) => v === 24));
+  assert.ok(t.includes('24, 24, 24'), 'constant fourth differences');
+  assert.ok(t.includes('Asked in:'), 'Asked-in line');
 });
 
-test('interpolation walk-through numbers match the engine', () => {
+test('interpolation walk-through uses the sourced Rao Lagrange example', () => {
   const t = sectionText('interpolation', 'Start here: your first walk-through');
-  const r = s.lagrange({ xs: [2, 3], ys: [4, 9], x: 2.5 });
-  close(r.result.y, 6.5, 1e-9);
-  assert.ok(t.includes('6.5'), 'interpolated value');
+  const r = s.lagrange({ xs: [0, 1, 3, 4], ys: [5, 6, 50, 105], x: 2 });
+  close(r.result.y, 19, 1e-9);
+  ['19', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `interpolation missing ${n}`));
 });
 
-test('differentiation walk-through numbers match the engine', () => {
+test('differentiation walk-through uses the sourced F24 Q2(c) rocket table', () => {
   const t = sectionText('differentiation', 'Start here: your first walk-through');
-  const r = s.differentiate({ xs: [1, 2, 3], ys: [1, 4, 9], x: 2, method: 'central2' });
-  close(r.result.derivative, 4, 1e-9);
-  assert.ok(t.includes('9 - 4'), 'forward estimate shown');
-  assert.ok(t.includes('9 - 1'), 'central estimate shown');
+  const xs = [0, 25, 50, 75, 100, 125], ys = [0, 32, 58, 78, 92, 100];
+  close(s.differentiate({ xs, ys, x: 0, method: 'forward3' }).result.derivative, 1.4, 1e-9);
+  close(s.differentiate({ xs, ys, x: 50, method: 'central2' }).result.derivative, 0.92, 1e-9);
+  ['1.4', '0.92', '-0.0096', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `differentiation missing ${n}`));
 });
 
-test('integration walk-through numbers match the engine', () => {
+test('integration walk-through uses the sourced Rao Ex 9.4 Simpson example', () => {
   const t = sectionText('integration', 'Start here: your first walk-through');
-  const r = s.integrate({ xs: [0, 1, 2], ys: [0, 1, 4], method: 'trapezoid' });
-  close(r.result.value, 3, 1e-9);
-  assert.ok(t.includes('2.6667'), 'exact value for comparison');
+  const xs = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6].map((x) => +x.toFixed(1));
+  const ys = xs.map((x) => Math.exp(x));
+  const r = s.integrate({ xs, ys, method: 'simpson13' });
+  close(r.result.value, 0.82212, 1e-5);
+  ['0.82212', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `integration missing ${n}`));
 });
 
-test('regression walk-through numbers match the engine', () => {
+test('regression walk-through uses the sourced F23 Q3(c) surface-area fit', () => {
   const t = sectionText('regression', 'Start here: your first walk-through');
-  const r = s.leastSquares({ xs: [1, 2, 3], ys: [2, 3, 5] });
-  close(r.result.b, 1.5, 1e-9);
-  close(r.result.a, 1 / 3, 1e-4);
-  assert.ok(t.includes('1.5'), 'slope');
-  assert.ok(t.includes('0.3333'), 'intercept');
-  const symbols = sectionText('regression', 'Start here: reading the symbols');
-  assert.ok(symbols.includes('$\\sum x, \\sum y, \\sum xy, \\sum x^2$'), 'the four totals listed');
+  const W = [70, 75, 77, 80, 82, 84, 87, 90], A = [2.1, 2.12, 2.15, 2.2, 2.22, 2.23, 2.26, 2.3];
+  const r = s.leastSquares({ xs: W, ys: A });
+  close(r.result.b, 0.010479, 1e-6);
+  close(r.result.a, 1.3526, 1e-4);
+  ['0.010479', '1.3526', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `regression missing ${n}`));
 });
 
-test('gradient walk-through numbers match the engine', () => {
+test('gradient walk-through uses the sourced slides batch epoch', () => {
   const t = sectionText('gradient', 'Start here: your first walk-through');
-  const one = s.gradientDescent({ xs: [1], ys: [1], degree: 1, theta0: [0, 0], alpha: 0.1, epochs: 1, mode: 'batch' });
-  close(one.result.theta[0], 0.1, 1e-9); close(one.result.theta[1], 0.1, 1e-9);
-  const two = s.gradientDescent({ xs: [1], ys: [1], degree: 1, theta0: [0, 0], alpha: 0.1, epochs: 2, mode: 'batch' });
-  close(two.result.theta[0], 0.18, 1e-9);
-  assert.ok(t.includes('0.18'), 'second epoch shown');
+  const r = s.gradientDescent({ xs: [1, 2, 4, 3, 5], ys: [1, 3, 3, 2, 5], degree: 1, theta0: [0, 0], alpha: 0.01, epochs: 1, mode: 'batch' });
+  close(r.result.theta[0], 0.028, 1e-9);
+  close(r.result.theta[1], 0.1, 1e-9);
+  ['0.028', '-2.8', '-10', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `gradient missing ${n}`));
 });
 
-test('pca walk-through numbers match the engine', () => {
+test('pca walk-through uses the sourced PCA tutorial dataset', () => {
   const t = sectionText('pca', 'Start here: your first walk-through');
-  const r = s.pca({ points: [[2, 0], [-2, 0]], threshold: 95 });
-  close(r.result.eigvals[0], 4, 1e-9);
+  const P = [[2.5, 2.4], [0.5, 0.7], [2.2, 2.9], [1.9, 2.2], [3.1, 3.0], [2.3, 2.7], [2.0, 1.6], [1.0, 1.1], [1.5, 1.6], [1.1, 0.9]];
+  const r = s.pca({ points: P, threshold: 95 });
+  close(r.result.eigvals[0], 1.1556249, 1e-6);
   assert.equal(r.result.keep, 1);
-  assert.ok(t.includes('100\\%'), 'all variance on one axis, percent escaped in math mode');
-  assert.ok(t.includes('4'), 'largest eigenvalue');
+  ['1.1556', '96.3', '3.459', 'Asked in:'].forEach((n) => assert.ok(t.includes(n), `pca missing ${n}`));
 });
 
 test('every module opens with the four Start-here sections', () => {
@@ -319,5 +312,7 @@ test('every module opens with the four Start-here sections', () => {
     assert.deepEqual(m.sections.slice(0, 4).map((x) => x.heading), H, m.id);
     const heads = m.sections.map((x) => x.heading);
     assert.equal(new Set(heads).size, heads.length, `${m.id}: duplicate headings`);
+    const wt = sectionText(m.id, 'Start here: your first walk-through');
+    assert.ok(wt.includes('Asked in:'), `${m.id}: walk-through must list the Question Bank refs`);
   }
 });

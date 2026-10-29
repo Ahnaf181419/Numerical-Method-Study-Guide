@@ -144,16 +144,18 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Take the humblest interesting table — $y = x^2$ at $x = 0, 1, 2, 3$ — and difference it by hand." },
-        { type: "table", head: ["$x$", "$y$", "$\\Delta y$", "$\\Delta^2 y$"], rows: [
-          ["0", "0", "1", "2"],
-          ["1", "1", "3", "2"],
-          ["2", "4", "5", ""],
-          ["3", "9", "", ""],
+        { type: "p", text: "From **Chapra & Canale, Ch. 2, Example 1**: build the forward difference table of $f(x) = x^4$ for $x = -2$ to $4$ ($h = 1$) and read off the polynomial's degree." },
+        { type: "table", head: ["$x$", "$y$", "$\\Delta y$", "$\\Delta^2 y$", "$\\Delta^3 y$", "$\\Delta^4 y$"], rows: [
+          ["$-2$", "16", "$-15$", "14", "$-12$", "24"],
+          ["$-1$", "1", "$-1$", "2", "12", "24"],
+          ["0", "0", "1", "14", "36", "24"],
+          ["1", "1", "15", "50", "60", ""],
+          ["2", "16", "65", "110", "", ""],
+          ["3", "81", "175", "", "", ""],
+          ["4", "256", "", "", "", ""],
         ] },
-        { type: "p", text: "First differences: $1, 3, 5$ — the odd numbers, growing by 2 each step. Second differences: $2, 2$ — **constant**. That flat row is the fingerprint: a polynomial whose $k$-th differences are constant has degree $k$, and here the second differences flattening at 2 say 'quadratic' without any guessing." },
-        { type: "p", text: "Same table, backward view: $\\nabla y_2 = 4 - 1 = 3$, $\\nabla y_1 = 1 - 0 = 1$ — the same numbers as $\\Delta$, one row lower. Forward and backward are the same ladder seen from opposite sides, which is exactly why identities like $\\Delta - \\nabla \\equiv \\delta^2$ hold." },
-        { type: "exam", text: "Layout habit: the diagonal difference table above is the expected format — top-left to bottom-right diagonals, one column per difference order, blanks below the staircase. The proof identities then just manipulate these columns." },
+        { type: "p", text: "The fourth differences read 24, 24, 24 — constant — and the fifth would be zero: the table itself announces 'degree 4' without any algebra. **Asked in:** operator identities proved from these columns are Fall 2023 Q1(f) and Spring 2023 Q1(f); a missing-value table is Spring 2024 Q2(d); Fall 2024 B1(a) asks one of the proofs outright." },
+        { type: "exam", text: "Draw the diagonal table exactly as above — one column per difference order, blanks below the staircase — then state what the constant row implies." },
       ],
     },
     {

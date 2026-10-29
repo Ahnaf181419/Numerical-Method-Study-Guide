@@ -165,11 +165,11 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Run one epoch of batch gradient descent on a training set of a single example, $(x, y) = (1, 1)$, starting from $\\theta_0 = \\theta_1 = 0$ with $\\alpha = 0.1$. One example means the 'average' is just the one error." },
-        { type: "p", text: "**Epoch 1:** the hypothesis is $H_\\theta(1) = 0 + 0(1) = 0$, so the error is $e = 0 - 1 = -1$. Both derivatives are the error (and the error times $x$, which is still $-1$): $\\frac{\\partial J}{\\partial \\theta_0} = -1$ and $\\frac{\\partial J}{\\partial \\theta_1} = -1$. Update:" },
-        { type: "math", tex: "\\theta_0 = 0 - 0.1(-1) = 0.1, \\qquad \\theta_1 = 0 - 0.1(-1) = 0.1" },
-        { type: "p", text: "**Epoch 2:** with the improved parameters the hypothesis rises to $H_\\theta(1) = 0.1 + 0.1(1) = 0.2$, the error shrinks to $-0.8$, and the next step is smaller: $\\theta_0 = 0.1 - 0.1(-0.8) = 0.18$ and $\\theta_1 = 0.18$. That shrinking step **is** convergence happening: the walk flattens as the valley floor approaches." },
-        { type: "exam", text: "Exam shape (the papers ask exactly this): a table with columns $H_\\theta$, error and error$\\times x$ per example, the two averaged derivatives, then the two updates with $\\alpha$ substituted — finish by stating the parameter values after one epoch." },
+        { type: "p", text: "From the **Gradient Descent slides (batch mode)**: training set $(1,1), (2,3), (4,3), (3,2), (5,5)$ with $\\theta_0 = \\theta_1 = 0$ and $\\alpha = 0.01$. Run one epoch." },
+        { type: "p", text: "With both parameters zero every prediction $H_\\theta(x)$ is 0, so the error column is $-1, -3, -3, -2, -5$ and the error$\\times x$ column is $-1, -6, -12, -6, -25$." },
+        { type: "math", tex: "\\text{PD}_{\\theta_0} = \\tfrac{-14}{5} = -2.8, \\qquad \\text{PD}_{\\theta_1} = \\tfrac{-50}{5} = -10" },
+        { type: "p", text: "Update: $\\theta_0 = 0 - 0.01(-2.8) = 0.028$ and $\\theta_1 = 0 - 0.01(-10) = 0.1$ after one epoch. **Asked in:** the parameter-update derivation is Spring 2024 Q3(a) and the degree-2 demonstration is Spring 2024 Q3(b) — the same table method with one more column ($x^2$)." },
+        { type: "exam", text: "Columns for $H_\\theta$, error and error$\\times x$, the two averaged derivatives, the two updates with $\\alpha$ substituted — finish by stating the parameter values after the epoch." },
       ],
     },
     {

@@ -117,11 +117,10 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Factor $A = \\begin{bmatrix} 2 & 1 \\\\ 6 & 4 \\end{bmatrix}$ and solve $A\\mathbf{x} = \\begin{bmatrix} 3 \\\\ 8 \\end{bmatrix}$ in the LU way." },
-        { type: "p", text: "**Eliminate once:** pivot $a_{11} = 2$ is nonzero — no swap. One step, $R_2' = R_2 - 3R_1$ (the multiplier 3 goes into $L$), giving the resulting row $[\\,0 \\;\\; 1\\,]$ — that is $U$'s second row. So $L = \\begin{bmatrix} 1 & 0 \\\\ 3 & 1 \\end{bmatrix}$ and $U = \\begin{bmatrix} 2 & 1 \\\\ 0 & 1 \\end{bmatrix}$." },
-        { type: "p", text: "**Forward substitution** $L\\mathbf{y} = \\mathbf{b}$, top-down: $y_1 = 3$, then $3(3) + y_2 = 8$ so $y_2 = -1$. **Back substitution** $U\\mathbf{x} = \\mathbf{y}$, bottom-up: $x_2 = -1$, then $2x_1 + (-1) = 3$ so $x_1 = 2$. The solution is $x = 2$, $y = -1$." },
-        { type: "p", text: "Check: $A\\begin{bmatrix} 2 \\\\ -1 \\end{bmatrix} = \\begin{bmatrix} 2(2) + 1(-1) \\\\ 6(2) + 4(-1) \\end{bmatrix} = \\begin{bmatrix} 3 \\\\ 8 \\end{bmatrix}$ ✓. And if the load changes to any other $\\mathbf{b}$, only the two sweeps rerun — $L$ and $U$ are already on the page." },
-        { type: "exam", text: "Write the three stages as three labelled blocks: the elimination that produces $U$ (with the resulting rows shown), the $L$ you read off from the multipliers, then the forward and back substitutions — the papers mark each stage separately." },
+        { type: "p", text: "From the **LU Decomposition slides**: factor $A = \\begin{bmatrix} 2 & 1 & 1 \\ -4 & 3 & 2 \\ 6 & 5 & 7 \\end{bmatrix}$ by Do-Little and solve $A\\mathbf{x} = [\\,9,\\ 20,\\ 35\\,]^T$." },
+        { type: "p", text: "Eliminate once, recording the multipliers: $m_{21} = -2$, $m_{31} = 3$, $m_{32} = 0.4$. The resulting rows: $R_2' = R_2 + 2R_1 = [\\,0 \\;\\; 5 \\;\\; 4\\,]$, $R_3' = R_3 - 3R_1 = [\\,0 \\;\\; 2 \\;\\; 4\\,]$, $R_3'' = R_3' - 0.4R_2' = [\\,0 \\;\\; 0 \\;\\; 2.4\\,]$. $L$ collects the multipliers, $U$ is the staircase." },
+        { type: "p", text: "Forward substitution $L\\mathbf{y} = \\mathbf{b}$: $\\mathbf{y} = [\\,9,\\ 38,\\ -7.2\\,]$. Back substitution $U\\mathbf{x} = \\mathbf{y}$: $z = -3$, then $y = 10$, then $x = 1$ — and the check $A[\\,1, 10, -3\\,]^T = [\\,9, 20, 35\\,]^T$ ✓. **Asked in:** factorisation into L and U is Fall 2023 Q2(f); solving by Do-Little is Fall 2024 A2(d)." },
+        { type: "exam", text: "Three labelled blocks: the elimination producing $U$ (resulting rows shown), the $L$ read off from the multipliers, then the two substitutions — each block carries its own marks." },
       ],
     },
     {

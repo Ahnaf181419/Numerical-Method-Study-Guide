@@ -175,11 +175,11 @@ export default {
     {
       heading: "Start here: your first walk-through",
       blocks: [
-        { type: "p", text: "Estimate $y$ at $x = 2.5$ from just two facts: $y(2) = 4$ and $y(3) = 9$. (Both come from $y = x^2$, so the truth is $6.25$ — see how close the honest guess gets.)" },
-        { type: "p", text: "**Triangle view:** the target sits exactly halfway, so take the midpoint of the two known heights: $\\frac{4 + 9}{2} = 6.5$. Straightforward — but only works halfway, and only for a line." },
-        { type: "p", text: "**Lagrange view (the machine that always works):** weight each known value by how close the target is to it. The weights come from fractions that sum to 1: $y(2.5) = 4 \\cdot \\frac{2.5 - 3}{2 - 3} + 9 \\cdot \\frac{2.5 - 2}{3 - 2} = 4(0.5) + 9(0.5) = 6.5$. The same answer — and the same formula scales to ten unevenly spaced points unchanged." },
-        { type: "p", text: "The gap to the truth ($6.5$ vs $6.25$) is the price of fitting a **line** through curved data: more points would pull the fitted polynomial up to degree 2 and land exactly on $6.25$." },
-        { type: "exam", text: "Exam shape: name the formula, tabulate the weights (or the difference table) with $u$ shown, substitute, and box the value — and if asked, one sentence on why the two-point answer misses the true curve (linear vs quadratic)." },
+        { type: "p", text: "From **Shanker Rao §5.3, Exercise 5.1**: given $f(0) = 5$, $f(1) = 6$, $f(3) = 50$, $f(4) = 105$, find $f(2)$ by Lagrange's formula — the spacing is unequal, so the difference-table toolkit does not apply." },
+        { type: "p", text: "Each known point gets a weight that equals 1 at itself and 0 at every other node; at $x = 2$ the four weights are $-\\tfrac{1}{6},\\ \\tfrac{2}{3},\\ \\tfrac{2}{3},\\ -\\tfrac{1}{6}$ — and they sum to 1, a free sanity check." },
+        { type: "math", tex: "f(2) = 5\\left(-\\tfrac{1}{6}\\right) + 6\\left(\\tfrac{2}{3}\\right) + 50\\left(\\tfrac{2}{3}\\right) + 105\\left(-\\tfrac{1}{6}\\right) = -\\tfrac{5}{6} + 4 + \\tfrac{100}{3} - \\tfrac{35}{2} = 19" },
+        { type: "p", text: "**Asked in:** Lagrange with unequal intervals is Spring 2023 Q2(e) (gravity at altitude); the sales estimate is Fall 2023 Q2(g); the derivation of the formula is Spring 2024 Q1(e)." },
+        { type: "exam", text: "State the formula, list the weights (showing they sum to 1), substitute, box the value — the sites of the marks in the module's worked example." },
       ],
     },
     {
