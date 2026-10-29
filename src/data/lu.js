@@ -195,7 +195,7 @@ export default {
         },
         {
           type: 'p',
-          text: 'The slide puts it plainly: *the whole process is the same except that $U$ has 1s on the diagonal*.',
+          text: 'The slide puts it plainly: *the whole process is the same except that* $U$ *has 1s on the diagonal*.',
         },
         {
           type: 'note',

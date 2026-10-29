@@ -372,7 +372,7 @@ export default {
       type: 'Numerical — PCA',
       question: 'Perform Principal Component Analysis on the data set $\\{(2.5, 2.4), $$((0.5, 0.7), $$((2.2, 2.9), $$((1.9, 2.2), $$((3.1, 3.0), $$((2.3, 2.7), $$((2.0, 1.6), $$((1.0, 1.1), $$((1.5, 1.6), $$((1.1, 0.9\\}$ using (i) mean normalisation with no scaling, (ii) the principal components and the data variances along them, (iii) reduce the dimensionality keeping at least 95% of the variance, (iv) recast the data points along the principal component, (v) reconstruct the original points and find the MAE, SSE and RMSE.',
       source: 'PCA Tutorial Step by Step (Math) — Q1',
-      marks: 7,
+      marks: 8,
       steps: [
         { t: '**Step 1 — preprocessing.** $\\bar{x} = 1.81$, $\\bar{y} = 1.91$. Mean-normalised points: $(0.69, 0.49), $$((-1.31, -1.21), $$((0.39, 0.99), $$((0.09, 0.29), $$((1.29, 1.09), $$((0.49, 0.79), $$((0.19, -0.31), $$((-0.81, -0.81), $$((-0.31, -0.31), $$((-0.71, -1.01$.', m: '1 mark' },
         { t: '**Step 2 — covariance matrix.** $\\Sigma = \\frac{1}{10}\\sum z^{(i)}z^{(i)T} = \\begin{bmatrix} 0.5549 & 0.5539 \\\\ 0.5539 & 0.6449 \\end{bmatrix}$.', m: '1 mark' },

@@ -6,6 +6,7 @@ import modules from '../data/syllabusData.js';
 import checks from '../data/checks.js';
 import { likely, traps } from '../data/examPrep.js';
 import papers from '../data/pastPapers.js';
+import fullAnswers, { paperKey } from '../data/fullAnswers.js';
 import syllabusTopics from '../data/syllabusTopics.js';
 import { SOLVERS } from './solverConfigs.js';
 
@@ -71,6 +72,7 @@ test('exam prep points at real chapters and its math compiles', () => {
   const ids = new Set(modules.map((m) => m.id));
   for (const q of likely) {
     assert.ok(ids.has(q.module), q.q);
+    for (const title of q.examples) assert.ok(modules.find((m) => m.id === q.module).examples.some((e) => e.title === title), `${q.id}: no example "${title}"`);
     [q.q, ...q.answer].forEach(inline);
   }
   for (const t of traps) {
@@ -131,6 +133,7 @@ test('flat point lists are split into wrappable math spans', () => {
   };
   modules.forEach((m) => walk(m, m.id));
   walk(papers, 'papers');
+  walk(fullAnswers, 'fullAnswers');
   walk(likely, 'likely');
   walk(traps, 'traps');
   for (const [where, text] of all)
@@ -152,3 +155,35 @@ test('syllabus page reproduces Shuvo Sir topic pdf in order', () => {
   assert.equal(urls.length, 12); // 9 youtube + 3 drive links
   urls.forEach((u) => assert.ok(!u.includes(' '), u));
 });
+
+const marksOf = (steps) => steps.reduce((sum, st) => sum + (parseInt(st.m, 10) || 0), 0);
+
+test('every example\'s step marks add up to its marks', () => {
+  for (const m of modules) for (const e of m.examples) if (e.marks) assert.equal(marksOf(e.steps), e.marks, `${m.id}: ${e.title}`);
+});
+
+test('every past-paper item has a full exam-script answer', () => {
+  const keys = new Set();
+  for (const p of papers)
+    for (const set of p.sets)
+      for (const it of set.items) {
+        const key = paperKey(p, it);
+        keys.add(key);
+        const f = fullAnswers[key];
+        assert.ok(f, `${key}: no full answer`);
+        const full = typeof f === 'string' ? modules.find((m) => m.id === it.module).examples.find((e) => e.title === f) : f;
+        assert.ok(full, `${key}: no ${it.module} example "${f}"`);
+        assert.equal(marksOf(full.steps), it.marks, `${key}: step marks must add up to the paper's ${it.marks}`);
+        assert.ok(full.steps.every((st) => st.t && st.m), `${key}: every step needs text and marks`);
+        assert.match(full.answer, /\\boxed/, `${key}: box the final answer`);
+        assert.ok(full.note && full.explanation?.length, `${key}: needs a Trap note and an explanation`);
+        [full.answer, full.note, ...full.explanation, ...full.steps.map((st) => st.t)].forEach(inline);
+        // A script written for the paper must carry every number its (solver-audited) model answer prints.
+        // Linked lesson examples are audited against the solvers on their own (audit.test.js).
+        if (typeof f === 'string') continue;
+        const text = [full.answer, full.note, ...full.steps.map((st) => st.t)].join(' ');
+        for (const n of it.answer.join(' ').replace(/(§|Ex\.\s?|Example\s|Ch\.\s?)\d+(\.\d+)*/g, '').match(/(?<![\d.])\d+\.\d{2,}/g) ?? []) assert.ok(text.includes(n), `${key}: full answer is missing ${n}`);
+      }
+  for (const k of Object.keys(fullAnswers)) assert.ok(keys.has(k), `${k}: no such past-paper item`);
+});
+

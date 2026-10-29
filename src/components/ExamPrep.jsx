@@ -3,9 +3,12 @@ import { Rich } from './NotesView.jsx';
 import Quiz, { shuffle } from './Quiz.jsx';
 import { likely, traps } from '../data/examPrep.js';
 import papers from '../data/pastPapers.js';
+import fullAnswers, { paperKey } from '../data/fullAnswers.js';
+import { Worked } from './Examples.jsx';
 
-function Likely({ q, mod, onOpen }) {
+function Likely({ q, mod, onOpen, onExample, full, label = 'model answer' }) {
   const [open, setOpen] = useState(false);
+  const [fullOpen, setFullOpen] = useState(false);
   return (
     <article className="rounded-2xl border border-line bg-panel p-5 sm:p-6">
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm">
@@ -17,21 +20,46 @@ function Likely({ q, mod, onOpen }) {
           Ch {mod.chapter}: {mod.title}
         </button>
       </div>
-      <h3 className="prose-read text-[1.18rem] leading-snug text-text">
+      <h3 className="prose-read overflow-x-auto text-[1.18rem] leading-snug text-text">
         <Rich text={q.q} />
       </h3>
       {open && (
         <ol className="prose-read enter mt-4 list-decimal space-y-2 border-l-2 border-gold/50 pl-9 text-text/90">
           {q.answer.map((a, i) => (
-            <li key={i}>
+            <li key={i} className="overflow-x-auto">
               <Rich text={a} />
             </li>
           ))}
         </ol>
       )}
-      <button onClick={() => setOpen(!open)} className={`press mt-4 min-h-11 rounded-xl px-5 font-medium ${open ? 'border border-line text-ash' : 'bg-gold text-ink'}`}>
-        {open ? 'Hide model answer' : 'Show model answer'}
-      </button>
+      {open && q.examples?.length > 0 && (
+        <div className="enter mt-4">
+          <p className="text-sm text-ash">Full worked answer, written the way you write it in the exam:</p>
+          <div className="mt-2 flex flex-col items-start gap-2">
+            {q.examples.map((title) => (
+              <button key={title} onClick={() => onExample(mod.id, title)} className="press min-h-11 rounded-xl border border-gold/50 px-4 py-2 text-left text-gold">
+                <Rich text={title} /> →
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {fullOpen && (
+        <div className="enter mt-4 rounded-xl border border-gold/40 bg-ink/40 p-4 sm:p-5">
+          <p className="font-sans text-sm font-semibold text-gold">Full answer — {q.marks} marks, written as you would in the exam</p>
+          <Worked ex={full} />
+        </div>
+      )}
+      <div className="mt-4 flex flex-wrap gap-3">
+        <button onClick={() => setOpen(!open)} className={`press min-h-11 rounded-xl px-5 font-medium ${open ? 'border border-line text-ash' : 'bg-gold text-ink'}`}>
+          {open ? `Hide ${label}` : `Show ${label}`}
+        </button>
+        {full && (
+          <button onClick={() => setFullOpen(!fullOpen)} className={`press min-h-11 rounded-xl px-5 font-medium ${fullOpen ? 'border border-line text-ash' : 'border border-gold/60 text-gold'}`}>
+            {fullOpen ? 'Hide full answer' : 'Show full answer'}
+          </button>
+        )}
+      </div>
     </article>
   );
 }
@@ -100,7 +128,13 @@ function Mock({ modules, best, onFinish, onOpen }) {
   );
 }
 
-export default function ExamPrep({ modules, progress, onOpen, onMockFinish }) {
+// A full answer is either the lesson example that works this exact question, or a script written for it.
+const fullFor = (paper, it, byId) => {
+  const f = fullAnswers[paperKey(paper, it)];
+  return typeof f === 'string' ? byId[it.module].examples.find((e) => e.title === f) : f;
+};
+
+export default function ExamPrep({ modules, progress, onOpen, onExample, onMockFinish }) {
   const [tab, setTab] = useState('paper');
   const [paperIdx, setPaperIdx] = useState(0);
   const byId = Object.fromEntries(modules.map((m) => [m.id, m]));
@@ -150,7 +184,7 @@ export default function ExamPrep({ modules, progress, onOpen, onMockFinish }) {
                     <span className="text-sm text-ash">{set.rule}</span>
                   </h3>
                   {set.items.map((it) => (
-                    <Likely key={it.id} q={{ ...it, flag: `${it.marks} marks · ${it.type}${it.flagged ? ' · not in your slides/notes' : ''}` }} mod={byId[it.module]} onOpen={onOpen} />
+                    <Likely key={it.id} q={{ ...it, flag: `${it.marks} marks · ${it.type}${it.flagged ? ' · not in your slides/notes' : ''}` }} mod={byId[it.module]} onOpen={onOpen} full={fullFor(paper, it, byId)} />
                   ))}
                 </section>
               ))}
@@ -159,7 +193,7 @@ export default function ExamPrep({ modules, progress, onOpen, onMockFinish }) {
         {tab === 'likely' && (
           <div className="grid grid-cols-[minmax(0,1fr)] gap-5">
             {likely.map((q) => (
-              <Likely key={q.q} q={q} mod={byId[q.module]} onOpen={onOpen} />
+              <Likely key={q.q} q={q} mod={byId[q.module]} onOpen={onOpen} onExample={onExample} />
             ))}
           </div>
         )}

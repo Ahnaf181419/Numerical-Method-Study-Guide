@@ -788,7 +788,7 @@ export default {
         },
         {
           t: 'The 3/8 rule is exact for cubics; $\\frac{1}{1+x^2}$ is nearly a cubic on $[0,1]$, which is why the error is only about $2 \\times 10^{-6}$.',
-          m: '1 mark',
+          m: '',
         },
         {
           t: '$\\boxed{I \\approx 0.7853959 \\; (\\text{exact } 0.7853982)}$',
@@ -829,7 +829,7 @@ export default {
         },
         {
           t: 'Exact value $e^{0.6} - 1 = 0.8221188$, so the rule is accurate to about seven decimal places — as expected from an $O(h^4)$ formula with $h = 0.1$.',
-          m: '1 mark',
+          m: '',
         },
         {
           t: '$\\boxed{I \\approx 0.82212}$',

@@ -234,7 +234,7 @@ export default {
           type: 'list',
           items: [
             '**P.D. = Average Error** — the derivative with respect to $\\theta_0$ is the average of the error column.',
-            '**P.D. = Average over Error i * x i** — the derivative with respect to $\\theta_1$ is the average of the error $\\times x$ column.',
+            '**P.D. = Average over Error i × x i** — the derivative with respect to $\\theta_1$ is the average of the error $\\times x$ column.',
             'the update itself: $\\theta_0 \\leftarrow \\theta_0 - \\alpha(\\text{PD}_{\\theta_0})$ and $\\theta_1 \\leftarrow \\theta_1 - \\alpha(\\text{PD}_{\\theta_1})$.',
           ],
           ordered: false,
@@ -498,7 +498,7 @@ export default {
         },
         {
           t: 'Row 2, $(2,3)$: $H_\\theta = 0.01 + 0.01(2) = 0.03$, $e = 0.03 - 3 = -2.97$, $ex = -5.94$; new $\\theta_0 = 0.01 + 0.0297 = 0.0397$, new $\\theta_1 = 0.01 + 0.0594 = 0.0694$.',
-          m: '2 marks',
+          m: '1 mark',
         },
         {
           t: 'Row 3, $(4,3)$: $H_\\theta = 0.0397 + 0.0694(4) = 0.3173$, $e = -2.6827$, $ex = -10.7308$; new $\\theta_0 = 0.0397 + (0.01)(2.6827) = 0.0665$, new $\\theta_1 = 0.0694 + (0.01)(10.7308) = 0.1767$.',

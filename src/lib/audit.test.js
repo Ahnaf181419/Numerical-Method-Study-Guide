@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import * as s from './solvers.js';
 import modules from '../data/syllabusData.js';
 import papers from '../data/pastPapers.js';
+import fullAnswers from '../data/fullAnswers.js';
 
 const exampleText = (id, titlePart) => {
   const m = modules.find((x) => x.id === id);
@@ -404,3 +405,35 @@ test('Shanker Ex 5.2 divided difference table: recomputed values match the engin
   const text = exampleText('interpolation', 'x = 1, 3, 4, 6, 10');
   ['= 66', '= 182.5', '= 0.2077'].forEach((n) => has(text, n, 'Ex 5.2'));
 });
+
+const fullText = (key) => {
+  const f = fullAnswers[key];
+  return [f.answer, f.note, ...f.steps.map((st) => st.t)].join(' ');
+};
+const r4 = (v) => (Math.round(v * 1e4) / 1e4).toFixed(4);
+
+test('full answers: intermediate numbers the model answers do not print match the engine', () => {
+  // Power-law table, Spring 2024 Q2(e): every ln-row the script prints.
+  const sp = fullText('Spring 2024 Q2(e)');
+  [2, 3, 4, 5].forEach((x, i) => {
+    const X = Math.log(x), Y = Math.log([4, 13.5, 32, 62.5][i]);
+    [X, Y, X * X, X * Y].forEach((v) => has(sp, r4(v), `power-law row x = ${x}`));
+  });
+  // Gauss-Seidel, Spring 2023 Q2(b): the four sweeps.
+  const gs = fullText('Spring 2023 Q2(b)');
+  let x = 0, y = 0, z = 0;
+  for (let k = 1; k <= 3; k++) {
+    x = (12 - y - z) / 10; y = (13 - 2 * x - z) / 10; z = (14 - 2 * x - 2 * y) / 10;
+    [x, y, z].forEach((v) => has(gs, r4(v).replace(/0+$/, ''), `Gauss-Seidel sweep ${k}`));
+  }
+  // Synthetic division rows (Fall 2024 A2(a), Fall 2023 Q2(h)) and the tourists' check (Spring 2023 Q2(f)).
+  assert.deepEqual(s.horner({ coeffs: [1, -5, 5, 5, -6], r: -1 }).result, { value: 0, quotient: [1, -6, 11, -6] });
+  assert.deepEqual(s.horner({ coeffs: [1, -6, 11, -6], r: 1 }).result, { value: 0, quotient: [1, -5, 6] });
+  has(fullText('Fall 2024 A2(a)'), '[\\ 1 \\quad -6 \\quad 11 \\quad -6 \\mid 0\\ ]', 'first deflation row');
+  const t = s.gaussEliminate({ A: [[18, 7, 9], [8, 17, 7], [10, 9, 20]], b: [165, 170, 180], pivot: 'off' }).result.x;
+  close(8 * 4.8805 + 17 * 6.1399 + 7 * 3.7968, 170, 1e-2);
+  [4.8805, 6.1399, 3.7968].forEach((v, i) => close(t[i], v, 1e-4));
+  // Fall 2023 Q2(f): forward/back substitution quoted in the explanation.
+  [0, 1, 2].forEach((v, i) => close(s.luSolve({ A: [[1, 1, 1], [2, 3, 4], [4, 9, 16]], b: [3, 11, 41] }).result.x[i], v, 1e-12));
+});
+

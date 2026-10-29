@@ -3,8 +3,9 @@ import { BlockMath, InlineMath } from 'react-katex';
 // Renders text with $inline math$ and **bold**.
 export function Rich({ text }) {
   if (!text) return null;
-  return text.split(/(\*\*[^*]+\*\*|\$[^$]+\$)/g).map((part, i) => {
+  return text.split(/(\*\*[^*]+\*\*|\$[^$]+\$|\*[^*\s$][^*$]*\*)/g).map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) return <strong key={i} className="font-semibold text-text"><Rich text={part.slice(2, -2)} /></strong>;
+    if (part.length > 2 && part.startsWith('*') && part.endsWith('*')) return <em key={i}>{part.slice(1, -1)}</em>;
     if (part.length > 1 && part.startsWith('$') && part.endsWith('$')) return <InlineMath key={i} math={part.slice(1, -1)} />;
     return part;
   });

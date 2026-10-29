@@ -21,6 +21,7 @@ export default function App() {
   const [cheatOpen, setCheatOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [focusExample, setFocusExample] = useState(null);
   const drawer = useRef(null);
 
   const view = progress.view ?? 'home';
@@ -34,8 +35,9 @@ export default function App() {
     if (!navOpen && d.open) d.close();
   }, [navOpen]);
 
-  const go = (patch) => {
+  const go = (patch, example = null) => {
     update(patch);
+    setFocusExample(example);
     setNavOpen(false);
     setSearchOpen(false);
     window.scrollTo({ top: 0 });
@@ -43,6 +45,7 @@ export default function App() {
   const openModule = (id, lessonIdx) =>
     go((p) => ({ view: 'module', moduleId: id, ...(lessonIdx != null && { mode: 'learn', lesson: { ...p.lesson, [id]: lessonIdx } }) }));
   const pickMode = (m) => go({ mode: m });
+  const openExample = (id, title) => go({ view: 'module', moduleId: id, mode: 'examples' }, title);
   const setLesson = (i) => update((p) => ({ lesson: { ...p.lesson, [mod.id]: i } }));
   const toggleLearned = (i) => update((p) => ({ learned: { ...p.learned, [mod.id]: toggleIn(p.learned?.[mod.id], i) } }));
   const toggleKnown = (i) => update((p) => ({ known: { ...p.known, [mod.id]: toggleIn(p.known?.[mod.id], i) } }));
@@ -99,7 +102,7 @@ export default function App() {
 
         {view === 'home' && <Dashboard modules={modules} progress={progress} onOpen={(id) => openModule(id)} onExam={() => go({ view: 'exam' })} onContinue={() => openModule(mod.id)} />}
 
-        {view === 'exam' && <ExamPrep modules={modules} progress={progress} onOpen={(id) => openModule(id)} onMockFinish={saveMock} />}
+        {view === 'exam' && <ExamPrep modules={modules} progress={progress} onOpen={(id) => openModule(id)} onExample={openExample} onMockFinish={saveMock} />}
 
         {view === 'syllabus' && <Syllabus />}
 
@@ -124,7 +127,7 @@ export default function App() {
               {mode === 'learn' && (
                 <Learn module={mod} index={lesson} learned={progress.learned?.[mod.id] ?? []} onIndex={setLesson} onLearned={toggleLearned} onDone={() => pickMode('cards')} />
               )}
-              {mode === 'examples' && <Examples module={mod} />}
+              {mode === 'examples' && <Examples module={mod} focus={focusExample} />}
               {mode === 'cards' && <Flashcards module={mod} known={progress.known?.[mod.id] ?? []} onToggleKnown={toggleKnown} />}
               {mode === 'quiz' && <Quiz questions={mod.quiz} best={progress.quizBest?.[mod.id]} onFinish={saveQuiz} />}
               {mode === 'solve' && <Solvers module={mod} />}

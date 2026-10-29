@@ -3,6 +3,7 @@
 export const likely = [
   {
     id: 'LP-1', module: 'elimination', flag: 'Asked in 3 of 4 papers',
+    examples: ["Board Example 2: a zero pivot after the first elimination"],
     q: 'Solve a system of linear equations by Gauss elimination, with partial pivoting where a zero pivot appears.',
     answer: [
       'Write the augmented matrix and name the pivot row.',
@@ -13,6 +14,7 @@ export const likely = [
   },
   {
     id: 'LP-2', module: 'interpolation', flag: 'Asked in every paper',
+    examples: ["Lagrange's interpolation formula for unequal intervals, and $f(2)$", "Newton forward interpolation of the cubic through $(0,-1), (1,1), (2,1), (3,-2)$ at $x = 1.5$"],
     q: 'Derive and apply an interpolation formula — Lagrange for unequal intervals, or Newton forward for equal intervals.',
     answer: [
       'State the formula with its notation before using it.',
@@ -23,6 +25,7 @@ export const likely = [
   },
   {
     id: 'LP-3', module: 'differences', flag: 'Asked in 3 of 4 papers — prove it',
+    examples: ["Prove that $\\Delta - \\nabla \\equiv \\delta^2$", "Prove that $\\mu^2 \\equiv 1 + \\tfrac{1}{4}\\delta^2$"],
     q: 'Prove $\\Delta - \\nabla = \\delta^2$ and $\\mu^2 = 1 + \\tfrac{1}{4}\\delta^2$.',
     answer: [
       'Write the operators out on a test function: $\\Delta f(x) = f(x+h)-f(x)$, $\\nabla f(x) = f(x)-f(x-h)$, $\\delta f(x) = f(x+h/2)-f(x-h/2)$.',
@@ -33,6 +36,7 @@ export const likely = [
   },
   {
     id: 'LP-4', module: 'integration', flag: 'Asked in every paper',
+    examples: ["Composite trapezoidal and Simpson’s one-third rule for ∫₀¹ dx/(1+x²)", "Romberg integration of (2x² + x)e⁻ˣ from 1 to 3"],
     q: 'Apply a numerical integration rule — trapezoidal, Simpson\'s 1/3, Simpson\'s 3/8, Weddle\'s or Romberg — and compare with the true value.',
     answer: [
       'State $h$, the number of subintervals, and the values of the integrand at each node.',
@@ -43,6 +47,7 @@ export const likely = [
   },
   {
     id: 'LP-5', module: 'errors', flag: 'Asked in every paper',
+    examples: ["Relative maximum error in $u = \\dfrac{5xy^2}{z^3}$ at $x = y = z = 1$", "Absolute and relative error when $X = 2.536$ is rounded off and when it is chopped"],
     q: 'Define the error terms — chopping, rounding, relative error, significant digits, condition number, deflation — and compute a relative error.',
     answer: [
       'Give the definitions in one line each.',
@@ -52,6 +57,7 @@ export const likely = [
   },
   {
     id: 'LP-6', module: 'roots', flag: 'Asked in every paper',
+    examples: ["Bisection: the root of $x^3 - 9x + 1$ between 2 and 3", "Newton-Raphson: $x^3 - 4x^2 + x + 6 = 0$", "Finding all the roots of $x^4 + 7x^3 + 5x^2 - 31x - 30$ by deflation"],
     q: 'Find a root by Bisection, Newton-Raphson or Secant, and find all the roots of a polynomial by synthetic division and deflation.',
     answer: [
       'State the bracketing and the stopping criterion, then run the iterations in a table.',
@@ -61,6 +67,7 @@ export const likely = [
   },
   {
     id: 'LP-7', module: 'iterative', flag: 'Asked in 3 of 4 papers',
+    examples: ["Jacobi's method on the slide's system", "Gauss-Seidel on the slide's system"],
     q: 'Solve a system by Jacobi or Gauss-Seidel iteration, and state the convergence condition.',
     answer: [
       '**First**: the diagonal dominance check, one line per row.',
@@ -71,6 +78,7 @@ export const likely = [
   },
   {
     id: 'LP-8', module: 'differentiation', flag: 'Asked in 3 of 4 papers',
+    examples: ["Velocity and acceleration of the rocket at t = 0 s and t = 50 s", "Proving the truncation error of the second-order central difference is O(h²)"],
     q: 'Estimate a derivative from tabular data, or prove the truncation error of a difference formula.',
     answer: [
       'Choose the formula from the **position in the table**: forward at the first point, central in the middle, backward at the last point.',
@@ -80,6 +88,7 @@ export const likely = [
   },
   {
     id: 'LP-9', module: 'regression', flag: 'Asked in 3 of 4 papers',
+    examples: ["Least-squares line through the surface-area table", "Power-law fit $A = aW^b$ for the surface-area table"],
     q: 'Fit a straight line or a power law to a table by least squares, and justify the model.',
     answer: [
       'Justify with a statement about the shape of the data (points near a line; or log-log points near a line).',
@@ -89,6 +98,7 @@ export const likely = [
   },
   {
     id: 'LP-10', module: 'lu', flag: 'Asked in 2 of 4 papers',
+    examples: ["Solving a system with Do-Little LU"],
     q: 'Solve a system using Do-Little LU decomposition.',
     answer: [
       'Factorise: $u_{1j} = a_{1j}$, $l_{i1} = a_{i1}/u_{11}$, then fill in the rest of $U$ and $L$ with the slide\'s formulas.',
@@ -98,6 +108,7 @@ export const likely = [
   },
   {
     id: 'LP-11', module: 'gradient', flag: 'Asked in the latest paper (7 + 7 marks)',
+    examples: ["Batch mode: the first epoch on the slides' training set", "Single mode: the first epoch on the same training set"],
     q: 'Perform polynomial regression by gradient descent, in batch mode or single mode.',
     answer: [
       'Write the hypothesis $H_\\theta(x) = \\theta_0 + \\theta_1x + \\theta_2x^2 + \\cdots$ and the cost $J = \\frac{1}{2m}\\sum (H_\\theta - y)^2$.',
@@ -107,6 +118,7 @@ export const likely = [
   },
   {
     id: 'LP-12', module: 'pca', flag: 'Syllabus topic — no past paper yet',
+    examples: ["Full PCA on the tutorial dataset, keeping 95% of the variance"],
     q: 'Perform PCA on a data set, reduce the dimension keeping a stated percentage of variance, and reconstruct.',
     answer: [
       'Six steps: preprocess, covariance matrix, eigenvalues, eigenvectors and $V$, reduce, reconstruct and errors.',

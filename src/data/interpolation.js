@@ -515,11 +515,11 @@ export default {
       marks: 6,
       steps: [
         { t: 'Difference table: $\\Delta y_0 = 2$, $\\Delta^2 y_0 = -2$, $\\Delta^3 y_0 = -1$.', m: '2 marks' },
-        { t: '$u = \\dfrac{x - x_0}{h} = \\dfrac{1.5 - 0}{1} = 1.5$.', m: '1 mark' },
-        { t: '$y = y_0 + u\\Delta y_0 + \\dfrac{u(u-1)}{2!}\\Delta^2 y_0 + \\dfrac{u(u-1)(u-2)}{3!}\\Delta^3 y_0 = -1 + 3 - 0.75 + 0.0625$.', m: '2 marks' },
-        { t: '$y(1.5) = 1.3125$.', m: '1 mark' },
+        { t: 'With $x_0 = 0$, $h = 1$: $u = \\dfrac{x - x_0}{h} = x$, and Newton\'s forward formula $y = y_0 + u\\Delta y_0 + \\dfrac{u(u-1)}{2!}\\Delta^2 y_0 + \\dfrac{u(u-1)(u-2)}{3!}\\Delta^3 y_0$ gives $y(x) = -1 + 2x + \\dfrac{x(x-1)}{2}(-2) + \\dfrac{x(x-1)(x-2)}{6}(-1)$.', m: '1 mark' },
+        { t: 'Expand: $-1 + 2x - (x^2 - x) - \\frac{1}{6}(x^3 - 3x^2 + 2x) = -1 + \\frac{8}{3}x - \\frac{1}{2}x^2 - \\frac{1}{6}x^3$.', m: '2 marks' },
+        { t: 'At $x = 1.5$ ($u = 1.5$): $y = -1 + 1.5(2) + \\dfrac{1.5(0.5)}{2}(-2) + \\dfrac{1.5(0.5)(-0.5)}{6}(-1) = -1 + 3 - 0.75 + 0.0625 = 1.3125$.', m: '1 mark' },
       ],
-      answer: '$\\boxed{y(1.5) = 1.3125}$, with $y(x) = -1 + \\frac{8}{3}x - \\frac{1}{2}x^2 - \\frac{1}{6}x^3$',
+      answer: '$\\boxed{y(x) = -1 + \\frac{8}{3}x - \\frac{1}{2}x^2 - \\frac{1}{6}x^3, \\quad y(1.5) = 1.3125}$',
       note: 'Trap: dropping the 3! in the third term (writing 6 for 3!), or dividing the last term by $2$ instead of $3!$.',
       explanation: [
         'The difference table is $y = -1, 1, 1, -2$; $\\Delta y = 2, 0, -3$; $\\Delta^2 y = -2, -3$; $\\Delta^3 y = -1$. The leading differences $2, -2, -1$ are all the formula needs.',

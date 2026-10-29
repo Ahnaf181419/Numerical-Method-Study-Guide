@@ -3,7 +3,7 @@ import { InlineMath } from 'react-katex';
 import { Rich } from './NotesView.jsx';
 import mathSnippet from '../lib/snippet.js';
 
-const plain = (t = '') => t.replace(/\$[^$]+\$/g, '…').replace(/\*\*/g, '');
+const plain = (t = '') => t.replace(/\$[^$]+\$/g, '…').replace(/\*/g, '');
 
 function buildIndex(modules) {
   const out = [];

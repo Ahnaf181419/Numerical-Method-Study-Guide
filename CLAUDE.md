@@ -48,7 +48,9 @@ tab.
 - `src/data/checks.js` — one "check yourself" question per lesson, keyed by module id + exact
   section heading. Every section needs one (a test enforces it).
 - `src/data/examPrep.js` (likely questions, traps), `src/data/pastPapers.js` (past finals with
-  model answers).
+  model answers), `src/data/fullAnswers.js` (a full exam-script answer for every past-paper item:
+  either the title of the lesson example that works it for the same marks, or a script; a test
+  checks the marks add up and the model answer's numbers appear).
 - `src/lib/solvers.js` — pure calculators returning `{ result, steps }` (steps are LaTeX). UI
   configs in `components/Solvers.jsx`.
 - `src/lib/data.test.js` — every LaTeX string compiles with KaTeX, quiz answer indices are valid,
