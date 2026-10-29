@@ -1,6 +1,30 @@
 // Elimination methods — Gauss elimination, partial pivoting, Gauss-Jordan.
 // Source: Elimination Methods slides (Raqeebir Rab), Balagurusamy Ch 7-8, the teacher's board notes, past papers.
 export const checks = {
+  "Start here: the problem this chapter solves": {
+    q: "Why replace substitution with elimination for larger systems?",
+    options: ["Elimination is mathematically more exact", "Substitution rewrites every later equation and becomes a bookkeeping disaster", "Substitution only works for one equation", "Elimination avoids arithmetic entirely"],
+    answer: 1,
+    explain: "Row operations act on a fixed grid in a fixed order, so the process scales to any size without the copying errors substitution invites.",
+  },
+  "Start here: the core idea": {
+    q: "Which is NOT a legal row operation?",
+    options: ["Swap two rows", "Multiply a row by a nonzero constant", "Subtract a multiple of one row from another", "Multiply a row by zero"],
+    answer: 3,
+    explain: "Multiplying by zero destroys the equation — its solutions change. The other three preserve the solution set exactly.",
+  },
+  "Start here: reading the symbols": {
+    q: "In $a_{23}$, which entry of the matrix is meant?",
+    options: ["Row 3, column 2", "Row 2, column 3", "The 23rd entry", "The diagonal entry"],
+    answer: 1,
+    explain: "First index = row, second = column: $a_{23}$ sits in row 2, column 3.",
+  },
+  "Start here: your first walk-through": {
+    q: "After $R_2' = R_2 - R_1$ on the walk-through system, row 2 becomes…",
+    options: ["$[\\,1 \\;\\; -1 \\,|\\, 1\\,]$", "$[\\,0 \\;\\; -2 \\,|\\, -2\\,]$", "$[\\,0 \\;\\; 2 \\,|\\, 2\\,]$", "$[\\,2 \\;\\; 0 \\,|\\, 4\\,]$"],
+    answer: 1,
+    explain: "Subtract entrywise: $1-1=0$, $-1-1=-2$, $1-3=-2$ — and writing that resulting row out is the habit the exam rewards.",
+  },
   'The system as an augmented matrix': {
     q: 'In Gauss elimination, what is the "pivot row"?',
     options: [
@@ -65,6 +89,53 @@ export default {
   wave: 'elim',
   sources: ['Elimination Methods slides (Raqeebir Rab)', 'Balagurusamy Ch 7-8', 'Past papers'],
   sections: [
+    {
+      heading: "Start here: the problem this chapter solves",
+      blocks: [
+        { type: "p", text: "Three friends share a bill. One pays for two teas and one cake, another for one tea and two cakes, and their totals differ. How much is a tea, how much a cake? That is a **system of linear equations**: several straight-line conditions that must all hold at once." },
+        { type: "p", text: "School substitution solves two unknowns fine. But a 4-unknown system (or a 40-unknown circuit) makes substitution a bookkeeping disaster: every substitution rewrites every later equation, and one slip corrupts everything below it." },
+        { type: "p", text: "Gaussian elimination is the systematic replacement: a fixed sequence of row operations that converts any system into a triangle, from which the answers fall out one at a time. It is the workhorse this whole half of the course leans on." },
+        { type: "list", items: [
+          "Write any system as an augmented matrix.",
+          "Eliminate below the pivots to reach triangular form.",
+          "Back-substitute to read off the solution.",
+          "Handle the two dangers: a zero pivot and round-off (partial pivoting).",
+        ] },
+      ],
+    },
+    {
+      heading: "Start here: the core idea",
+      blocks: [
+        { type: "p", text: "You may do three things to an equation without changing its solutions: **swap it with another, multiply it by a nonzero constant, subtract a multiple of another equation from it.** Elimination is just these moves, aimed at one target: make zeros spread below the diagonal." },
+        { type: "p", text: "Kill the first variable everywhere below row 1, then the second variable everywhere below row 2, and so on. What remains is an **upper triangle** — the last equation already contains only the last unknown, so it hands you its value immediately, and each row above hands you the next one on the way back up (**back-substitution**)." },
+        { type: "note", text: "The teacher's non-negotiable habits live here: **check the pivot at every pivot row** (is it zero? then swap — otherwise do not touch the order), and **always write the resulting row after every row operation**, never just the operation." },
+      ],
+    },
+    {
+      heading: "Start here: reading the symbols",
+      blocks: [
+        { type: "p", text: "Elimination is written entirely in matrix shorthand. The dictionary:" },
+        { type: "table", head: ["Symbol", "Meaning", "In words"], rows: [
+          ["$a_{ij}$", "the coefficient in row $i$, column $j$", "'a i j' — row first, column second"],
+          ["$[\\,A \\mid b\\,]$", "the augmented matrix: coefficients with the right-hand side bolted on", "the system, as a grid"],
+          ["$R_2' = R_2 - 2R_1$", "replace row 2 by row 2 minus twice row 1", "a row operation"],
+          ["pivot", "the entry currently used to create zeros beneath it", "the working number"],
+          ["upper triangular", "all zeros below the main diagonal", "the staircase shape"],
+        ] },
+        { type: "p", text: "If the pivot is zero the elimination stalls — the fix is swapping in a row with a nonzero entry (partial pivoting, covered later in the chapter)." },
+      ],
+    },
+    {
+      heading: "Start here: your first walk-through",
+      blocks: [
+        { type: "p", text: "Solve the tea-and-cake system the elimination way: $x + y = 3$ and $x - y = 1$ (you already know the answer — that is why this is the right place to learn the moves)." },
+        { type: "math", tex: "\\left[\\begin{array}{cc|c} 1 & 1 & 3 \\\\ 1 & -1 & 1 \\end{array}\\right]" },
+        { type: "p", text: "**Pivot check:** the first pivot is $a_{11} = 1$ — nonzero, so no swap is needed. Eliminate $x$ from row 2: $R_2' = R_2 - R_1$. Write the resulting row: $[\\,0 \\;\\; -2 \\,|\\, -2\\,]$." },
+        { type: "math", tex: "\\left[\\begin{array}{cc|c} 1 & 1 & 3 \\\\ 0 & -2 & -2 \\end{array}\\right] \\quad \\text{(upper triangular)}" },
+        { type: "p", text: "Back-substitute upwards: row 2 says $-2y = -2$, so $y = 1$. Row 1 then gives $x + 1 = 3$, so $x = 2$. Check in the original equations: $2 + 1 = 3$ ✓ and $2 - 1 = 1$ ✓. Every bigger system in the chapter is exactly this loop, repeated." },
+        { type: "exam", text: "Habit to carry into every answer: after each row operation print the full new row (or the whole matrix), and check each pivot before dividing by it — the marks are attached to the shown steps, not the final numbers alone." },
+      ],
+    },
     {
       heading: 'The system as an augmented matrix',
       blocks: [

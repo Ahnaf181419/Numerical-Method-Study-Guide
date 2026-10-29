@@ -222,3 +222,11 @@ test('roots walk-through numbers match the engine', () => {
   close(r.result.root, 3.1623, 1e-3);
   ['3.5', '3.25', '3.125', '3.1623'].forEach((n) => assert.ok(t.includes(n), `roots walk-through missing ${n}`));
 });
+
+test('elimination walk-through numbers match the engine', () => {
+  const t = sectionText('elimination', 'Start here: your first walk-through');
+  const r = s.gaussEliminate({ A: [[1, 1], [1, -1]], b: [3, 1] });
+  close(r.result.x[0], 2); close(r.result.x[1], 1);
+  assert.ok(t.includes('x = 2'), 'x value');
+  assert.ok(t.includes('y = 1'), 'y value');
+});
