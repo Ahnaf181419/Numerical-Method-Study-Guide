@@ -11,7 +11,7 @@ export default [
         rule: 'Answer any 3 (3 × 3 = 9)',
         items: [
           {
-            id: 'A1(a)', marks: 3, module: 'errors',
+            id: 'A1(a)', type: 'Theory — Prove', marks: 3, module: 'errors',
             q: 'Prove that the symmetric round-off error is one-half the chopping error at worst case.',
             answer: [
               'Chopping: the extra digits are simply discarded, so the error is always in one direction and at most one unit in the last place retained: $e_c = \\pm q$, $|e_c| \\le q$.',
@@ -21,7 +21,7 @@ export default [
             ],
           },
           {
-            id: 'A1(b)', marks: 3, module: 'differentiation',
+            id: 'A1(b)', type: 'Theory — Derive', marks: 3, module: 'differentiation',
             q: 'Derive the Richardson extrapolation formula using the three-point central difference formula for numerical differentiation.',
             answer: [
               'Three-point central difference: $D(h) = \\dfrac{f(x+h) - f(x-h)}{2h} = f\'(x) + \\dfrac{h^2}{6}f\'\'\'(x) + O(h^4)$.',
@@ -31,7 +31,7 @@ export default [
             ],
           },
           {
-            id: 'A1(c)', marks: 3, module: 'integration',
+            id: 'A1(c)', type: 'Theory — Derive', marks: 3, module: 'integration',
             q: "Derive Simpson's one-third rule from the general quadrature formula for numerical integration with equidistant ordinates.",
             answer: [
               'General quadrature with $n$ ordinates at spacing $h$: $\\int_a^b f(x)\\,dx \\approx \\sum_{i=0}^{n-1} w_i f(x_i)$, where the weights $w_i$ come from the Lagrange form of the interpolating polynomial.',
@@ -41,7 +41,7 @@ export default [
             ],
           },
           {
-            id: 'A1(d)', marks: 3, module: 'errors',
+            id: 'A1(d)', type: 'Theory — Define', marks: 3, module: 'errors',
             q: 'Describe the following terms: (i) Condition Number (ii) Deflation (iii) Accuracy.',
             answer: [
               '**Condition number**: a measure of how much the output of a function changes when the input changes. For $u = f(x)$, the relative condition number is $\\left|\\dfrac{x f\'(x)}{f(x)}\\right|$; a large value means the problem is ill-conditioned and the relative error in the answer is amplified.',
@@ -50,7 +50,7 @@ export default [
             ],
           },
           {
-            id: 'A1(e)', marks: 3, module: 'differentiation',
+            id: 'A1(e)', type: 'Theory — Explain', marks: 3, module: 'differentiation',
             q: 'Explain the necessity of numerical differentiation. Prove that the truncation error of the second order central difference formula is $O(h^2)$.',
             answer: [
               'Necessity: the function is often only known at discrete points (from a table or measurement), and the derivative of that data has no closed form; so the derivative must be approximated from the data itself.',
@@ -67,7 +67,7 @@ export default [
         rule: 'Answer any 4 (6 × 4 = 24)',
         items: [
           {
-            id: 'A2(a)', marks: 6, module: 'roots',
+            id: 'A2(a)', type: 'Numerical — Deflation', marks: 6, module: 'roots',
             q: 'The polynomial equation $x^4 - 5x^3 + 5x^2 + 5x - 6 = 0$ has a root at $x = -1$. Use synthetic division to find all remaining roots.',
             answer: [
               'Write the coefficients $1, -5, 5, 5, -6$ and bring down the leading 1.',
@@ -78,7 +78,7 @@ export default [
             ],
           },
           {
-            id: 'A2(b)', marks: 6, module: 'elimination',
+            id: 'A2(b)', type: 'Numerical — Gauss elimination (partial pivoting)', marks: 6, module: 'elimination',
             q: 'Solve the following system of linear equation using Gauss Elimination with Partial Pivoting (show all necessary steps of the computation): $x + 2y - 3z = -4$, $-9x + 8y + 7z = 28$, $4x + 5y + 6z = 32$.',
             answer: [
               'Augmented matrix $\\left[\\begin{array}{ccc|c} 1 & 2 & -3 & -4 \\\\ -9 & 8 & 7 & 28 \\\\ 4 & 5 & 6 & 32 \\end{array}\\right]$.',
@@ -90,7 +90,7 @@ export default [
             ],
           },
           {
-            id: 'A2(c)', marks: 6, module: 'differentiation',
+            id: 'A2(c)', type: 'Numerical — Differentiation (tabulated)', marks: 6, module: 'differentiation',
             q: 'The following table provides the distance travelled by a rocket at various time intervals: $t = 0, 25, 50, 75, 100, 125$ s and $s = 0, 32, 58, 78, 92, 100$ km. Use appropriate numerical differentiation methods for tabular functions to estimate both velocity and acceleration at $t = 0$ s and $t = 50$ s.',
             answer: [
               '$h = 25$ s. The first and last points admit only **forward/backward** differences; the middle points admit central differences.',
@@ -101,7 +101,7 @@ export default [
             ],
           },
           {
-            id: 'A2(d)', marks: 6, module: 'lu',
+            id: 'A2(d)', type: 'Numerical — Doolittle LU', marks: 6, module: 'lu',
             q: 'Solve the following system of linear equation using Do-Little LU Decomposition Method (show all necessary steps of the computation): $2x + y + z = 9$, $-4x + 3y + 2z = 20$, $6x + 5y + 7z = 35$.',
             answer: [
               'Factorise: $u_{11} = 2$, $u_{12} = 1$, $u_{13} = 1$; $l_{21} = -2$, $l_{31} = 3$; $u_{22} = 3 - (-2)(1) = 5$, $u_{23} = 2 - (-2)(1) = 4$; $l_{32} = \\frac{5 - (3)(1)}{5} = 0.4$; $u_{33} = 7 - (3)(1) - (0.4)(4) = 2.4$.',
@@ -112,7 +112,7 @@ export default [
             ],
           },
           {
-            id: 'A2(e)', marks: 6, module: 'integration',
+            id: 'A2(e)', type: 'Numerical — Simpson & Trapezoid', marks: 6, module: 'integration',
             q: "During takeoff, an aircraft's acceleration is denoted by $a(t) = 3.2 + 12t - 28t^2 + 32t^3 - 16t^4 + 3t^5$ m/s². Determine the velocity gained from $t = 0$ to $t = 1.75$ seconds during the takeoff roll. Use 7 intervals and choose the most appropriate numerical integration technique(s).",
             answer: [
               'The velocity gained is $v(1.75) - v(0) = \\int_0^{1.75} a(t)\\,dt$.',
@@ -124,7 +124,7 @@ export default [
             ],
           },
           {
-            id: 'A2(f)', marks: 6, module: 'integration',
+            id: 'A2(f)', type: 'Numerical — Romberg', marks: 6, module: 'integration',
             q: "Use Romberg's Integration to calculate $\\int_1^3 (2x^2 + x)e^{-x}\\,dx$ correct up to 4 decimal places. Compare the result with the true value 2.5226.",
             answer: [
               'Build the Romberg table: the first column is the trapezoidal rule with 1, 2, 4, 8 intervals; each later column is the Richardson extrapolation of the two to its left.',
@@ -141,7 +141,7 @@ export default [
         rule: 'Answer all (6 + 6 + 5 = 17)',
         items: [
           {
-            id: 'B1(a)', marks: 6, module: 'interpolation',
+            id: 'B1(a)', type: 'Theory — Prove', marks: 6, module: 'interpolation',
             q: 'Prove that $\\Delta - \\nabla = \\delta^2$, where the symbols have their usual meaning. Also, derive Lagrange\'s interpolation formula for interpolation with unequal intervals.',
             answer: [
               'With $\\Delta f(x) = f(x+h) - f(x)$, $\\nabla f(x) = f(x) - f(x-h)$ and $\\delta f(x) = f(x + h/2) - f(x - h/2)$:',
@@ -153,7 +153,7 @@ export default [
             ],
           },
           {
-            id: 'B1(b)', marks: 6, module: 'interpolation',
+            id: 'B1(b)', type: 'Numerical — Newton forward', marks: 6, module: 'interpolation',
             q: "A third-degree polynomial passes through the points $(0, -1)$, $(1, 1)$, $(2, 1)$ and $(3, -2)$. Find the polynomial by Newton's forward interpolation formula. Also, find the polynomial's value at $x = 1.5$.",
             answer: [
               'Difference table: $\\Delta y_0 = 2$, $\\Delta^2 y_0 = -2$, $\\Delta^3 y_0 = -1$; $p = \\frac{x - x_0}{h} = \\frac{x}{1}$.',
@@ -164,7 +164,7 @@ export default [
             ],
           },
           {
-            id: 'B1(c)', marks: 5, module: 'interpolation',
+            id: 'B1(c)', type: 'Numerical — Divided differences', marks: 5, module: 'interpolation',
             q: "Evaluate $f(9)$ by using Newton's divided difference interpolation formula from the data points: $x = 5, 7, 11, 13, 17$ and $f(x) = 150, 392, 1452, 2366, 5202$.",
             answer: [
               'First differences: $121,\\ 265,\\ 457,\\ 709$; second: $24,\\ 32,\\ 42$; third: $1,\\ 1$; fourth: $0$.',
@@ -186,7 +186,7 @@ export default [
         rule: 'Answer any 5 (4 × 5 = 20)',
         items: [
           {
-            id: 'Q1(a)', marks: 4, module: 'errors',
+            id: 'Q1(a)', type: 'Theory — Define', marks: 4, module: 'errors',
             q: 'Define significant digit, accuracy, and precision. Also, prove that $e_{r;xy} = |e_{r;x}| + |e_{r;y}|$, where the symbols have their usual meaning.',
             answer: [
               'A **significant digit** is any digit that is meaningful (not a leading or trailing placeholder zero).',
@@ -196,7 +196,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(b)', marks: 4, module: 'roots',
+            id: 'Q1(b)', type: 'Theory — Derive', marks: 4, module: 'roots',
             q: 'Derive the Secant iterative formula for finding the roots of a non-linear equation. Also, mention different stopping criteria for any iterative algorithm to find the roots of non-linear equations.',
             answer: [
               'Take two points $x_0, x_1$ and write the chord through $(x_0, f(x_0))$ and $(x_1, f(x_1))$; its intersection with the axis gives the next point.',
@@ -206,7 +206,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(c)', marks: 4, module: 'errors',
+            id: 'Q1(c)', type: 'Theory — Explain', marks: 4, module: 'errors',
             q: 'What do you understand by deflation and synthetic division? Write the algorithm to find all possible roots of a non-linear equation by using Newton\'s method.',
             answer: [
               '**Synthetic division** is Horner\'s scheme written as a table: bring down the leading coefficient, multiply by the root, add, repeat — the last entry is $p(r)$.',
@@ -216,7 +216,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(d)', marks: 4, module: 'elimination',
+            id: 'Q1(d)', type: 'Theory — Explain', marks: 4, module: 'elimination',
             q: 'Describe the four possible scenarios about the existence of solution(s) of a system of linear equations. Also, mention the condition for convergence of Jacobi iteration method and make comments on the strength of this condition.',
             answer: [
               'With $A$ the coefficient matrix and $b$ the constant vector: (i) $\\det A \\ne 0$ — a **unique** solution; (ii) $\\det A = 0$ and $b \\notin C(A)$ — **no** solution (inconsistent); (iii) $\\det A = 0$ and $b \\in C(A)$ — **infinitely many** solutions; (iv) $\\det A = 0$ with $A = 0$ and $b \\ne 0$ — still no solution.',
@@ -225,7 +225,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(e)', marks: 4, module: 'interpolation',
+            id: 'Q1(e)', type: 'Theory — Derive', marks: 4, module: 'interpolation',
             q: "Derive Lagrange's interpolation formula for interpolation with unequal intervals.",
             answer: [
               'Let $P(x)$ be the polynomial of degree $\\le n$ through the $n+1$ points $(x_i, y_i)$.',
@@ -235,7 +235,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(f)', marks: 4, module: 'integration',
+            id: 'Q1(f)', type: 'Theory — Derive', marks: 4, module: 'integration',
             q: "Derive Simpson's one-third rule from the general quadrature formula for numerical integration with equidistant ordinates.",
             answer: [
               'General quadrature: $\\int_a^b f(x)\\,dx \\approx \\sum w_i f(x_i)$, the weights coming from the Lagrange form of the interpolating polynomial.',
@@ -245,7 +245,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(g)', marks: 4, module: 'regression',
+            id: 'Q1(g)', type: 'Theory — Explain', marks: 4, module: 'regression',
             q: 'What is the difference between interpolation and regression? Prove that: (i) $\\mu^2 = 1 + \\tfrac{1}{4}\\delta^2$, and (ii) $E^{1/2} = \\mu + \\tfrac{1}{2}\\delta$, where the symbols have their usual meaning.',
             answer: [
               'Interpolation passes through **every** data point; regression finds the curve that best fits the data in the least-squares sense and needs more points than parameters.',
@@ -263,7 +263,7 @@ export default [
         rule: 'Answer any 6 (6 × 6 = 36)',
         items: [
           {
-            id: 'Q2(a)', marks: 6, module: 'roots',
+            id: 'Q2(a)', type: 'Numerical — Bisection', marks: 6, module: 'roots',
             q: 'Find the largest root of the equation $x^2 - 4x - 10 = 0$ using the Bisection method. Use the formula for the search bracket to make the initial guesses and continue the bisection method for three iterations only.',
             answer: [
               'Search bracket: for $x^2 - 4x - 10 = 0$ the roots are $\\dfrac{4 \\pm \\sqrt{16 + 40}}{2}$, so the largest root lies between 5 and 6 ($f(5) = -5$, $f(6) = 2$).',
@@ -274,7 +274,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(b)', marks: 6, module: 'roots',
+            id: 'Q2(b)', type: 'Numerical — Horner', marks: 6, module: 'roots',
             q: 'Evaluate the polynomial $f(x) = x^4 + 3x^2 - 2x$ by using Horner\'s rule at $x = 3$. Also, find the Quotient polynomial $q(x)$ such that $p(x) = (x - x_0)q(x)$, where $p(x)$ is $x^4 + 7x^3 + 5x^2 - 31x - 30 = 0$ and it has a root at $x_0 = -3$.',
             answer: [
               'Horner for $x^4 + 3x^2 - 2x$ at $x = 3$, writing the missing coefficients as zeros: $b_0 = 1$, $b_1 = 0 + 3(1) = 3$, $b_2 = 3 + 3(3) = 12$, $b_3 = -2 + 3(12) = 34$, $b_4 = 0 + 3(34) = 102$.',
@@ -284,7 +284,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(c)', marks: 6, module: 'elimination',
+            id: 'Q2(c)', type: 'Numerical — Matrix inversion', marks: 6, module: 'elimination',
             q: 'Solve the following system of linear equations by using the Matrix Inversion method. Note: if you use any other method, you may still receive partial marks: $2x + y + z = 7$, $4x + 2y + 3z = 4$, $x - y + z = 0$.',
             answer: [
               'Form $A = \\begin{bmatrix} 2 & 1 & 1 \\\\ 4 & 2 & 3 \\\\ 1 & -1 & 1 \\end{bmatrix}$ and $b = \\begin{bmatrix} 7 \\\\ 4 \\\\ 0 \\end{bmatrix}$, and find $A^{-1}$ by Gauss-Jordan (augment $A$ with $I$).',
@@ -294,7 +294,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(d)', marks: 6, module: 'interpolation',
+            id: 'Q2(d)', type: 'Numerical — Difference table', marks: 6, module: 'interpolation',
             q: 'Find the missing values in the following interpolation table: $x = 0, 2, 4, 6, 8, 10$ and $f(x) = 2, \\cdot, 10, 17, \\cdot, 37$.',
             answer: [
               'Build the difference table with the unknown entries $A$ (at $x = 2$) and $B$ (at $x = 8$), with $h = 2$.',
@@ -304,7 +304,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(e)', marks: 6, module: 'regression',
+            id: 'Q2(e)', type: 'Numerical — Power-law fit', marks: 6, module: 'regression',
             q: 'Fit a power function model of the form $y = ax^b$ with the data $x = 1, 2, 3, 4, 5$ and $y = 0.5, 4, 13.5, 32, 62.5$.',
             answer: [
               'Take logarithms: $\\ln y = \\ln a + b\\ln x$, so fit a straight line to $(\\ln x, \\ln y)$.',
@@ -315,7 +315,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(f)', marks: 6, module: 'interpolation',
+            id: 'Q2(f)', type: 'Numerical — Newton forward', marks: 6, module: 'interpolation',
             q: "A third-degree polynomial passes through the points $(0, -1)$, $(1, 1)$, $(2, 1)$ and $(3, -2)$. Find the polynomial by Newton's forward interpolation formula. Also, determine the polynomial's value at $x = 1$.",
             answer: [
               'Difference table: $\\Delta y_0 = 2$, $\\Delta^2 y_0 = -2$, $\\Delta^3 y_0 = -1$; $p = x$.',
@@ -325,7 +325,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(g)', marks: 6, module: 'differentiation',
+            id: 'Q2(g)', type: 'Numerical — Differentiation (tabulated)', marks: 6, module: 'differentiation',
             q: 'The following table provides the distance travelled by a vehicle at various time intervals. Estimate both velocity and acceleration at $t = 5$ sec and $t = 13$ sec: $t = 3, 5, 7, 9, 11, 13$ s and $s = 7, 8, 12, 19, 32, 50$ km.',
             answer: [
               '$h = 2$ s. At $t = 5$ only forward differences exist, so use the three-point forward formula: $v(5) = \\dfrac{-3s(5) + 4s(7) - s(9)}{2h} = \\dfrac{-24 + 48 - 19}{4} = 1.25$ km/s.',
@@ -335,7 +335,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(h)', marks: 6, module: 'integration',
+            id: 'Q2(h)', type: 'Numerical — Weddle', marks: 6, module: 'integration',
             q: "Evaluate $\\int_0^2 (2x - x^2)\\,dx$ by using Weddle's rule, taking seven ordinates. Also, compare the result with the exact value and determine the error.",
             answer: [
               'Seven ordinates over $[0, 2]$ give $h = 2/6 = 1/3$.',
@@ -352,7 +352,7 @@ export default [
         rule: 'Answer all (7 + 7 = 14)',
         items: [
           {
-            id: 'Q3(a)', marks: 7, module: 'gradient',
+            id: 'Q3(a)', type: 'Theory — Derive', marks: 7, module: 'gradient',
             q: 'Derive the expression of parameter update for polynomial regression (with degree = 4) using gradient descent algorithm. Also, explain why simultaneous update is necessary and how it is implemented in this case.',
             answer: [
               'With $H_\\theta(x) = \\theta_0 + \\theta_1 x + \\theta_2 x^2 + \\theta_3 x^3 + \\theta_4 x^4$ and cost $J(\\theta) = \\frac{1}{2m}\\sum (H_\\theta(x^{(i)}) - y^{(i)})^2$:',
@@ -364,7 +364,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(b)', marks: 7, module: 'gradient',
+            id: 'Q3(b)', type: 'Numerical — Gradient descent', marks: 7, module: 'gradient',
             q: 'Demonstrate 2nd degree polynomial regression analysis (without variable conversion) by using gradient descent algorithm on the data $(x,y) = (0,0), (2,5), (3,6), (5,9), (4,7)$. Use batch update mode with the initial parameters $\\theta_0 = 2$, $\\theta_1 = 1$, $\\theta_2 = 3$, learning rate $\\alpha = 0.2$. Continue the process for one epoch only.',
             answer: [
               '$H_\\theta(x) = \\theta_0 + \\theta_1 x + \\theta_2 x^2$ with $(2, 1, 3)$; $m = 5$, $\\alpha = 0.2$.',
@@ -387,7 +387,7 @@ export default [
         rule: 'Answer any 4 (4 × 4 = 16)',
         items: [
           {
-            id: 'Q1(a)', marks: 4, module: 'roots',
+            id: 'Q1(a)', type: 'Theory — Discuss', marks: 4, module: 'roots',
             q: 'Discuss the situations where the fixed-point iteration process may not converge to a solution.',
             answer: [
               'Fixed-point iteration $x = g(x)$ converges when $|g\'(x)| < 1$ at the root (and stays below 1 in the interval).',
@@ -397,7 +397,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(b)', marks: 4, module: 'interpolation',
+            id: 'Q1(b)', type: 'Theory — Compare', marks: 4, module: 'interpolation',
             q: 'Compare the pros and cons of the Newton divided difference and Lagrange interpolation techniques.',
             answer: [
               '**Lagrange**: symmetric in the data points and easy to write down, but every evaluation redoes all $n+1$ products, so it is slow for repeated use.',
@@ -407,7 +407,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(c)', marks: 4, module: 'roots',
+            id: 'Q1(c)', type: 'Theory — Explain', marks: 4, module: 'roots',
             q: "How does Horner's Rule improve the accuracy for evaluating a polynomial.",
             answer: [
               'Horner\'s rule evaluates $p(x) = a_0 + a_1x + \\dots + a_nx^n$ as $p(x) = (\\dots((a_0 + a_1x)x + a_2)x \\dots)x + a_n$.',
@@ -417,7 +417,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(d)', marks: 4, module: 'errors',
+            id: 'Q1(d)', type: 'Numerical — Error propagation', marks: 4, module: 'errors',
             q: 'Find the relative error for calculating $u = 5xy^2/z^3$, where $\\Delta x = \\Delta y = \\Delta z = 1$ and $x = y = z = 1$.',
             answer: [
               '$u = 5xy^2z^{-3}$, so $u = 5$ at $x = y = z = 1$.',
@@ -427,7 +427,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(e)', marks: 4, module: 'differentiation',
+            id: 'Q1(e)', type: 'Theory — Derive', marks: 4, module: 'differentiation',
             q: 'Derive the three-point forward difference formula for tabular function in the context of numerical differentiation.',
             answer: [
               'Expand about $x_0$: $f(x_0+h) = f + hf\' + \\dfrac{h^2}{2}f\'\' + \\dfrac{h^3}{6}f\'\'\' + \\dots$ and $f(x_0+2h) = f + 2hf\' + 2h^2f\'\' + \\dfrac{4}{3}h^3f\'\'\' + \\dots$.',
@@ -437,7 +437,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(f)', marks: 4, module: 'differences',
+            id: 'Q1(f)', type: 'Theory — Prove', marks: 4, module: 'differences',
             q: 'Prove that (i) $\\Delta - \\nabla = \\delta^2$, (ii) $\\mu^2 = 1 + \\tfrac{1}{4}\\delta^2$, where the symbols have their usual meaning.',
             answer: [
               '(i) $\\Delta f(x) = f(x+h) - f(x)$ and $\\nabla f(x) = f(x) - f(x-h)$, so $(\\Delta - \\nabla)f(x) = f(x+h) - 2f(x) + f(x-h)$.',
@@ -453,7 +453,7 @@ export default [
         rule: 'Answer any 6 (6 × 6 = 36)',
         items: [
           {
-            id: 'Q2(a)', marks: 6, module: 'roots',
+            id: 'Q2(a)', type: 'Numerical — Bisection', marks: 6, module: 'roots',
             q: 'Estimate the root of the equation $f(x) = x^3 - 9x + 1 = 0$ using Bisection method correct upto 2 significant digits where $x \\in [2, 3]$.',
             answer: [
               '$f(2) = -9$ and $f(3) = 1$, so a root lies in $[2, 3]$.',
@@ -465,7 +465,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(b)', marks: 6, module: 'iterative',
+            id: 'Q2(b)', type: 'Numerical — Jacobi', marks: 6, module: 'iterative',
             q: 'Solve the following System of Linear Equations by iterating four times the Jacobi Method. Consider $x_0 = y_0 = z_0 = 0$: $2x - y = 1$, $-x + 2y - z = 0$, $-y + 2z = 1$.',
             answer: [
               'Isolate: $x = \\tfrac{1}{2}(1 + y)$, $y = \\tfrac{1}{2}(x + z)$, $z = \\tfrac{1}{2}(1 + y)$.',
@@ -477,7 +477,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(c)', marks: 6, module: 'roots',
+            id: 'Q2(c)', type: 'Numerical — Newton-Raphson', marks: 6, module: 'roots',
             q: 'Apply Newton Raphson method to find the root of the given non linear equation $x^3 - 4x^2 + x + 6 = 0$, using an initial estimation of 0, and iterate the method until the absolute error $E_a \\le 0.01$.',
             answer: [
               '$f(x) = x^3 - 4x^2 + x + 6$, $f\'(x) = 3x^2 - 8x + 1$, so $x_{i+1} = x_i - \\dfrac{f(x_i)}{f\'(x_i)}$.',
@@ -489,7 +489,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(d)', marks: 6, module: 'integration',
+            id: 'Q2(d)', type: 'Numerical — Trapezoid & Simpson', marks: 6, module: 'integration',
             q: 'Implement composite Trapezoidal and Simpson\'s 1/3 Rule to find the integral $\\int_0^1 \\dfrac{1}{1+x^2}\\,dx$ by taking five subintervals.',
             answer: [
               '$h = 0.2$; $f(x_i) = \\frac{1}{1+x_i^2}$ gives $1,\\ 0.961538,\\ 0.862069,\\ 0.735294,\\ 0.609756,\\ 0.5$.',
@@ -502,7 +502,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(e)', marks: 6, module: 'differentiation',
+            id: 'Q2(e)', type: 'Numerical — Differentiation (central)', marks: 6, module: 'differentiation',
             q: 'Use three points central difference formula to estimate the 2nd order derivative of $f(x) = \\dfrac{1}{1+x^2}$ at $x = 0.5$, with step size $h = 0.01$. Compare the result with the true value.',
             answer: [
               'Three-point central difference for the second derivative: $f\'\'(x) \\approx \\dfrac{f(x+h) - 2f(x) + f(x-h)}{h^2}$.',
@@ -513,7 +513,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(f)', marks: 6, module: 'lu',
+            id: 'Q2(f)', type: 'Numerical — LU decomposition', marks: 6, module: 'lu',
             q: 'Factorize the following system of linear equations in Lower Triangular (L) matrix and Upper Triangular (U) matrix using Gauss Elimination method: $x + y + z = 3$, $2x + 3y + 4z = 11$, $4x + 9y + 16z = 41$.',
             answer: [
               'Augmented matrix $\\left[\\begin{array}{ccc|c} 1 & 1 & 1 & 3 \\\\ 2 & 3 & 4 & 11 \\\\ 4 & 9 & 16 & 41 \\end{array}\\right]$.',
@@ -524,7 +524,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(g)', marks: 6, module: 'interpolation',
+            id: 'Q2(g)', type: 'Numerical — Interpolation', marks: 6, module: 'interpolation',
             q: 'The following table gives the sales of Tex company for the five years. Estimate the sales for the year 1986 using 2nd degree Newton Gregory forward interpolating polynomial. [Your answer must include Forward Difference table.] Year: 1985, 1987, 1989, 1991, 1993; Sales (thousands): 40, 43, 48, 52, 57.',
             answer: [
               'The years are not equally spaced (spacing 2 years) but the sales are given at two-year steps, so take $x = $ year index with $h = 2$.',
@@ -535,7 +535,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(h)', marks: 6, module: 'roots',
+            id: 'Q2(h)', type: 'Numerical — Horner', marks: 6, module: 'roots',
             q: "Evaluate the polynomial $p(x) = x^3 - 6x^2 + 11x - 6 = 0$ using Horner's rule at $x = 2$ and find the quotient polynomial $q(x)$ of $p(x)$ such that $p(x) = (x - 2)q(x)$, where $p(x)$ has a root at $x = 2$.",
             answer: [
               'Horner: $b_0 = 1$, $b_1 = -6 + 2(1) = -4$, $b_2 = 11 + 2(-4) = 3$, $b_3 = -6 + 2(3) = 0$.',
@@ -551,7 +551,7 @@ export default [
         rule: 'Answer any 3 (6 × 3 = 18)',
         items: [
           {
-            id: 'Q3(a)', marks: 6, module: 'differentiation',
+            id: 'Q3(a)', type: 'Theory — Justify', marks: 6, module: 'differentiation',
             q: 'Justify why the Richardson extrapolation method outperforms the three-point forward difference formula in generating accurate estimates of derivatives.',
             answer: [
               'Three-point forward difference: $D(h) = f\'(x) + \\dfrac{h^2}{3}f\'\'\'(x) + O(h^3)$ — the error is $O(h^2)$.',
@@ -561,7 +561,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(b)', marks: 6, module: 'roots',
+            id: 'Q3(b)', type: 'Numerical — Newton-Raphson', marks: 6, module: 'roots',
             q: 'You are designing a spherical tank to hold water for a small village in a developing country. The volume of liquid it can hold can be computed as $V = (\\pi h^2(3R - h))/3$, where $V$ is volume [m³], $h$ is the depth of the water in the tank [m], and $R$ is the tank radius [m]. If $R = 3$ m, to what depth must the tank be filled so that it holds 30 m³? Based on the above-mentioned problem, which method will be the best choice to find the optimal depth of the tank. Analyze your answer based on error convergence rate of numerical methods for System of Non-linear equation. Note that an initial guess of $h$ will always converge.',
             answer: [
               'Substituting $V = 30$ and $R = 3$: $30 = \\dfrac{\\pi h^2(9 - h)}{3}$, i.e. $h^3 - 9h^2 + \\dfrac{90}{\\pi} = 0$.',
@@ -572,7 +572,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(c)', marks: 6, module: 'regression',
+            id: 'Q3(c)', type: 'Numerical — Least squares', marks: 6, module: 'regression',
             q: 'On average, the surface area $A$ of human beings is related to weight $W$ and height $H$. Measurements on a number of individuals of height 180 cm and different weights (kg) gives values of $A$ (m²): $W = 70, 75, 77, 80, 82, 84, 87, 90$ and $A = 2.10, 2.12, 2.15, 2.20, 2.22, 2.23, 2.26, 2.30$. (i) Justify that $A = a + bW$ fits the above data reasonably well. (ii) Evaluate the constants $a$ and $b$.',
             answer: [
               'A straight line is a reasonable fit because the points lie close to a line (the correlation between $W$ and $A$ is near 1).',
@@ -583,7 +583,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(d)', marks: 6, module: 'iterative',
+            id: 'Q3(d)', type: 'Theory — Explain', marks: 6, module: 'iterative',
             q: 'Interpret with an example; convergence rate of Gauss-Seidel is more rapid than Jacobi\'s method for solving linear system.',
             answer: [
               'Example: $5x + 2y + z = 12$, $x + 4y + 2z = 15$, $x + 2y + 5z = 20$ — diagonally dominant, so both converge.',
@@ -593,7 +593,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(e)', marks: 6, module: 'iterative',
+            id: 'Q3(e)', type: 'Numerical — Jacobi (divergence)', marks: 6, module: 'iterative',
             q: 'Consider a two equation system $a_{11}x_1 + a_{12}x_2 = b_1$, $a_{21}x_1 + a_{22}x_2 = b_2$. Show that sufficient conditions for convergence of Gauss Seidel method are $|a_{11}| > |a_{12}|$ and $|a_{22}| > |a_{21}|$.',
             answer: [
               'Write $x_1 = F(x_1, x_2) = \\dfrac{b_1 - a_{12}x_2}{a_{11}}$ and $x_2 = G(x_1, x_2) = \\dfrac{b_2 - a_{21}x_1}{a_{22}}$.',
@@ -615,7 +615,7 @@ export default [
         rule: 'Answer any 4 (4 × 4 = 16)',
         items: [
           {
-            id: 'Q1(a)', marks: 4, module: 'roots',
+            id: 'Q1(a)', type: 'Theory — Discuss', marks: 4, module: 'roots',
             q: 'Describe the limitations of the fixed point iteration method for solving nonlinear equations.',
             answer: [
               'Convergence is not guaranteed — it needs $|g\'(x)| < 1$ near the root, and the equation can always be rearranged badly.',
@@ -625,7 +625,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(b)', marks: 4, module: 'roots',
+            id: 'Q1(b)', type: 'Theory — Explain', marks: 4, module: 'roots',
             q: 'How is synthetic division used to determine the multiple roots of a polynomial?',
             answer: [
               'Synthetic division evaluates $p(x)$ at a number $r$ and simultaneously produces the quotient $q(x)$ with $p(x) = (x - r)q(x) + p(r)$.',
@@ -635,7 +635,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(c)', marks: 4, module: 'errors',
+            id: 'Q1(c)', type: 'Theory — Explain', marks: 4, module: 'errors',
             q: 'Explain the significance of condition number in numerical computing.',
             answer: [
               'The condition number measures how much the output changes when the input changes: for $u = f(x)$, the relative condition number is $\\left|\\dfrac{x f\'(x)}{f(x)}\\right|$.',
@@ -645,7 +645,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(d)', marks: 4, module: 'errors',
+            id: 'Q1(d)', type: 'Numerical — Error propagation', marks: 4, module: 'errors',
             q: 'Find the relative error for calculating $u = 5xy^2/z^3$, where $\\Delta x = \\Delta y = \\Delta z = 1$ and $x = y = z = 1$.',
             answer: [
               '$u = 5xy^2z^{-3} = 5$.',
@@ -655,7 +655,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(e)', marks: 4, module: 'differentiation',
+            id: 'Q1(e)', type: 'Theory — Derive', marks: 4, module: 'differentiation',
             q: 'Derive the three point forward difference formula for tabular function in the context of numerical differentiation.',
             answer: [
               'Expand $f(x_0+h)$ and $f(x_0+2h)$ about $x_0$ in Taylor series and combine $-3f(x_0) + 4f(x_0+h) - f(x_0+2h)$.',
@@ -665,7 +665,7 @@ export default [
             ],
           },
           {
-            id: 'Q1(f)', marks: 4, module: 'differences',
+            id: 'Q1(f)', type: 'Theory — Prove', marks: 4, module: 'differences',
             q: 'Prove that (i) $\\Delta - \\nabla = \\delta^2$, (ii) $\\Delta = \\nabla E = E\\nabla = \\delta E^{1/2}$, where the symbols have their usual meaning.',
             answer: [
               '(i) As shown before: $(\\Delta - \\nabla)f(x) = f(x+h) - 2f(x) + f(x-h) = \\delta^2 f(x)$.',
@@ -681,7 +681,7 @@ export default [
         rule: 'Answer any 6 (6 × 6 = 36)',
         items: [
           {
-            id: 'Q2(a)', marks: 6, module: 'roots',
+            id: 'Q2(a)', type: 'Numerical — Bisection', marks: 6, module: 'roots',
             q: 'Estimate the root of the equation $f(x) = e^x - 3x = 0$ using Bisection method correct to 2 decimal places where $x \\in [1.5, 1.6]$.',
             answer: [
               '$f(1.5) = 4.4817 - 4.5 = -0.0183$ and $f(1.6) = 4.9530 - 4.8 = 0.1530$, so a root lies in $[1.5, 1.6]$.',
@@ -693,7 +693,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(b)', marks: 6, module: 'iterative',
+            id: 'Q2(b)', type: 'Numerical — Gauss-Seidel', marks: 6, module: 'iterative',
             q: 'Solve the following system of Linear Equations correct up to 2 decimal places by applying Gauss-Seidel Method. Consider $x_0 = 0$: $10x + y + z = 12$, $2x + 10y + z = 13$, $2x + 2y + 10z = 14$.',
             answer: [
               'Dominance check: $|10| > 2$, $|10| > 3$, $|10| > 4$ — diagonally dominant, so the iteration converges.',
@@ -705,7 +705,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(c)', marks: 6, module: 'roots',
+            id: 'Q2(c)', type: 'Numerical — Secant', marks: 6, module: 'roots',
             q: 'Implement Secant method to find the root of the equation $x^3 - 8x - 4 = 0$, which lies between 3.0 and 4.0 and iterate the method until the absolute error $E_a \\le 0.01$.',
             answer: [
               '$f(3) = -1$, $f(4) = 28$, so a root lies in $[3, 4]$.',
@@ -716,7 +716,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(d)', marks: 6, module: 'integration',
+            id: 'Q2(d)', type: 'Numerical — Integration', marks: 6, module: 'integration',
             q: 'Find the value of integral $\\int_0^1 e^{-x^2}\\,dx$ correct upto 4 decimal places using Romberg integration method.',
             answer: [
               'Build the Romberg table: the first column is the trapezoidal rule with 1, 2, 4, 8, 16 subintervals; each later column extrapolates the two to its left.',
@@ -727,7 +727,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(e)', marks: 6, module: 'interpolation',
+            id: 'Q2(e)', type: 'Numerical — Lagrange', marks: 6, module: 'interpolation',
             q: 'The acceleration due to gravity at an altitude $y$ above the surface of the earth is given in the following table: $y = 0, 30000, 60000, 90000, 120000$ m and $g = 9.8100, 9.7487, 9.6879, 9.6278, 9.5682$ m/s². Compute $g$ at $y = 55000$ employing 2nd order Lagrange Polynomial.',
             answer: [
               'With three points $y_0 = 30000$, $y_1 = 60000$, $y_2 = 90000$ and $x = 55000$:',
@@ -738,7 +738,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(f)', marks: 6, module: 'elimination',
+            id: 'Q2(f)', type: 'Numerical — Gauss elimination', marks: 6, module: 'elimination',
             q: 'Three Tourists planned to visit three places. The distances of the three places are $x, y, z$. Tourist 1 paid $18, $7, $9$ to visit $x, y, z$ places respectively by train, Tourist 2 paid $8, $17, $7$ by bus and Tourist 3 paid $10, $9, $20$ by taxi. The total amount paid by tourists 1, 2, 3 are $165, $170, $180$ respectively. Formulate the appropriate system of linear equations to determine the distances of three places from the hotels using Gauss Elimination method. (Show all steps of the computation.)',
             answer: [
               'The system is $18x + 7y + 9z = 165$, $8x + 17y + 7z = 170$, $10x + 9y + 20z = 180$.',
@@ -750,7 +750,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(g)', marks: 6, module: 'differentiation',
+            id: 'Q2(g)', type: 'Numerical — Differentiation (tabulated)', marks: 6, module: 'differentiation',
             q: 'The following table displays the landing position of a jet fighter on an aircraft carrier\'s runway, tracked by time: $t = 0, 0.52, 1.04, 1.75, 2.37, 3.25, 3.83$ s and $x = 153, 185, 208, 249, 261, 271, 273$ m. Where $x$ is the distance from the end of the carrier. Use appropriate numerical differentiation method for tabular function to approximate the velocity and acceleration at $t = 3.25$ second.',
             answer: [
               'At $t = 3.25$ the point is in the interior of the table, so use the **central** difference: $h$ is not uniform here, so use the three-point non-uniform (Newton) forward/backward formula, or the central difference with the neighbours $t = 2.37$ and $t = 3.83$.',
@@ -760,7 +760,7 @@ export default [
             ],
           },
           {
-            id: 'Q2(h)', marks: 6, module: 'differentiation',
+            id: 'Q2(h)', type: 'Numerical — Euler', marks: 6, module: 'differentiation',
             q: "Evaluate the Ordinary Differential Equation $\\dfrac{dy}{dx} = x^3 + y$ to estimate $y(0.04)$ with initial condition $x = 0$, $y = 1$ using Euler's method for step size $h = 0.01$.",
             answer: [
               "Euler's method: $y_{n+1} = y_n + h\\,f(x_n, y_n)$ with $f(x, y) = x^3 + y$.",
@@ -778,7 +778,7 @@ export default [
         rule: 'Answer any 3 (6 × 3 = 18)',
         items: [
           {
-            id: 'Q3(a)', marks: 6, module: 'differentiation',
+            id: 'Q3(a)', type: 'Theory — Justify', marks: 6, module: 'differentiation',
             q: 'Justify why the Richardson extrapolation method outperforms the three-point forward difference formula in generating accurate estimates of derivatives.',
             answer: [
               'Three-point forward difference has truncation error $O(h^2)$: $D(h) = f\'(x) + \\frac{h^2}{3}f\'\'\'(x) + O(h^3)$.',
@@ -788,7 +788,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(b)', marks: 6, module: 'integration',
+            id: 'Q3(b)', type: 'Numerical — Integration', marks: 6, module: 'integration',
             q: 'The wind force distributed against the side of a skyscraper is measured as $(l_0, F_0), (l_1, F_1), \\dots, (l_6, F_6)$, where $l$ is height in meter and $F$ is wind force in N/m. Show that total net force using the composite Trapezoidal rule is $I = \\frac{h}{2}(F_0 + 2\\sum_{i=2}^{5} F_i + F_6)$, where $h$ is interval size.',
             answer: [
               'The composite trapezoidal rule applies the single trapezoidal rule to each pair of consecutive ordinates:',
@@ -798,7 +798,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(c)', marks: 6, module: 'regression',
+            id: 'Q3(c)', type: 'Numerical — Least squares', marks: 6, module: 'regression',
             q: 'On average, the surface area $A$ of human beings is related to weight $W$ and height $H$. Measurements on individuals of height 180 cm and different weights give $W = 70, 75, 77, 80, 82, 84, 87, 90$ kg and $A = 2.10, 2.12, 2.15, 2.20, 2.22, 2.23, 2.26, 2.30$ m². (i) Justify that a power law $A = aW^b$ fits the above data reasonably well. (ii) Evaluate the constant $a$ and $b$.',
             answer: [
               'A power law is a straight line in log-log space: $\\ln A = \\ln a + b\\ln W$, so plot $\\ln A$ against $\\ln W$ — the points are nearly collinear, which justifies the model.',
@@ -809,7 +809,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(d)', marks: 6, module: 'differentiation',
+            id: 'Q3(d)', type: 'Theory — Analyze', marks: 6, module: 'differentiation',
             q: 'Analyze the underlying principle of Heun\'s Method in order to improve the accuracy of the solution for Ordinary Differentiation equations.',
             answer: [
               'Euler\'s method uses the slope at the start of the interval, so the error is $O(h)$.',
@@ -820,7 +820,7 @@ export default [
             ],
           },
           {
-            id: 'Q3(e)', marks: 6, module: 'iterative',
+            id: 'Q3(e)', type: 'Numerical — Jacobi (divergence)', marks: 6, module: 'iterative',
             q: 'Consider a two equation system $a_{11}x_1 + a_{12}x_2 = b_1$, $a_{21}x_1 + a_{22}x_2 = b_2$. Show that sufficient conditions for convergence of Gauss Seidel method are $|a_{11}| > |a_{12}|$ and $|a_{22}| > |a_{21}|$.',
             answer: [
               'Write the system as $x_1 = \\dfrac{b_1 - a_{12}x_2}{a_{11}}$ and $x_2 = \\dfrac{b_2 - a_{21}x_1}{a_{22}}$.',

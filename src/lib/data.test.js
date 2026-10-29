@@ -96,3 +96,10 @@ test('every example carries a mark allocation that adds up', () => {
       assert.ok(e.question && e.answer, `${m.id}: ${e.title} is missing the question or the answer`);
     }
 });
+
+test('every past-paper question carries a Theory/Numerical type', () => {
+  for (const p of papers)
+    for (const set of p.sets)
+      for (const it of set.items)
+        assert.ok(typeof it.type === 'string' && /^(Theory|Numerical) — /.test(it.type), `${p.title} ${it.id}: missing type`);
+});
