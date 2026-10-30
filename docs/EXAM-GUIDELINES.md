@@ -180,6 +180,32 @@ Extracted text lives in `docs/sources/` (the slides and the class notes — comm
 4. Every worked numeric answer must be reproducible by a solver in `src/lib/solvers.js`,
    with a test asserting the printed answer.
 
+### 8.1 Drill examples: the book numbers and the site examples that replace them
+
+Shuvo Sir's sheet names drill examples by book number (`4.4`, `9.1`, …). The site works
+**every one of those methods**, but with the past-paper or slide examples instead, so that
+the student practises the questions that actually come in the exam. The book itself is still
+the place to drill those exact numbers.
+
+| Book drill example | Method | On the site: chapter → worked example |
+|---|---|---|
+| 4.4 – 4.8 | Newton Forward Interpolation | Ch 7 Interpolation → *Newton forward interpolation of the cubic through $(0,-1)$, $(1,1)$, $(2,1)$, $(3,-2)$ at $x = 1.5$* (also Fall 2024 B1(b)) |
+| 4.9 – 4.10 | Newton Backward Interpolation | Ch 7 → *Newton's backward interpolation: $f(7.5)$ from $f(x) = x^3$* |
+| 6.5 | Central Difference Interpolation | Ch 7 → *Stirling's formula: $Y(28)$ from five equally spaced values* |
+| 6.1, 6.3 | Gauss Forward | Ch 7 → *Gauss's forward formula: $y(30)$ from five equally spaced values* |
+| 6.2, 6.4 | Gauss Backward | Ch 7 → *Gauss's backward formula: the sales for 1966* |
+| 6.8 – 6.9 | Stirling Interpolation | Ch 7 → *Stirling's formula: $Y(28)$ from five equally spaced values* |
+| 5.1 – 5.4 | Newton Divided Difference | Ch 7 → *Divided difference table for $x = 1, 3, 4, 6, 10$* (Shanker Rao Ex 5.2) |
+| 5.5 – 5.6, Ex 5.1 | Lagrange Interpolation | Ch 7 → *Lagrange's interpolation formula for unequal intervals, and $f(2)$* |
+| 7.1 – 7.3 | Inverse Interpolation | Ch 7 → *Inverse interpolation: find $x$ for a given $y$* |
+| 3.24 | Finding Error in Data | Ch 6 Finite Differences → *Locate and correct the error in a table of values* |
+| 9.1 – 9.3 | Trapezoidal Rule | Ch 9 Integration → *Composite trapezoidal and Simpson's one-third rule for $\int_0^1 \frac{dx}{1+x^2}$* (also Fall 2023 Q2(d)) |
+| 9.4 – 9.6 | Simpson 1/3 Rule | Ch 9 → *Simpson's one-third rule for $\int_0^{0.6} e^x\,dx$* (also Fall 2024 A2(e)) |
+| 9.7 – 9.8 | Simpson 3/8 Rule | Ch 9 → *Simpson's three-eighths rule for $\int_0^1 \frac{dx}{1+x^2}$* |
+| 9.9 – 9.10 | Weddle's Rule | Ch 9 → *Weddle's rule for $\int_0^3 (2x - x^2)\,dx$* (also Spring 2024 Q2(h)) |
+| 11.1 – 11.6 (Balagurusamy Ch 11) | Numerical Differentiation | Ch 8 → *Velocity and acceleration of the rocket at t = 0 s and t = 50 s* (Fall 2024 A2(c), Spring 2024 Q2(g)) |
+| 10.1, 10.2, 10.4, 10.5 (Balagurusamy Ch 10) | Regression | Ch 10 → *Least-squares line through the surface-area table* and *Power-law fit $A = aW^b$* (Spring 2024 Q2(e), Fall 2023 Q3(c)) |
+
 ## 9. Repo layout
 
 ```

@@ -69,6 +69,28 @@ export const checks = {
     answer: 0,
     explain: 'Rule 2: Gauss-Jordan goes all the way to reduced row echelon form. For a square matrix that is the identity, so you read the answer straight off and never back-substitute.',
   },
+  'Matrix inversion by the adjoint method': {
+    q: 'In the matrix inversion method, the adjoint of $A$ is',
+    options: [
+      'the cofactor matrix transposed',
+      'the cofactor matrix as it stands',
+      'the inverse of the cofactor matrix',
+      'the transpose of $A$ divided by $|A|$',
+    ],
+    answer: 0,
+    explain: '$\\operatorname{adj} A = C^T$ — the cofactor matrix transposed — and then $A^{-1} = \\frac{1}{|A|}\\operatorname{adj} A$. Forgetting the transpose is the classic slip.',
+  },
+  'The four scenarios for the existence of a solution': {
+    q: 'A system has $\\det A = 0$ and its two equations are consistent with each other. Then',
+    options: [
+      'there is no solution',
+      'there are infinitely many solutions',
+      'there is exactly one solution',
+      'the system is ill-conditioned',
+    ],
+    answer: 1,
+    explain: '$\\det A = 0$ with consistent equations means one equation is a multiple of the other — the lines coincide, so every point on the line is a solution. Ill-conditioned means $\\det A \\approx 0$, not exactly zero.',
+  },
   'Choosing the method and writing the answer': {
     q: 'The question says only "solve by Gauss elimination" and no pivot is zero. What should you do?',
     options: [
@@ -282,6 +304,82 @@ export default {
       ],
     },
     {
+      heading: 'Matrix inversion by the adjoint method',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Gauss elimination is not the only way to solve $AX = B$. The **matrix inversion method** finds $A^{-1}$ first and then multiplies: $X = A^{-1}B$. It costs more arithmetic for one system, but once $A^{-1}$ is known every further right-hand side is a single multiplication — which is why the papers ask for it by name.',
+        },
+        {
+          type: 'math',
+          tex: 'A^{-1} = \\frac{1}{|A|}\\operatorname{adj} A, \\qquad X = A^{-1}B',
+        },
+        {
+          type: 'table',
+          head: ['Symbol', 'Meaning', 'In words'],
+          rows: [
+            ['$|A|$', 'the **determinant** of $A$', 'the size of the matrix, up to a sign'],
+            ['$M_{ij}$', 'the **minor**: the determinant of $A$ with row $i$ and column $j$ deleted', 'the small determinant left over'],
+            ['$C_{ij} = (-1)^{i+j} M_{ij}$', 'the **cofactor** of the entry $a_{ij}$', 'the minor with its sign'],
+            ['$\\operatorname{adj} A$', 'the **adjoint**: the transpose of the cofactor matrix', 'the cofactors, flipped across the diagonal'],
+          ],
+        },
+        {
+          type: 'p',
+          text: 'The method is four steps, and the sign pattern is what students get wrong:',
+        },
+        {
+          type: 'list',
+          ordered: true,
+          items: [
+            '**The determinant** $|A|$, by cofactor expansion along the first row: $a_{11}(a_{22}a_{33}-a_{23}a_{32}) - a_{12}(a_{21}a_{33}-a_{23}a_{31}) + a_{13}(a_{21}a_{32}-a_{22}a_{31})$ for a $3\\times3$ matrix.',
+            '**The cofactor matrix** $C$, one cofactor per entry, with the checkerboard sign pattern $+, -, +$, $-, +, -$, $+, -, +$ down the rows.',
+            '**The adjoint** $\\operatorname{adj} A = C^T$ — the cofactor matrix transposed. Then $A^{-1} = \\dfrac{1}{|A|}\\operatorname{adj} A$.',
+            '**The solution** $X = A^{-1}B$.',
+          ],
+        },
+        {
+          type: 'note',
+          text: 'Trap: the adjoint is the **transpose** of the cofactor matrix, so the off-diagonal cofactors swap places. Forgetting that transpose is the single most common error here, and it is the one the exam marks.',
+        },
+        {
+          type: 'exam',
+          text: 'Write $|A|$ first — if it is zero, stop and say the matrix has no inverse. Then the cofactor matrix, then the adjoint, then $A^{-1}$, then the final multiplication $A^{-1}B$ with the numbers substituted, and box the three unknowns.',
+        },
+      ],
+    },
+    {
+      heading: 'The four scenarios for the existence of a solution',
+      blocks: [
+        {
+          type: 'p',
+          text: 'A system of linear equations does not always have an answer, and when it does the answer may not be unique. Seen as lines (two equations, two unknowns), there are exactly four possibilities, and the **determinant** tells you which one you are in.',
+        },
+        {
+          type: 'table',
+          head: ['Scenario', 'What the lines look like', 'The test'],
+          rows: [
+            ['**Unique solution**', 'the lines cross at one point', '$\\det A \\ne 0$'],
+            ['**No solution**', 'the lines are parallel and inconsistent', '$\\det A = 0$, and the equations contradict each other'],
+            ['**Infinitely many solutions**', 'the lines coincide — one equation is a multiple of the other', '$\\det A = 0$, and the equations are consistent'],
+            ['**Ill-conditioned**', 'the lines are nearly parallel', '$\\det A \\approx 0$: a solution exists, but small changes in the coefficients move it a long way'],
+          ],
+        },
+        {
+          type: 'p',
+          text: 'So the determinant does double duty: $\\det A \\ne 0$ is exactly the condition for $A^{-1}$ to exist, which is why the matrix inversion method cannot be used on a singular system at all.',
+        },
+        {
+          type: 'note',
+          text: 'The same paper question also asks for the **convergence condition of the Jacobi iteration** and how strong it is. That condition is **diagonal dominance** — $|a_{ii}| > \\sum_{j \\ne i}|a_{ij}|$ in every row — which is Chapter 4\'s material. Its strength is that it is **sufficient but not necessary**: it guarantees convergence, but a system that fails the test may still converge, so failing it is not a proof of divergence. Rearranging the equations often makes a system dominant.',
+        },
+        {
+          type: 'exam',
+          text: 'For a four-mark theory question: name the four scenarios, give the determinant condition for each, then state the dominance condition and that it is sufficient but not necessary. One clear line each.',
+        },
+      ],
+    },
+    {
       heading: 'Choosing the method and writing the answer',
       blocks: [
         {
@@ -461,6 +559,26 @@ export default {
         'The final identity matrix is the whole answer: the constants in the last column are the unknowns. If your matrix is not the identity at the end, you have not finished the method.',
       ],
     },
+    {
+      title: 'Matrix inversion method: solving a system by the adjoint',
+      type: 'Numerical — Matrix inversion',
+      question: 'Solve the following system of linear equations by using the Matrix Inversion method: $2x + y + z = 7$, $4x + 2y + 3z = 4$, $x - y + z = 0$.',
+      source: 'Spring 2024 Q2(c)',
+      marks: 6,
+      steps: [
+        { t: 'Write the system as $AX = B$ with $A = \\begin{bmatrix} 2 & 1 & 1 \\\\ 4 & 2 & 3 \\\\ 1 & -1 & 1 \\end{bmatrix}$, $B = \\begin{bmatrix} 7 \\\\ 4 \\\\ 0 \\end{bmatrix}$. If $|A| \\ne 0$ then $X = A^{-1}B$ with $A^{-1} = \\dfrac{\\operatorname{adj} A}{|A|}$ (Shanker Rao §11.1).', m: '1 mark' },
+        { t: '$|A| = 2(2 \\cdot 1 - 3 \\cdot (-1)) - 1(4 \\cdot 1 - 3 \\cdot 1) + 1(4 \\cdot (-1) - 2 \\cdot 1) = 2(5) - 1(1) + 1(-6) = 10 - 1 - 6 = 3 \\ne 0$, so the inverse exists.', m: '1 mark' },
+        { t: 'Cofactors: $C_{11} = 5$, $C_{12} = -1$, $C_{13} = -6$; $C_{21} = -(1 + 1) = -2$, $C_{22} = 2 - 1 = 1$, $C_{23} = -(-2 - 1) = 3$; $C_{31} = 3 - 2 = 1$, $C_{32} = -(6 - 4) = -2$, $C_{33} = 4 - 4 = 0$. Transpose: $\\operatorname{adj} A = \\begin{bmatrix} 5 & -2 & 1 \\\\ -1 & 1 & -2 \\\\ -6 & 3 & 0 \\end{bmatrix}$, $A^{-1} = \\dfrac{1}{3}\\operatorname{adj} A$.', m: '2 marks' },
+        { t: '$X = A^{-1}B = \\dfrac{1}{3}\\begin{bmatrix} 5 & -2 & 1 \\\\ -1 & 1 & -2 \\\\ -6 & 3 & 0 \\end{bmatrix}\\begin{bmatrix} 7 \\\\ 4 \\\\ 0 \\end{bmatrix} = \\dfrac{1}{3}\\begin{bmatrix} 35 - 8 \\\\ -7 + 4 \\\\ -42 + 12 \\end{bmatrix} = \\dfrac{1}{3}\\begin{bmatrix} 27 \\\\ -3 \\\\ -30 \\end{bmatrix} = \\begin{bmatrix} 9 \\\\ -1 \\\\ -10 \\end{bmatrix}$.', m: '1 mark' },
+        { t: 'Check: $2(9) + (-1) + (-10) = 7$ ✓, $4(9) + 2(-1) + 3(-10) = 4$ ✓, $9 - (-1) + (-10) = 0$ ✓.', m: '1 mark' },
+      ],
+      answer: '$\\boxed{x = 9,\\ y = -1,\\ z = -10}$',
+      note: 'Trap: forgetting to transpose the cofactor matrix. The adjoint is the **transpose** of the cofactors, so the off-diagonal cofactors swap places — and the sign pattern $+,-,+$ must be applied to the cofactors first, before the transpose.',
+      explanation: [
+        'Matrix inversion solves $AX = B$ in one multiplication once $A^{-1}$ is known, which is worth it when the same $A$ is used with several right-hand sides. For a single system Gauss elimination is cheaper, which is why the paper allows another method for partial marks.',
+        'The determinant does two jobs at once: it is the divisor that turns the adjoint into the inverse, and $\\det A \\ne 0$ is exactly the condition for a unique solution. A zero determinant means the matrix has no inverse at all, so the method cannot even be started.',
+      ],
+    },
   ],
   flashcards: [
     { front: 'What is a pivot element?', back: 'The leading non-zero coefficient of the pivot row — it is the number you divide by to get the multiplier.' },
@@ -477,6 +595,11 @@ export default {
     { front: 'What does a row interchange change?', back: 'Nothing about the solution — it only reorders the equations.' },
     { front: 'Why must you write the resulting row after each operation?', back: 'Because the marks are for the calculation, not for the intention. Writing only the operation loses marks.' },
     { front: 'What is the diagonal of the result of Gauss-Jordan on a square system?', back: 'All ones — it is the identity matrix.' },
+    { front: 'What is the adjoint of a matrix?', back: 'The transpose of its cofactor matrix: $\\operatorname{adj} A = C^T$.' },
+    { front: 'How do you get the inverse of a matrix?', back: '$A^{-1} = \\dfrac{1}{|A|}\\operatorname{adj} A$ — the adjoint divided by the determinant.' },
+    { front: 'What does a zero determinant tell you?', back: 'That $A$ has no inverse — so the matrix inversion method cannot be used, and the system has no unique solution.' },
+    { front: 'What are the four scenarios for the existence of a solution?', back: 'Unique solution ($\\det A \\ne 0$), no solution, infinitely many solutions (both $\\det A = 0$), and ill-conditioned ($\\det A \\approx 0$).' },
+    { front: 'Is the diagonal dominance condition for Jacobi necessary?', back: 'No — it is sufficient but not necessary. Failing it does not prove divergence.' },
   ],
   quiz: [
     {
@@ -569,6 +692,28 @@ export default {
       answer: 1,
       explain: 'Reduced row echelon form for a square system is the identity; the last column holds the answers.',
     },
+    {
+      q: 'In the matrix inversion method, $A^{-1}$ is obtained as',
+      options: [
+        '$\\operatorname{adj} A$ divided by $|A|$',
+        'the cofactor matrix $C$ as it stands',
+        'the transpose of $A$',
+        'the inverse of the cofactor matrix',
+      ],
+      answer: 0,
+      explain: '$A^{-1} = \\dfrac{1}{|A|}\\operatorname{adj} A$, where $\\operatorname{adj} A = C^T$ — the cofactor matrix transposed.',
+    },
+    {
+      q: 'A system of linear equations has $\\det A = 0$ and the equations are consistent with each other. Then',
+      options: [
+        'there is no solution',
+        'there are infinitely many solutions',
+        'there is exactly one solution',
+        'the system is ill-conditioned',
+      ],
+      answer: 1,
+      explain: 'A zero determinant with consistent equations means one equation is a multiple of the other, so every point on the line is a solution. Ill-conditioned means $\\det A \\approx 0$, not exactly zero.',
+    },
   ],
-  solvers: ['gauss', 'gaussPivot', 'gaussJordan'],
+  solvers: ['gauss', 'gaussPivot', 'gaussJordan', 'matrixInverse'],
 };

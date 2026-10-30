@@ -292,7 +292,7 @@ export default {
       blocks: [
         {
           type: 'p',
-          text: 'Let $x = x_0$ be an approximate value of one root and let the exact root be $x_1 = x_0 + h$. Since $f(x_1) = 0$, expanding by Taylor’s theorem gives',
+          text: 'Let $x = x_0$ be an approximate value of one root and let the exact root be $x_1 = x_0 + h$. Since $f(x_1) = 0$, expanding by Taylor’s theorem — see **The Taylor expansion in one page** in Chapter 1 — gives',
         },
         { type: 'math', tex: 'f(x_0) + f\'(x_0)h + \\frac{f\'\'(x_0)}{2!}h^2 + \\cdots = 0' },
         {
@@ -573,15 +573,13 @@ export default {
         { t: 'Check: $\\frac{\\pi(2.0269)^2(9 - 2.0269)}{3} = 30.0$ m$^3$ \\checkmark. Newton-Raphson is the best choice here because its convergence is quadratic, and the paper notes that an initial guess of $h$ will always converge.', m: '1 mark' },
       ],
       answer: '$\\boxed{h = 2.027\\ \\text{m}\\ (\\text{to 3 decimal places})}$',
+      note: 'Trap: the cap volume is $\\pi h^2\\left(R - \\dfrac{h}{3}\\right)$ — not $\\pi h^2 R$, and not the volume of the whole sphere. Getting the geometry wrong changes the equation, and then every Newton row is wrong.',
       explanation: [
         'The tank problem turns a geometry formula into a root-finding problem: the volume equation is a cubic in $h$, and the physical root is the one between 0 and $2R$.',
         'Newton-Raphson is preferred over bisection here because the error is roughly squared at each step (quadratic convergence), so three or four iterations reach three decimal places, and the paper states that the initial guess will always converge.',
-      ],
-      note: 'Trap: the cap volume is $\\pi h^2\\left(R - \\dfrac{h}{3}\\right)$ — not $\\pi h^2 R$, and not the volume of the whole sphere. Getting the geometry wrong changes the equation, and then every Newton row is wrong.',
-      explanation: [
         'This is the standard textbook form of the spherical-tank question; it is not in the class slides or the extracted notes, so treat it as a worked template. If your paper uses a different radius or a different fraction of the tank, only the numbers change — the equation comes from $\\pi h^2(R-h/3) = \\text{(fraction of the sphere)}$ and the Newton steps are exactly as above.',
         'The workflow is always: geometry gives one equation, simplify it into $f(h) = 0$, bracket the root with two values of $h$, then run Newton.',
-        'Always check the answer by substituting it back into the volume formula. Here the computed volume is $1047.2$ and half the sphere is $1000\\pi/3 = 1047.2$, so the answer is right.',
+        'Always check the answer by substituting it back into the volume formula. Here $R = 3$ and $h = 2.027$, and $\\frac{\\pi (2.027)^2(9 - 2.027)}{3} = 30.0$ m$^3$ — exactly the 30 m$^3$ the question asks for, so the answer is right.',
       ],
     },
     {

@@ -114,7 +114,7 @@ export default {
         { type: "p", text: "It is the course's bridge from linear algebra to data: means and covariances build a matrix, eigen-stuff finds the directions, projections rewrite the data in the new coordinates." },
         { type: "list", items: [
           "Mean-centre the data and build the covariance matrix.",
-          "Find eigenvalues and eigenvectors (Jacobi's method for bigger sets).",
+          "Find the eigenvalues and eigenvectors of the covariance matrix.",
           "Rank components by explained variance and choose how many to keep.",
           "Project the data onto the kept components.",
         ] },
@@ -292,6 +292,10 @@ export default {
         {
           type: 'note',
           text: 'An eigenvector can be multiplied by $-1$ and it is still the same direction. The tutorial writes $v_2 = (0.735, -0.678)$; if you get the opposite sign, your answer is still correct — but write the sign you used consistently in the reconstruction.',
+        },
+        {
+          type: 'note',
+          text: 'The two-by-two case is the one the exam asks for, and the characteristic equation settles it by hand. For a covariance matrix with more features the characteristic equation is too unwieldy to write out, so the **PCA calculator** finds the eigenpairs numerically instead — it repeatedly rotates the axes to drive the off-diagonal entries of $\\Sigma$ to zero (the **Jacobi rotation method**), and the eigenvalues are what is left on the diagonal. Use the calculator for those; you are not expected to reproduce the rotations.',
         },
         {
           type: 'exam',

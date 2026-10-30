@@ -255,19 +255,6 @@ dialog[open]::backdrop {
   }
 }
 
-/* Modulation lab playhead: constant motion explains the bit-to-wave mapping. */
-.playhead {
-  animation: sweep var(--dur, 4s) linear infinite;
-}
-@keyframes sweep {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(var(--w));
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .enter,
   .enter-next,
@@ -288,8 +275,7 @@ dialog[open]::backdrop {
     transition-duration: 0ms;
   }
   .pop,
-  .shake,
-  .playhead {
+  .shake {
     animation: none;
   }
   .press:active {

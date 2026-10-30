@@ -245,20 +245,7 @@ export default {
       'Horner’s rule and synthetic division are the same table: the last entry is the value $p(r)$, the earlier entries are the quotient. A zero last entry means $r$ is a root and the quotient is the deflated polynomial.',
     ],
   },
-  'Spring 2024 Q2(c)': {
-    steps: [
-      { t: 'Write the system as $AX = B$: $A = \\begin{bmatrix} 2 & 1 & 1 \\\\ 4 & 2 & 3 \\\\ 1 & -1 & 1 \\end{bmatrix}$, $B = \\begin{bmatrix} 7 \\\\ 4 \\\\ 0 \\end{bmatrix}$. If $|A| \\ne 0$, $X = A^{-1}B$ with $A^{-1} = \\dfrac{\\operatorname{adj} A}{|A|}$ (Shanker Rao §11.1).', m: '1 mark' },
-      { t: '$|A| = 2(2 \\cdot 1 - 3 \\cdot (-1)) - 1(4 \\cdot 1 - 3 \\cdot 1) + 1(4 \\cdot (-1) - 2 \\cdot 1) = 2(5) - 1(1) + 1(-6) = 3 \\ne 0$.', m: '1 mark' },
-      { t: 'Cofactors: $C_{11} = 5$, $C_{12} = -1$, $C_{13} = -6$; $C_{21} = -(1 + 1) = -2$, $C_{22} = 2 - 1 = 1$, $C_{23} = -(-2 - 1) = 3$; $C_{31} = 3 - 2 = 1$, $C_{32} = -(6 - 4) = -2$, $C_{33} = 4 - 4 = 0$. Transpose: $\\operatorname{adj} A = \\begin{bmatrix} 5 & -2 & 1 \\\\ -1 & 1 & -2 \\\\ -6 & 3 & 0 \\end{bmatrix}$, $A^{-1} = \\dfrac{1}{3}\\operatorname{adj} A$.', m: '2 marks' },
-      { t: '$X = A^{-1}B = \\dfrac{1}{3}\\begin{bmatrix} 5(7) - 2(4) + 1(0) \\\\ -1(7) + 1(4) - 2(0) \\\\ -6(7) + 3(4) + 0(0) \\end{bmatrix} = \\dfrac{1}{3}\\begin{bmatrix} 27 \\\\ -3 \\\\ -30 \\end{bmatrix} = \\begin{bmatrix} 9 \\\\ -1 \\\\ -10 \\end{bmatrix}$.', m: '1 mark' },
-      { t: 'Check: $2(9) + (-1) + (-10) = 7$ ✓, $4(9) + 2(-1) + 3(-10) = 4$ ✓, $9 - (-1) + (-10) = 0$ ✓.', m: '1 mark' },
-    ],
-    answer: '$\\boxed{x = 9,\\ y = -1,\\ z = -10}$',
-    note: 'Forgetting to transpose the cofactor matrix: the adjoint is the transpose of the cofactors, and the sign pattern $+,-,+$ must be applied first.',
-    explanation: [
-      'Matrix inversion solves $AX = B$ in one multiplication once $A^{-1}$ is known, which is worth it when the same $A$ is used with several right-hand sides. For a single system Gauss elimination is cheaper, which is why the paper allows another method for partial marks.',
-    ],
-  },
+  'Spring 2024 Q2(c)': 'Matrix inversion method: solving a system by the adjoint',
   'Spring 2024 Q2(e)': {
     steps: [
       { t: 'Linearise: $y = ax^b \\Rightarrow \\ln y = \\ln a + b\\ln x$. With $X = \\ln x$, $Y = \\ln y$ this is a straight line $Y = A + bX$, $A = \\ln a$.', m: '1 mark' },

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { BlockMath } from 'react-katex';
+import { mathError } from './NotesView.jsx';
 
 export default function CheatSheet({ open, onClose, modules, currentId }) {
   const ref = useRef(null);
@@ -58,7 +59,7 @@ export default function CheatSheet({ open, onClose, modules, currentId }) {
                   <div key={f.label} className="rounded-xl border border-line bg-panel px-4 py-3">
                     <p className="text-sm font-medium">{f.label}</p>
                     <div className="overflow-x-auto">
-                      <BlockMath math={f.tex} />
+                      <BlockMath math={f.tex} renderError={mathError} />
                     </div>
                     {f.where && <p className="text-sm text-ash">{f.where}</p>}
                   </div>

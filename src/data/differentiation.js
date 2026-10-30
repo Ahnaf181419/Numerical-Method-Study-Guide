@@ -467,7 +467,7 @@ export default {
       blocks: [
         {
           type: 'p',
-          text: 'A paper asks you to **prove** that the truncation error of the second-order central difference is $O(h^2)$. The proof is four lines of Taylor expansion — learn it once and it also gives you the five-point formula and the second-derivative formula.',
+          text: 'A paper asks you to **prove** that the truncation error of the second-order central difference is $O(h^2)$. The proof is four lines of Taylor expansion — see **The Taylor expansion in one page** in Chapter 1 — learn it once and it also gives you the five-point formula and the second-derivative formula.',
         },
         {
           type: 'math',

@@ -11,7 +11,7 @@ export const SOLVERS = {
     {
       title: 'Gauss elimination (naive — no pivoting unless a zero pivot appears)',
       fields: [
-        ['A', 'Coefficient matrix — rows separated by ;', 'matrix', '1,1,1;2,3,1;3,4,5'],
+        ['A', 'Coefficient matrix — rows separated by ;', 'matrix', '1,1,1;2,3,1;3,2,5'],
         ['b', 'Constants', 'vec', '6,13,18'],
         ['pivot', 'Pivoting', 'select', 'auto', ['auto', 'on', 'off']],
       ],
@@ -28,7 +28,7 @@ export const SOLVERS = {
     {
       title: 'Gauss-Jordan (ends at the identity matrix — no back substitution)',
       fields: [
-        ['A', 'Coefficient matrix — rows separated by ;', 'matrix', '1,1,1;2,3,1;3,4,5'],
+        ['A', 'Coefficient matrix — rows separated by ;', 'matrix', '1,1,1;2,3,1;3,2,5'],
         ['b', 'Constants', 'vec', '6,13,18'],
       ],
       run: (v) => s.gaussJordan(v),
@@ -48,10 +48,30 @@ export const SOLVERS = {
     {
       title: 'Gauss-Jordan elimination',
       fields: [
-        ['A', 'Coefficient matrix — rows separated by ;', 'matrix', '1,1,1;2,3,1;3,4,5'],
+        ['A', 'Coefficient matrix — rows separated by ;', 'matrix', '1,1,1;2,3,1;3,2,5'],
         ['b', 'Constants', 'vec', '6,13,18'],
       ],
       run: (v) => s.gaussJordan(v),
+    },
+  ],
+  chopRound: [
+    {
+      title: "Chopping and rounding off to n significant figures",
+      fields: [
+        ['value', 'The number', 'any', '93.2155'],
+        ['digits', 'Number of significant figures to keep', 'num', '4'],
+      ],
+      run: (v) => s.chopRound(v),
+    },
+  ],
+  matrixInverse: [
+    {
+      title: 'Matrix inversion method — determinant, adjoint, A⁻¹B',
+      fields: [
+        ['A', 'Coefficient matrix — rows separated by ;', 'matrix', '2,1,1;4,2,3;1,-1,1'],
+        ['b', 'Constants', 'vec', '7,4,0'],
+      ],
+      run: (v) => s.matrixInverse(v),
     },
   ],
   jacobi: [
@@ -192,6 +212,27 @@ export const SOLVERS = {
         ['x', 'Point to evaluate at', 'any', '9'],
       ],
       run: (v) => s.dividedDifference(v),
+    },
+  ],
+  diffTableCh6: [
+    {
+      title: 'Forward difference table — Chapra Example 1, f(x) = x⁴',
+      fields: [
+        ['xs', 'x values', 'nums', '-2,-1,0,1,2,3,4'],
+        ['ys', 'y values', 'nums', '16,1,0,1,16,81,256'],
+      ],
+      run: (v) => {
+        const cols = s.diffTable(v.ys);
+        return {
+          result: { cols },
+          steps: [
+            `h = ${s.spacing(v.xs)}`,
+            '\\begin{array}{c|' + 'c'.repeat(cols.length) + '} \\hline ' +
+              cols.map((_, k) => `\\Delta^{${k}}`).join(' & ') + ' \\\\ \\hline ' +
+              cols.map((c) => c.map((val) => String(val)).join(' & ')).join(' \\\\ ') + ' \\end{array}',
+          ],
+        };
+      },
     },
   ],
   diffTable: [

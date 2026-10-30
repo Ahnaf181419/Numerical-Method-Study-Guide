@@ -60,8 +60,8 @@ export const checks = {
   'Significant digits': {
     q: 'The number of significant digits of $0.0005010$ is',
     options: ['4', '3', '5', '7'],
-    answer: 1,
-    explain: 'The first four zeros only fix the decimal point; the significant digits are 5, 0, 1 — three of them.',
+    answer: 0,
+    explain: 'The leading zeros only fix the decimal point; the significant digits are 5, 0, 1 and the trailing 0 — four of them ($0.0005010 = 5.010 \\times 10^{-4}$).',
   },
   'Accuracy and precision': {
     q: 'In Balagurusamy\'s definition, the **accuracy** of 57.396 is',
@@ -79,6 +79,17 @@ export const checks = {
     ],
     answer: 0,
     explain: 'It is the ratio of the relative error in $f(x)$ to the relative error in $x$. A large value means the problem is ill conditioned: small changes in the input are magnified in the output.',
+  },
+  'The Taylor expansion in one page': {
+    q: 'The Taylor expansion of $f$ about $x$, written to the first two terms, is',
+    options: [
+      '$f(x) + h f\'(x)$',
+      '$f(x) + h f\'(x) + \\dfrac{h^2}{2} f\'\'(x)$',
+      '$f(x) + h^2 f\'\'(x)$',
+      '$f(x + h) \\approx f(x)$',
+    ],
+    answer: 0,
+    explain: 'The first two terms are the value and the tangent-line correction. The full expansion adds $\\frac{h^2}{2!}f\'\'(x)$ and the higher powers of the small step $h$.',
   },
   'Error in a numerical algorithm': {
     q: 'In a numerical algorithm the **truncation error** is',
@@ -216,8 +227,12 @@ export default {
           rows: [
             ['0.522341', '0.522', '0.5223', '0.52234'],
             ['93.2155', '93.2', '93.22', '93.216'],
-            ['0.66666', '0.667', '0.6667', '0.66667'],
+            ['0.666666', '0.667', '0.6667', '0.66667'],
           ],
+        },
+        {
+          type: 'note',
+          text: 'The third row is the repeating decimal $\\tfrac{2}{3} = 0.666666\\dots$, which the book prints in short as 0.66666; writing it out is what makes the five-figure answer 0.66667 rather than 0.66666. Try both numbers in the **Chopping and rounding** calculator.',
         },
         {
           type: 'p',
@@ -279,9 +294,46 @@ export default {
       ],
     },
     {
+      heading: 'The Taylor expansion in one page',
+      blocks: [
+        {
+          type: 'p',
+          text: 'Three derivations in this course — how an error propagates through a formula, why Newton-Raphson works, and the truncation error of a difference formula — all start from the same place: **write the function at a nearby point as a polynomial**. That is the Taylor expansion.',
+        },
+        {
+          type: 'math',
+          tex: 'f(x + h) = f(x) + h f\'(x) + \\frac{h^2}{2!} f\'\'(x) + \\frac{h^3}{3!} f\'\'\'(x) + \\cdots',
+        },
+        {
+          type: 'p',
+          text: 'Read it as: *the value a little to the right of $x$ equals the value at $x$, plus a correction proportional to how far you moved, plus a smaller correction proportional to how far you moved squared, and so on.* The coefficients are the derivatives at $x$, which is why the derivatives have to exist at all.',
+        },
+        {
+          type: 'p',
+          text: '**The picture.** Draw the curve $y = f(x)$ and the straight **tangent line** touching it at $x$. The tangent line is exactly the first two terms, $f(x) + h f\'(x)$: it matches the curve at $x$ and has the same slope there. The next term, $\\tfrac{h^2}{2!}f\'\'(x)$, is how far the curve bows away from that straight line, so the full expansion is the curve rebuilt out of the tangent line plus a series of ever smaller corrections.',
+        },
+        {
+          type: 'p',
+          text: '**Why the higher terms may be dropped.** $h$ is a *small* step, so $h^2$ is much smaller than $h$, and $h^3$ smaller still. Keeping only the first correction leaves an error of order $h^2$ — which is exactly what an $O(h^2)$ formula means, and exactly the size of the error Newton-Raphson leaves behind at each step.',
+        },
+        {
+          type: 'p',
+          text: 'For a function of several variables the same idea gives the **multivariate** form, which is what the next section needs: expand about the point $(x_1, \\dots, x_n)$ and keep only the terms linear in the small errors $\\Delta x_i$.',
+        },
+        {
+          type: 'note',
+          text: 'This page is the shared starting point for three chapters. In **Chapter 2** it justifies the Newton-Raphson iteration; in **Chapter 8** it is the proof that a difference formula has truncation error $O(h)$ or $O(h^2)$.',
+        },
+        {
+          type: 'exam',
+          text: 'If a question asks you to expand a function, write the series, substitute the values, and then say which terms you are keeping and why the rest may be neglected: "the higher powers of $h$ are neglected because $h$ is small."',
+        },
+      ],
+    },
+    {
       heading: 'Error propagation through a formula',
       blocks: [
-        { type: 'p', text: 'Let $u = f(x_1, x_2, \\dots, x_n)$ with errors $\\Delta x_1, \\dots, \\Delta x_n$. Taylor expansion about $(x_1,\\dots,x_n)$, neglecting the squares and higher powers of the small errors, gives the **general error formula**.' },
+        { type: 'p', text: 'Let $u = f(x_1, x_2, \\dots, x_n)$ with errors $\\Delta x_1, \\dots, \\Delta x_n$. Taylor expansion about $(x_1,\\dots,x_n)$ — see **The Taylor expansion in one page** — neglecting the squares and higher powers of the small errors, gives the **general error formula**.' },
         { type: 'math', tex: '\\Delta u \\approx \\sum_{i=1}^{n}\\frac{\\partial f}{\\partial x_i}\\,\\Delta x_i' },
         {
           type: 'p',
@@ -753,8 +805,8 @@ export default {
     {
       q: 'The number 0.0005010 has how many significant digits?',
       options: ['3', '4', '5', '7'],
-      answer: 0,
-      explain: 'The first four zeros only fix the decimal point; the significant digits are 5, 0, 1 — three of them.',
+      answer: 1,
+      explain: 'The leading zeros only fix the decimal point; the significant digits are 5, 0, 1 and the trailing 0 — four of them.',
     },
     {
       q: 'Balagurusamy defines the **accuracy** of a number as',
@@ -785,5 +837,5 @@ export default {
       explain: 'With $\\lambda = \\max|\\phi\'(x)|$ the error satisfies $|x_n - \\alpha| \\le \\lambda^n|x_0 - \\alpha|$; it shrinks if $\\lambda < 1$ and grows if $\\lambda > 1$.',
     },
   ],
-  solvers: [],
+  solvers: ['chopRound'],
 };

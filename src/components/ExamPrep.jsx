@@ -64,8 +64,53 @@ function Likely({ q, mod, onOpen, onExample, full, label = 'model answer' }) {
   );
 }
 
+// The written mock: one numerical question per chapter. The student writes the
+// answer on paper first, then reveals the model exam script to compare against.
+function ScriptMock({ modules }) {
+  const [open, setOpen] = useState({});
+  const items = modules
+    .map((m) => ({ m, ex: m.examples.find((e) => (e.type ?? '').startsWith('Numerical')) }))
+    .filter((x) => x.ex);
+  const done = items.filter((x) => open[`${x.m.id}`]).length;
+  return (
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-5">
+      <p className="text-ash">
+        One numerical question per chapter. Write your answer on paper — with the mark
+        allocations, the pivot checks, the resulting rows — then reveal the model script and
+        compare it line by line. Revealed {done}/{items.length}.
+      </p>
+      {items.map(({ m, ex }) => (
+        <article key={m.id} className="rounded-2xl border border-line bg-panel p-5 sm:p-6">
+          <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2 text-sm">
+            <span className="text-ash">Ch {m.chapter}: {m.title}</span>
+            <span className="flex items-center gap-2">
+              {ex.marks ? <span className="rounded-md bg-gold/15 px-2 py-0.5 font-medium text-gold">{ex.marks} marks</span> : null}
+              <span className="rounded-md border border-line px-2 py-0.5 text-text/80">{ex.type}</span>
+            </span>
+          </div>
+          <h3 className="prose-read overflow-x-auto text-[1.1rem] leading-snug text-text">
+            <Rich text={ex.question} />
+          </h3>
+          {open[m.id] && (
+            <div className="enter mt-2">
+              <Worked ex={ex} />
+            </div>
+          )}
+          <button
+            onClick={() => setOpen({ ...open, [m.id]: !open[m.id] })}
+            className={`press mt-4 min-h-11 rounded-xl px-5 font-medium ${open[m.id] ? 'border border-line text-ash' : 'bg-gold text-ink'}`}
+          >
+            {open[m.id] ? 'Hide the model script' : 'I have written my answer — show the model script'}
+          </button>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function Mock({ modules, best, onFinish, onOpen }) {
   const [size, setSize] = useState(null);
+  const [written, setWritten] = useState(false);
   // Spread questions evenly across chapters, then shuffle.
   const questions = useMemo(() => {
     if (!size) return [];
@@ -74,6 +119,7 @@ function Mock({ modules, best, onFinish, onOpen }) {
     for (let r = 0; picked.length < size && r < 20; r++) pool.forEach((p) => p[r] && picked.length < size && picked.push(p[r]));
     return shuffle(picked);
   }, [size, modules]);
+  if (written) return <ScriptMock modules={modules} />;
   if (!size)
     return (
       <div className="rounded-2xl border border-line bg-panel p-6 sm:p-8">
@@ -86,6 +132,12 @@ function Mock({ modules, best, onFinish, onOpen }) {
               {n} questions
             </button>
           ))}
+        </div>
+        <div className="mt-6 border-t border-line pt-6">
+          <p className="text-sm text-ash">Or practise writing full answers the way the exam marks them:</p>
+          <button onClick={() => setWritten(true)} className="press mt-3 min-h-12 rounded-xl border border-gold/60 px-6 font-medium text-gold">
+            Written script — one question per chapter
+          </button>
         </div>
       </div>
     );

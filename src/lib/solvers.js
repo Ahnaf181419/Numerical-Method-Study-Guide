@@ -25,10 +25,13 @@ const transpose = (A) => A[0].map((_, j) => A.map((r) => r[j]));
 const boxedX = (x) => `\\boxed{${x.map((v, i) => `x_{${i + 1}} = ${fmt(v)}`).join(',\\quad ')}}`;
 
 // The equal-interval rules all take h from the first gap — refuse a table whose gaps differ.
+// The tolerance is relative to h, so x values typed to six decimals (0, 0.333333, 0.666667, …)
+// are still equally spaced, while a genuinely uneven table is still rejected.
 export const spacing = (xs) => {
   if (xs.length < 2) throw new Error('give at least two x values.');
   const h = xs[1] - xs[0];
-  if (!xs.every((v, i) => i === 0 || Math.abs(v - xs[i - 1] - h) < 1e-9)) {
+  const tol = Math.max(Math.abs(h) * 1e-5, 1e-9);
+  if (!xs.every((v, i) => i === 0 || Math.abs(v - xs[i - 1] - h) <= tol)) {
     throw new Error('the x values must be equally spaced for this rule.');
   }
   return h;
@@ -147,6 +150,70 @@ export function gaussJordan({ A, b }) {
   steps.push(boxedX(x));
   return { result: { x, matrix: M }, steps };
 }
+
+// ---------------------------------------------------------------- matrix inversion
+
+// The determinant of a square matrix by cofactor expansion along its first row.
+const determinant = (M) => {
+  const n = M.length;
+  if (n === 1) return M[0][0];
+  if (n === 2) return M[0][0] * M[1][1] - M[0][1] * M[1][0];
+  let sum = 0;
+  for (let j = 0; j < n; j++) {
+    const minor = M.slice(1).map((row) => row.filter((_, k) => k !== j));
+    sum += (j % 2 ? -1 : 1) * M[0][j] * determinant(minor);
+  }
+  return sum;
+};
+
+// Matrix inversion by the adjoint method (Shanker Rao §11.1):
+//   |A| by cofactor expansion  ->  cofactor matrix  ->  adj(A) = transpose of it
+//   ->  A^-1 = adj(A)/|A|  ->  X = A^-1 B.
+// A zero determinant means there is no inverse, so the method cannot be used.
+export function matrixInverse({ A, b }) {
+  const n = A.length;
+  if (n < 2 || n > 4) throw new Error('the adjoint method is for 2x2, 3x3 or 4x4 matrices.');
+  const det = determinant(A);
+  const steps = [];
+  steps.push(`\\textbf{Step 1: the determinant} \\quad |A| = ${detStep(A)}`);
+  if (Math.abs(det) < 1e-12) {
+    throw new Error('the determinant is zero, so A has no inverse — the matrix is singular.');
+  }
+  // Cofactor matrix: C_ij = (-1)^(i+j) times the minor M_ij.
+  const cof = Array.from({ length: n }, (_, i) =>
+    Array.from({ length: n }, (_, j) => {
+      const minor = A.filter((_, r) => r !== i).map((row) => row.filter((_, c) => c !== j));
+      return (i + j) % 2 ? -determinant(minor) : determinant(minor);
+    }),
+  );
+  steps.push(`\\textbf{Step 2: the cofactor matrix} \\quad C = ${tex(cof)} \\quad (C_{ij} = (-1)^{i+j} M_{ij})`);
+  // The adjoint is the transpose of the cofactor matrix.
+  const adj = transpose(cof);
+  steps.push(`\\textbf{Step 3: the adjoint} \\quad \\operatorname{adj} A = C^T = ${tex(adj)}`);
+  const inv = adj.map((row) => row.map((v) => v / det));
+  steps.push(`\\textbf{Step 4: the inverse} \\quad A^{-1} = \\frac{1}{|A|}\\operatorname{adj} A = \\frac{1}{${fmt(det)}} ${tex(adj)} = ${tex(inv)}`);
+  const x = b ? mv(inv, b) : null;
+  if (b) {
+    steps.push(`\\textbf{Step 5: the solution} \\quad X = A^{-1}B = ${tex(inv)} ${tex(b.map((v) => [v]))} = ${tex(x.map((v) => [v]))}`);
+    steps.push(`\\boxed{${x.map((v, i) => `${'xyz'[i] ?? `x_{${i + 1}}`} = ${fmt(v)}`).join(', \\quad ')}}`);
+  }
+  return { result: { det, cof, adj, inv, x }, steps };
+}
+
+// The determinant written out as the exam writes it: a11(a22a33-a23a32) - a12(...) + a13(...)
+const detStep = (A) => {
+  const n = A.length;
+  const g = (i, j) => fmt(A[i][j]);
+  const p = (i, j, k, l) => `${g(i, j)}\\cdot${g(k, l)}`;
+  if (n === 2) return `a_{11}a_{22} - a_{12}a_{21} = ${p(0, 0, 1, 1)} - ${p(0, 1, 1, 0)}`;
+  if (n === 3) {
+    return [
+      `a_{11}(a_{22}a_{33} - a_{23}a_{32}) - a_{12}(a_{21}a_{33} - a_{23}a_{31}) + a_{13}(a_{21}a_{32} - a_{22}a_{31})`,
+      `= ${g(0, 0)}(${p(1, 1, 2, 2)} - ${p(1, 2, 2, 1)}) - ${g(0, 1)}(${p(1, 0, 2, 2)} - ${p(1, 2, 2, 0)}) + ${g(0, 2)}(${p(1, 0, 2, 1)} - ${p(1, 1, 2, 0)})`,
+    ].join(' ');
+  }
+  return `\\text{cofactor expansion along the first row} = ${fmt(determinant(A))}`;
+};
 
 // Do-Little LU factorisation (L has ones on the diagonal), exactly as the LU slides do it.
 export function luDecompose({ A }) {
@@ -592,6 +659,62 @@ export function richardson({ expr, x, h }) {
   return { result: { coarse: d1, fine: d2, richardson: R }, steps };
 }
 
+// ---------------------------------------------------------------- chopping and rounding
+
+// Chopping and rounding to n significant digits, following the rule the errors
+// chapter teaches (Shanker Rao): keep the first n significant digits, then
+//   * discarded part less than 5        -> leave the retained digits unchanged
+//   * discarded part greater than 5     -> add 1 to the last retained digit
+//   * discarded part exactly 5 with other non-zero digits -> add 1
+//   * discarded part exactly 5 with all zeros -> even-digit rule: leave the last
+//     retained digit if it is even, add 1 if it is odd.
+export function chopRound({ value, digits }) {
+  const n = Math.max(1, Math.floor(digits));
+  const neg = value < 0;
+  // Work on the decimal string so the digits are exactly the ones written.
+  const [ip, fp = ''] = Math.abs(value).toString().split('.');
+  const all = ip + fp;
+  const dp = ip.length; // digits before the point
+  let first = 0;
+  while (first < all.length && all[first] === '0') first++;
+  if (first === all.length) {
+    return { result: { chopped: 0, rounded: 0 }, steps: ['\\boxed{0}'] };
+  }
+  const sig = all.slice(first); // the significant digits, in order
+  // A digit string R of n digits sits at 10^(dp - first - n).
+  const place = (R) => {
+    const num = Number(R) * Math.pow(10, dp - first - n);
+    return Number((neg ? -num : num).toPrecision(12));
+  };
+  const keep = sig.slice(0, n);
+  const dropped = sig.slice(n);
+  // Chopping: keep the digits, drop the rest.
+  const chopped = place(keep);
+  // Rounding: the first dropped digit decides, unless it is exactly 5.
+  let roundDigits = keep;
+  const bump = () => {
+    const d = keep.split('');
+    let i = d.length - 1;
+    while (i >= 0 && d[i] === '9') { d[i] = '0'; i--; }
+    if (i < 0) return '1' + d.join('');
+    d[i] = String(Number(d[i]) + 1);
+    return d.join('');
+  };
+  if (dropped.length) {
+    const d0 = Number(dropped[0]);
+    const restNonZero = dropped.slice(1).split('').some((c) => c !== '0');
+    if (d0 > 5 || (d0 === 5 && restNonZero)) roundDigits = bump();
+    else if (d0 === 5 && !restNonZero && Number(keep[keep.length - 1]) % 2 === 1) roundDigits = bump(); // even-digit rule
+  }
+  const rounded = place(roundDigits);
+  const steps = [];
+  steps.push(`\\textbf{Number: } ${value} \\quad (${sig.length} significant digit(s))`);
+  steps.push(`\\textbf{Chopping to ${n} figure(s): } keep ${keep} -> ${fmt(chopped)}`);
+  steps.push(`\\textbf{Rounding to ${n} figure(s): } keep ${keep} -> ${fmt(rounded)}`);
+  steps.push(`\\boxed{\\text{chopped } ${fmt(chopped)}, \\quad \\text{rounded } ${fmt(rounded)}}`);
+  return { result: { chopped, rounded }, steps };
+}
+
 // ---------------------------------------------------------------- integration
 
 export function integrate({ xs, ys, method = 'trapezoid' }) {
@@ -896,8 +1019,8 @@ export function pca({ points, threshold = 95, scale = false }) {
   steps.push(`\\textbf{Step 2: covariance matrix} \\quad \\Sigma = \\frac{1}{${m}}\\sum (x^{(i)}-\\bar{x})(x^{(i)}-\\bar{x})^T = ${tex(cov)}`);
 
   const { eigvals, eigvecs } = jacobiEigen(cov);
-  steps.push(`\\textbf{Step 3: eigenvalues} \\quad \\lambda_1 = ${fmt(eigvals[0])}, \\; \\lambda_2 = ${fmt(eigvals[1])}`);
-  steps.push(`\\textbf{Step 4: eigenvectors} \\quad v_1 = ${eigvecs[0].map((v) => fmt(v)).join(', ')}, \\; v_2 = ${eigvecs[1].map((v) => fmt(v)).join(', ')}`);
+  steps.push(`\\textbf{Step 3: eigenvalues} \\quad ${eigvals.map((v, k) => `\\lambda_${k + 1} = ${fmt(v)}`).join(', \\; ')}`);
+  steps.push(`\\textbf{Step 4: eigenvectors} \\quad ${eigvecs.map((v, k) => `v_${k + 1} = ${v.map((c) => fmt(c)).join(', ')}`).join(', \\; ')}`);
   const V = transpose(eigvecs);
   steps.push(`\\text{Transformation matrix } V = ${tex(V)} \\text{ (eigenvectors stacked column-wise)}`);
 

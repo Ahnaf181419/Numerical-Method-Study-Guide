@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { InlineMath } from 'react-katex';
-import { Rich } from './NotesView.jsx';
+import { Rich, mathError } from './NotesView.jsx';
 import mathSnippet from '../lib/snippet.js';
 
 const plain = (t = '') => t.replace(/\$[^$]+\$/g, '…').replace(/\*/g, '');
@@ -62,7 +62,7 @@ export default function Search({ open, onClose, modules, onGo }) {
           ref={input}
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search lessons and formulas, e.g. Hamming, guard band, Nyquist"
+          placeholder="Search lessons and formulas, e.g. Simpson, pivot, Lagrange"
           aria-label="Search lessons and formulas"
           className="min-h-14 flex-1 bg-transparent text-base text-text outline-none placeholder:text-ash/70"
         />
@@ -85,7 +85,7 @@ export default function Search({ open, onClose, modules, onGo }) {
             </span>
             {h.tex ? (
               <span className="mt-1 block overflow-x-auto text-gold">
-                <InlineMath math={h.tex} />
+                <InlineMath math={h.tex} renderError={mathError} />
               </span>
             ) : (
               <span className="mt-1 block text-sm leading-relaxed text-ash">
