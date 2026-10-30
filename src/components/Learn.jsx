@@ -73,7 +73,7 @@ export default function Learn({ module, index, learned, onIndex, onLearned, onDo
             [false, 'Step by step'],
             [true, 'Whole chapter'],
           ].map(([v, l]) => (
-            <button key={l} role="radio" aria-checked={whole === v} onClick={() => setWhole(v)} className={`press min-h-10 rounded-lg px-4 font-medium ${whole === v ? 'bg-raise text-text' : 'text-ash'}`}>
+            <button key={l} role="radio" aria-checked={whole === v} onClick={() => setWhole(v)} className={`press min-h-11 rounded-lg px-4 font-medium ${whole === v ? 'bg-raise text-text' : 'text-ash'}`}>
               {l}
             </button>
           ))}
@@ -87,18 +87,19 @@ export default function Learn({ module, index, learned, onIndex, onLearned, onDo
         <NotesView module={module} />
       ) : (
         <>
-          <nav aria-label="Lessons" className="mb-8 flex gap-1.5">
-            {module.sections.map((sec, k) => (
-              <button
-                key={sec.heading}
-                onClick={() => go(k)}
-                aria-label={`Lesson ${k + 1}: ${sec.heading}${learned.includes(k) ? ' (understood)' : ''}`}
-                aria-current={k === i ? 'step' : undefined}
-                className="group flex min-h-11 flex-1 items-center"
-              >
-                <span className={`h-1.5 w-full rounded-full transition-colors duration-300 ${k === i ? 'bg-gold' : learned.includes(k) ? 'bg-gold/45' : 'bg-line'}`} />
-              </button>
-            ))}
+          <nav aria-label="Lessons" className="mb-8">
+            <div aria-hidden="true" className="flex gap-1.5">
+              {module.sections.map((sec, k) => (
+                <span key={sec.heading} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${k === i ? 'bg-gold' : learned.includes(k) ? 'bg-gold/45' : 'bg-line'}`} />
+              ))}
+            </div>
+            <select aria-label="Jump to lesson" value={i} onChange={(e) => go(Number(e.target.value))} className="mt-3 min-h-12 w-full rounded-lg border border-line bg-panel px-3 text-base text-text">
+              {module.sections.map((sec, k) => (
+                <option key={sec.heading} value={k}>
+                  {`${k + 1}. ${sec.heading}${learned.includes(k) ? ' ✓' : ''}`}
+                </option>
+              ))}
+            </select>
           </nav>
 
           <article key={`${module.id}-${i}`} className={dir}>

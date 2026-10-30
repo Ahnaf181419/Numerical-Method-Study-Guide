@@ -86,7 +86,8 @@ function Solver({ cfg }) {
               <input
                 value={vals[key]}
                 onChange={(e) => setVals({ ...vals, [key]: e.target.value })}
-                inputMode={type === 'num' || type === 'num0' || type === 'any' ? 'decimal' : type === 'bits' ? 'numeric' : 'text'}
+                // 'any' takes negatives, and the iPhone decimal keypad has no minus key
+                inputMode={type === 'num' || type === 'num0' ? 'decimal' : type === 'bits' ? 'numeric' : 'text'}
                 autoCapitalize="off"
                 autoCorrect="off"
                 spellCheck={false}

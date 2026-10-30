@@ -66,7 +66,7 @@ export default function Search({ open, onClose, modules, onGo }) {
           aria-label="Search lessons and formulas"
           className="min-h-14 flex-1 bg-transparent text-base text-text outline-none placeholder:text-ash/70"
         />
-        <button onClick={onClose} className="press min-h-10 rounded-lg px-3 text-sm text-ash">
+        <button onClick={onClose} className="press min-h-11 rounded-lg px-3 text-sm text-ash">
           Close
         </button>
       </div>

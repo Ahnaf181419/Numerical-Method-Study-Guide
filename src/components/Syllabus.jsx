@@ -1,7 +1,7 @@
 import syllabus, { credit1 } from '../data/syllabusTopics.js';
 
 const link = (url) => (
-  <a href={url} target="_blank" rel="noreferrer" className="text-gold underline decoration-gold/40 underline-offset-2 [overflow-wrap:anywhere] hover:decoration-gold">
+  <a href={url} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center text-gold underline decoration-gold/40 underline-offset-2 [overflow-wrap:anywhere] hover:decoration-gold">
     {url.replace('https://', '')}
   </a>
 );

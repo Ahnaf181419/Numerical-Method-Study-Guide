@@ -22,7 +22,7 @@ export default function CheatSheet({ open, onClose, modules, currentId }) {
       key={id}
       onClick={() => setFilter(id)}
       aria-pressed={filter === id}
-      className={`min-h-10 shrink-0 rounded-full border px-4 text-sm ${filter === id ? 'border-gold bg-gold text-ink' : 'border-line text-ash active:bg-raise'}`}
+      className={`min-h-11 shrink-0 rounded-full border px-4 text-sm ${filter === id ? 'border-gold bg-gold text-ink' : 'border-line text-ash active:bg-raise'}`}
     >
       {label}
     </button>
