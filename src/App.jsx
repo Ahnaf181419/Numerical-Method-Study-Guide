@@ -134,6 +134,12 @@ export default function App() {
             </main>
           </>
         )}
+
+        <footer className="mx-auto mt-16 max-w-3xl px-5 sm:px-8 lg:hidden">
+          <p className="border-t border-line pt-6 text-center text-sm leading-relaxed text-ash">
+            <span className="font-semibold text-gold">Best on a desktop-size screen.</span> Open this site on a laptop or desktop, or turn your iPad to landscape, so wide tables, matrices and long formulas fit without sideways scrolling.
+          </p>
+        </footer>
       </div>
 
       <button
