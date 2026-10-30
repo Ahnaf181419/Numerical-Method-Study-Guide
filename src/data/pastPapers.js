@@ -1,7 +1,7 @@
 // CSE 2201 (AUST) semester finals: Fall 2024, Spring 2024, Fall 2023, Spring 2023. Typed from the question papers.
 // Model answers follow the class slides/notes and the exam rules in docs/EXAM-GUIDELINES.md.
 // `module` links each item to the chapter that teaches it.
-export default [
+const papers = [
   {
     title: 'Fall 2024 semester final',
     meta: 'CSE 2201, AUST. 2 hours 30 minutes, 50 marks. Part A: 2 questions (answer any 3 of 5, then any 4 of 6). Part B: 1 question, answer all.',
@@ -844,3 +844,19 @@ export default [
     ],
   },
 ];
+
+export default papers;
+
+// Papers, items and marks per chapter across every paper above; chapters never asked are absent.
+export const examWeight = () => {
+  const w = {};
+  for (const p of papers) {
+    for (const it of p.sets.flatMap((s) => s.items)) {
+      const m = (w[it.module] ??= { papers: new Set(), marks: 0, items: 0 });
+      m.papers.add(p.title);
+      m.marks += it.marks;
+      m.items += 1;
+    }
+  }
+  return Object.fromEntries(Object.entries(w).map(([k, v]) => [k, { ...v, papers: v.papers.size }]));
+};

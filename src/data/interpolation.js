@@ -404,7 +404,7 @@ export default {
         },
         {
           type: 'exam',
-          text: 'A paper that asks "derive Lagrange\'s formula for unequal intervals" wants the four-line derivation: assume the form (8), put $x = x_0$ to get $a_0$, put $x = x_1$ to get $a_1$, write "similarly for $a_2 \\dots a_n$", substitute, and box the result.',
+          text: 'A paper that asks "derive Lagrange\'s formula for unequal intervals" wants the four-line derivation: assume the form above, put $x = x_0$ to get $a_0$, put $x = x_1$ to get $a_1$, write "similarly for $a_2 \\dots a_n$", substitute, and box the result.',
         },
       ],
     },

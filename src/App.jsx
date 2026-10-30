@@ -104,7 +104,7 @@ export default function App() {
 
         {view === 'exam' && <ExamPrep modules={modules} progress={progress} onOpen={(id) => openModule(id)} onExample={openExample} onMockFinish={saveMock} />}
 
-        {view === 'syllabus' && <Syllabus />}
+        {view === 'syllabus' && <Syllabus onOpen={(id) => openModule(id)} />}
 
         {view === 'module' && (
           <>

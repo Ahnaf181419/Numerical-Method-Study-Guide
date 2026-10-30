@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { mastery } from '../lib/useProgress.js';
 import { likely } from '../data/examPrep.js';
+import papers, { examWeight } from '../data/pastPapers.js';
 import Wave from './Wave.jsx';
 
 function Ring({ value, size = 132 }) {
@@ -39,6 +40,7 @@ export default function Dashboard({ modules, progress, onOpen, onExam, onContinu
   const last = modules.find((m) => m.id === progress.moduleId);
   const lessons = modules.reduce((a, m) => a + m.sections.length, 0);
   const learned = modules.reduce((a, m) => a + (progress.learned?.[m.id]?.length ?? 0), 0);
+  const weight = examWeight();
 
   return (
     <div className="stagger mx-auto max-w-5xl px-5 pb-20 pt-10 sm:px-8">
@@ -74,6 +76,9 @@ export default function Dashboard({ modules, progress, onOpen, onExam, onContinu
       <h2 style={{ '--i': 2 }} className="display mb-4 text-2xl">
         Chapters, in study order
       </h2>
+      <p style={{ '--i': 2 }} className="-mt-2 mb-5 max-w-2xl text-ash">
+        Each card shows how often the {papers.length} past finals asked that chapter and for how many marks — short on time, start with the ones asked most.
+      </p>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {modules.map((m, k) => {
           const v = mastery(m, progress);
@@ -85,10 +90,13 @@ export default function Dashboard({ modules, progress, onOpen, onExam, onContinu
                 <span className="text-sm tabular-nums text-ash">{Math.round(v * 100)}%</span>
               </span>
               <span className="mt-2 text-lg font-semibold leading-snug text-text">{m.title}</span>
-              {m.flagged && <span className="mt-1 text-sm font-medium text-red">Covers a paper topic that is not in your slides/notes</span>}
+              {m.offSyllabus && <span className="mt-1 text-sm font-medium text-red">Not on the printed syllabus, but asked in every past paper</span>}
               <span className="mt-1 text-sm text-ash">
                 {m.sections.length} lessons, {m.examples.length ? `${m.examples.length} example${m.examples.length > 1 ? 's' : ''}` : 'theory'}
                 {best != null && `, quiz ${best}/${m.quiz.length}`}
+              </span>
+              <span className="mt-1 text-sm font-medium text-text/80">
+                {weight[m.id] ? `Asked in ${weight[m.id].papers}/${papers.length} papers · ${weight[m.id].marks} marks` : 'On the syllabus, not asked in these papers yet'}
               </span>
               <span className="mt-4 h-1 overflow-hidden rounded-full bg-line">
                 <span className="bar-fill block h-full w-full bg-gold" style={{ transform: `scaleX(${v})` }} />

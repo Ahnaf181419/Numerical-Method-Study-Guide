@@ -1,6 +1,8 @@
 // Content payload: built from the CSE 2201 slides, the class notes, the books and the past papers.
 // Modules are listed in study order. A module flagged `true` covers a past-paper topic that the
 // slides and notes do not cover — it is taught with the standard textbook method and says so.
+// `offSyllabus` marks a chapter that is not on the printed final syllabus but is asked in every past paper;
+// that, not `flagged`, is what the red chapter badge shows.
 import errors from './errors.js';
 import roots from './roots.js';
 import elimination from './elimination.js';

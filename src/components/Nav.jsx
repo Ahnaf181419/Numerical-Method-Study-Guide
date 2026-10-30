@@ -36,7 +36,7 @@ export function SideNav({ modules, view, currentId, progress, onHome, onPick, on
             <span className="min-w-0 flex-1 py-2">
               <span className={`block leading-tight ${active ? 'text-text' : 'text-text/85'}`}>
                 {m.title}
-                {m.flagged && <span className="ml-1.5 align-middle text-xs text-red">extra</span>}
+                {m.offSyllabus && <span className="ml-1.5 align-middle text-xs text-red">past papers</span>}
               </span>
               <span className="mt-1.5 block h-0.5 overflow-hidden rounded-full bg-line">
                 <span className="bar-fill block h-full w-full bg-gold" style={{ transform: `scaleX(${v})` }} />

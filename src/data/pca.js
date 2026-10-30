@@ -274,11 +274,23 @@ export default {
       blocks: [
         {
           type: 'p',
-          text: 'Solve the characteristic equation $\\det(\\Sigma - \\lambda I) = 0$ for the eigenvalues, then solve $(\\Sigma - \\lambda I)v = 0$ for the eigenvector of each, and normalise it.',
+          text: 'Solve the characteristic equation $\\det(\\Sigma - \\lambda I) = 0$ for the eigenvalues, then solve $(\\Sigma - \\lambda I)v = 0$ for the eigenvector of each, and normalise it. For the $2 \\times 2$ covariance matrix above, by hand:',
+        },
+        {
+          type: 'math',
+          tex: '\\begin{vmatrix} 0.5549 - \\lambda & 0.5539 \\\\ 0.5539 & 0.6449 - \\lambda \\end{vmatrix} = (0.5549 - \\lambda)(0.6449 - \\lambda) - 0.5539^2 = 0 \\;\\Rightarrow\\; \\lambda^2 - 1.1998\\lambda + 0.0510 = 0',
+        },
+        {
+          type: 'p',
+          text: 'The $\\lambda$ coefficient is the sum of the diagonal ($0.5549 + 0.6449 = 1.1998$) and the constant is the determinant ($0.35785501 - 0.30680521 = 0.0510498 \\approx 0.0510$). The quadratic formula gives $\\lambda = \\frac{1.1998 \\pm \\sqrt{1.1998^2 - 4(0.0510)}}{2} = \\frac{1.1998 \\pm 1.1114}{2}$:',
         },
         {
           type: 'math',
           tex: '\\lambda_1 = 1.1556, \\qquad \\lambda_2 = 0.0442',
+        },
+        {
+          type: 'p',
+          text: '**Eigenvectors, the class method.** Put $\\lambda$ into the first row of $(\\Sigma - \\lambda I)v = 0$, $(0.5549 - \\lambda)x_1 + 0.5539x_2 = 0$, take $x_1 = 1$ and solve: $x_2 = \\frac{\\lambda - 0.5549}{0.5539}$. For $\\lambda_1 = 1.1556$, $x_2 = \\frac{0.6007}{0.5539} = 1.0845$, so $v = (1, 1.0845)$; divide by its length $\\sqrt{1^2 + 1.0845^2} = 1.4752$ to get the unit vector $(0.678, 0.735)$. For $\\lambda_2 = 0.044175$ (keep the unrounded value here), $x_2 = \\frac{-0.510725}{0.5539} = -0.9221$, length $\\sqrt{1 + 0.9221^2} = 1.3602$, unit vector $(0.735, -0.678)$.',
         },
         {
           type: 'math',
@@ -374,14 +386,14 @@ export default {
     {
       title: 'Full PCA on the tutorial dataset, keeping 95% of the variance',
       type: 'Numerical — PCA',
-      question: 'Perform Principal Component Analysis on the data set $\\{(2.5, 2.4), $$((0.5, 0.7), $$((2.2, 2.9), $$((1.9, 2.2), $$((3.1, 3.0), $$((2.3, 2.7), $$((2.0, 1.6), $$((1.0, 1.1), $$((1.5, 1.6), $$((1.1, 0.9\\}$ using (i) mean normalisation with no scaling, (ii) the principal components and the data variances along them, (iii) reduce the dimensionality keeping at least 95% of the variance, (iv) recast the data points along the principal component, (v) reconstruct the original points and find the MAE, SSE and RMSE.',
+      question: 'Perform Principal Component Analysis on the data set $\\{(2.5, 2.4), $$(0.5, 0.7), $$(2.2, 2.9), $$(1.9, 2.2), $$(3.1, 3.0), $$(2.3, 2.7), $$(2.0, 1.6), $$(1.0, 1.1), $$(1.5, 1.6), $$(1.1, 0.9\\}$ using (i) mean normalisation with no scaling, (ii) the principal components and the data variances along them, (iii) reduce the dimensionality keeping at least 95% of the variance, (iv) recast the data points along the principal component, (v) reconstruct the original points and find the MAE, SSE and RMSE.',
       source: 'PCA Tutorial Step by Step (Math) — Q1',
       marks: 8,
       steps: [
-        { t: '**Step 1 — preprocessing.** $\\bar{x} = 1.81$, $\\bar{y} = 1.91$. Mean-normalised points: $(0.69, 0.49), $$((-1.31, -1.21), $$((0.39, 0.99), $$((0.09, 0.29), $$((1.29, 1.09), $$((0.49, 0.79), $$((0.19, -0.31), $$((-0.81, -0.81), $$((-0.31, -0.31), $$((-0.71, -1.01$.', m: '1 mark' },
+        { t: '**Step 1 — preprocessing.** $\\bar{x} = 1.81$, $\\bar{y} = 1.91$. Mean-normalised points: $(0.69, 0.49), $$(-1.31, -1.21), $$(0.39, 0.99), $$(0.09, 0.29), $$(1.29, 1.09), $$(0.49, 0.79), $$(0.19, -0.31), $$(-0.81, -0.81), $$(-0.31, -0.31), $$(-0.71, -1.01$.', m: '1 mark' },
         { t: '**Step 2 — covariance matrix.** $\\Sigma = \\frac{1}{10}\\sum z^{(i)}z^{(i)T} = \\begin{bmatrix} 0.5549 & 0.5539 \\\\ 0.5539 & 0.6449 \\end{bmatrix}$.', m: '1 mark' },
-        { t: '**Step 3 — eigenvalues.** $\\det(\\Sigma - \\lambda I) = 0$ gives $\\lambda_1 = 1.1556$ and $\\lambda_2 = 0.0442$.', m: '1 mark' },
-        { t: '**Step 4 — eigenvectors and V.** $v_1 = (0.678, 0.735)$, $v_2 = (0.735, -0.678)$, so $V = \\begin{bmatrix} 0.678 & 0.735 \\\\ 0.735 & -0.678 \\end{bmatrix}$.', m: '1 mark' },
+        { t: '**Step 3 — eigenvalues.** $\\det(\\Sigma - \\lambda I) = (0.5549 - \\lambda)(0.6449 - \\lambda) - 0.5539^2 = 0$, i.e. $\\lambda^2 - 1.1998\\lambda + 0.0510 = 0$, so $\\lambda = \\frac{1.1998 \\pm 1.1114}{2}$: $\\lambda_1 = 1.1556$ and $\\lambda_2 = 0.0442$.', m: '1 mark' },
+        { t: '**Step 4 — eigenvectors and V.** From $(0.5549 - \\lambda)x_1 + 0.5539x_2 = 0$ with $x_1 = 1$: for $\\lambda_1$, $x_2 = 1.0845$, normalised by $\\sqrt{1 + 1.0845^2} = 1.4752$; for $\\lambda_2$, $x_2 = -0.9221$, normalised by $1.3602$. So $v_1 = (0.678, 0.735)$, $v_2 = (0.735, -0.678)$, and $V = \\begin{bmatrix} 0.678 & 0.735 \\\\ 0.735 & -0.678 \\end{bmatrix}$.', m: '1 mark' },
         { t: '**Step 5 — reduce.** The variance percentages are $\\frac{1.1556}{1.1998}\\times 100 = 96.3\\%$ and $3.7\\%$. Since $96.3\\% \\ge 95\\%$, keep **one** component. Transform: $Y = XV$, giving $Y = (3.459, 0.854, 3.623, 2.905, 4.307,$ $3.544, 2.532, 1.487, 2.193, 1.407)$.', m: '2 marks' },
         { t: '**Step 6 — reconstruct.** $X_r = YV^T$, a $(10 \\times 1)(1 \\times 2) = 10 \\times 2$ product. The first point comes back as $3.459 \\times (0.678, 0.735) = (2.35, 2.54)$ against the original $(2.5, 2.4)$, so the errors are $(0.15, -0.14)$.', m: '1 mark' },
         { t: 'Over all ten points: $\\text{MAE} = (0.13, 0.12)$, $\\text{SSE} = (0.25, 0.21)$, $\\text{RMSE} = (0.157, 0.145)$.', m: '1 mark' },
@@ -403,7 +415,7 @@ export default {
       steps: [
         { t: '**Step 1 — mean normalisation and scaling.** After centring, the standard deviations are $s_x = 0.7449$ and $s_y = 0.8031$. Dividing each centred column by its standard deviation gives the scaled points.', m: '1 mark' },
         { t: '**Step 2 — covariance matrix of the scaled points.** $\\Sigma_{scaled} = \\frac{1}{10}\\sum z^{(i)}z^{(i)T} = \\begin{bmatrix} 1 & 0.9259 \\\\ 0.9259 & 1 \\end{bmatrix}$ — the diagonal is 1 and the off-diagonal entry is the correlation of the two features.', m: '2 marks' },
-        { t: '**Step 3 — eigenvalues.** $\\lambda_1 = 1.9259$, $\\lambda_2 = 0.0741$.', m: '1 mark' },
+        { t: '**Step 3 — eigenvalues.** $(1 - \\lambda)^2 - 0.9259^2 = 0$, i.e. $\\lambda^2 - 2\\lambda + 0.1427 = 0$, so $\\lambda = 1 \\pm 0.9259$: $\\lambda_1 = 1.9259$, $\\lambda_2 = 0.0741$. With $x_1 = 1$, $x_2 = \\frac{\\lambda - 1}{0.9259} = \\pm 1$, so the unit eigenvectors are $(0.7071, 0.7071)$ and $(0.7071, -0.7071)$.', m: '1 mark' },
         { t: '**Step 4 — variance percentages.** $\\dfrac{1.9259}{2}\\times 100 = 96.3\\%$ and $3.7\\%$ — the same split as without scaling.', m: '1 mark' },
         { t: '**Steps 5-6.** With 95% the first component is still kept alone; the reconstruction and the errors are then computed from the **scaled** points, so the errors are in scaled units and must be compared with the scaled data, not the original.', m: '1 mark' },
       ],

@@ -83,7 +83,7 @@ export const checks = {
     options: ['3', '1', '4', '6'],
     answer: 1,
     explain:
-      'Simpson’s 3/8 rule is $I \\approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + y_2 + \\cdots + y_{n-1}) + y_n\\right]$ — the end ordinates have weight **1** and only the interior ones have weight 3. Weighting the ends by 3 is a classic mistake.',
+      'Simpson’s 3/8 rule is $I \approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + y_2 + y_4 + y_5 + \\cdots + y_{n-1}) + 2(y_3 + y_6 + \\cdots + y_{n-3}) + y_n\\right]$ — the end ordinates have weight **1**, the shared ordinates $y_3, y_6, \dots$ weight 2, and the rest weight 3. Weighting the ends by 3 is a classic mistake.',
   },
 
   "Weddle's rule": {
@@ -233,6 +233,10 @@ export default {
         },
         {
           type: 'p',
+          text: 'Where the coefficients come from: since $dx = h\\,du$, each term of the series is integrated in $u$ from $0$ to $n$. The first three are $\\int_0^n u\\,du = \\frac{n^2}{2}$, then $\\frac{1}{2!}\\int_0^n u(u-1)\\,du = \\frac{1}{2}\\left(\\frac{n^3}{3} - \\frac{n^2}{2}\\right)$, then $\\frac{1}{3!}\\int_0^n u(u-1)(u-2)\\,du = \\frac{1}{6}\\left(\\frac{n^4}{4} - n^3 + n^2\\right)$, and the pattern continues for $\\Delta^4 y_0, \\Delta^5 y_0, \\dots$ (Shanker Rao §9.2).',
+        },
+        {
+          type: 'p',
           text: 'Every numerical integration formula for equidistant ordinates comes out of this one box by putting in a suitable positive integer $n$ and neglecting the higher differences:',
         },
         {
@@ -333,7 +337,11 @@ export default {
         },
         {
           type: 'math',
-          tex: "I = \\int_{a}^{b} f(x)dx \\approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + y_2 + \\cdots + y_{n-1}) + y_n\\right]",
+          tex: "I = \\int_{a}^{b} f(x)dx \\approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + y_2 + y_4 + y_5 + \\cdots + y_{n-1}) + 2(y_3 + y_6 + \\cdots + y_{n-3}) + y_n\\right]",
+        },
+        {
+          type: 'p',
+          text: 'The rule is applied to each group of three subintervals, $\\frac{3h}{8}(y_0 + 3y_1 + 3y_2 + y_3)$, then $\\frac{3h}{8}(y_3 + 3y_4 + 3y_5 + y_6)$, and so on. Each ordinate $y_3, y_6, \\dots$ where two groups meet is counted once by each group, so it carries the weight **2**; the other interior ordinates carry **3**. With exactly three subintervals there is no shared ordinate and the bracket is just $y_0 + 3y_1 + 3y_2 + y_3$.',
         },
         {
           type: 'p',
@@ -345,7 +353,7 @@ export default {
         },
         {
           type: 'note',
-          text: "Shanker Rao’s note: Simpson's three-eighths rule can be applied when the range $[a,b]$ is divided into a number of subintervals that must be a **multiple of three**. And in the formula the end ordinates carry the weight **1**, not 3 — only the interior ones carry the 3.",
+          text: "Shanker Rao’s note: Simpson's three-eighths rule can be applied when the range $[a,b]$ is divided into a number of subintervals that must be a **multiple of three**. And in the formula the end ordinates carry the weight **1**, not 3; the shared ordinates $y_3, y_6, \\dots$ carry **2**, and every other interior ordinate carries 3.",
         },
         {
           type: 'p',
@@ -353,7 +361,7 @@ export default {
         },
         {
           type: 'exam',
-          text: 'Write $h = \\frac{b-a}{n}$ and check that $n$ is a multiple of 3, then substitute into $\\frac{3h}{8}\\left[y_0 + 3\\sum_{i=1}^{n-1} y_i + y_n\\right]$. Remember the factor $\\frac{3h}{8}$, not $\\frac{h}{3}$.',
+          text: 'Write $h = \\frac{b-a}{n}$ and check that $n$ is a multiple of 3, then substitute into $\\frac{3h}{8}\\left[y_0 + 3\\sum_{3 \\nmid i} y_i + 2(y_3 + y_6 + \\cdots + y_{n-3}) + y_n\\right]$, where the first sum runs over the interior $i$ that are **not** multiples of 3. Remember the factor $\\frac{3h}{8}$, not $\\frac{h}{3}$.',
         },
       ],
     },
@@ -371,7 +379,15 @@ export default {
         },
         {
           type: 'p',
-          text: "The weights repeat with the pattern $1, 5, 1, 6, 1, 5$. The last coefficient that the general quadrature formula produces for this case is $\\frac{41}{140} = \\frac{3}{10} - \\frac{1}{140}$; Shanker Rao takes $\\frac{3}{10}$ instead, so the difference $\\frac{1}{140}$ lands in the error term — and that difference vanishes for every polynomial of degree 5 or lower.",
+          text: "Within one panel of six subintervals the weights are $1, 5, 1, 6, 1, 5, 1$. For $12, 18, \\dots$ subintervals the rule is applied panel by panel, and the ordinate where two panels meet ($y_6, y_{12}, \\dots$) is counted by both, so it carries the weight **2** (Shanker Rao §9.6):",
+        },
+        {
+          type: 'math',
+          tex: "I \\approx \\frac{3h}{10}\\left[y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + 2y_6 + 5y_7 + y_8 + 6y_9 + y_{10} + 5y_{11} + 2y_{12} + \\cdots + y_n\\right]",
+        },
+        {
+          type: 'p',
+          text: "The last coefficient that the general quadrature formula produces for this case is $\\frac{41}{140} = \\frac{3}{10} - \\frac{1}{140}$; Shanker Rao takes $\\frac{3}{10}$ instead, so the difference $\\frac{1}{140}$ lands in the error term — and that difference vanishes for every polynomial of degree 5 or lower.",
         },
         {
           type: 'math',
@@ -474,7 +490,7 @@ export default {
         },
         {
           type: 'note',
-          text: 'Traps that cost marks: using Simpson’s one-third rule with an **odd** number of subintervals; forgetting the factor $\\frac{3h}{8}$ in the 3/8 rule; weighting the end ordinates by 3 in the 3/8 rule; and forgetting the factor $\\frac{3h}{10}$ in Weddle’s rule. Also: when the question says "correct to $k$ decimal places", give the answer to $k$ places **and** compare with the true value if one is supplied.',
+          text: 'Traps that cost marks: using Simpson’s one-third rule with an **odd** number of subintervals; forgetting the factor $\\frac{3h}{8}$ in the 3/8 rule; weighting the end ordinates by 3 in the 3/8 rule (or giving the shared ordinates $y_3, y_6, \\dots$ a 3 instead of 2); and forgetting the factor $\\frac{3h}{10}$ in Weddle’s rule. Also: when the question says "correct to $k$ decimal places", give the answer to $k$ places **and** compare with the true value if one is supplied.',
         },
         {
           type: 'exam',
@@ -502,7 +518,7 @@ export default {
     },
     {
       label: "Simpson's three-eighths rule",
-      tex: "I \\approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + y_2 + \\cdots + y_{n-1}) + y_n\\right]",
+      tex: "I \approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + y_2 + y_4 + y_5 + \\cdots + y_{n-1}) + 2(y_3 + y_6 + \\cdots + y_{n-3}) + y_n\\right]",
       where: 'Error $E \\approx -\\frac{3(b-a)h^4}{80}f^{(4)}(\\xi)$ — needs a multiple of three subintervals',
     },
     {
@@ -843,6 +859,112 @@ export default {
         'The table above is rounded to five digits, as in the book. If you evaluate the ordinates to full precision the calculator returns $0.8221193$ — the $2 \\times 10^{-7}$ difference is the rounding of the table, not the rule.',
       ],
     },
+
+    {
+      title: 'Deriving the trapezoidal rule from the general quadrature formula',
+      type: 'Theory — Derive',
+      question:
+        'Deduce the trapezoidal rule from the general quadrature formula for equidistant ordinates.',
+      source: 'Shanker Rao §9.3',
+      marks: 4,
+      steps: [
+        {
+          t: 'General quadrature formula (from Newton’s forward series with $x = x_0 + uh$, $dx = h\\,du$): $\\int_{x_0}^{x_0+nh} f(x)\\,dx = h\\left[n y_0 + \\frac{n^2}{2}\\Delta y_0 + \\frac{1}{2}\\left(\\frac{n^3}{3}-\\frac{n^2}{2}\\right)\\Delta^2 y_0 + \\cdots\\right]$.',
+          m: '1 mark',
+        },
+        {
+          t: 'Put $n = 1$ and neglect all differences above the first: $I_1 = \\int_{x_0}^{x_0+h} f(x)\\,dx = h\\left[y_0 + \\frac{1}{2}\\Delta y_0\\right]$.',
+          m: '1 mark',
+        },
+        {
+          t: 'With $\\Delta y_0 = y_1 - y_0$: $I_1 = h\\left[y_0 + \\frac{1}{2}(y_1 - y_0)\\right] = \\frac{h}{2}(y_0 + y_1)$. Similarly $I_2 = \\frac{h}{2}(y_1 + y_2)$, $I_3 = \\frac{h}{2}(y_2 + y_3)$, …, $I_n = \\frac{h}{2}(y_{n-1} + y_n)$.',
+          m: '1 mark',
+        },
+        {
+          t: 'Add $I_1 + I_2 + \\cdots + I_n$; every inner ordinate appears in two neighbouring strips: $\\boxed{\\int_a^b f(x)\\,dx \\approx \\frac{h}{2}\\left[y_0 + y_n + 2(y_1 + y_2 + \\cdots + y_{n-1})\\right]}$.',
+          m: '1 mark',
+        },
+      ],
+      answer:
+        '$\\boxed{I \\approx \\frac{h}{2}\\left[y_0 + y_n + 2(y_1 + y_2 + \\cdots + y_{n-1})\\right]}$, the trapezoidal rule, with error $-\\frac{(b-a)h^2}{12}f\'\'(\\xi)$.',
+      note: 'Trap: stopping at the one-strip result $\\frac{h}{2}(y_0 + y_1)$. The question wants the rule for the whole range, so write $I_2, \\dots, I_n$ and add them.',
+      explanation: [
+        'With $n = 1$ the interpolating polynomial through $(x_0, y_0)$ and $(x_1, y_1)$ is a straight line, so the area under it is a trapezium: half the sum of the parallel sides times the width. That is all $\\frac{h}{2}(y_0 + y_1)$ says.',
+        'The composite rule is the one-strip rule applied to every strip. The ends $y_0$ and $y_n$ belong to one strip each; every other ordinate is the right side of one strip and the left side of the next, which is where the 2 comes from.',
+      ],
+    },
+
+    {
+      title: 'Deriving Simpson’s three-eighths rule from the general quadrature formula',
+      type: 'Theory — Derive',
+      question:
+        'Deduce Simpson’s three-eighths rule from the general quadrature formula for equidistant ordinates.',
+      source: 'Shanker Rao §9.5',
+      marks: 4,
+      steps: [
+        {
+          t: 'General quadrature formula: $\\int_{x_0}^{x_0+nh} f(x)\\,dx = h\\left[n y_0 + \\frac{n^2}{2}\\Delta y_0 + \\frac{1}{2}\\left(\\frac{n^3}{3}-\\frac{n^2}{2}\\right)\\Delta^2 y_0 + \\frac{1}{6}\\left(\\frac{n^4}{4}-n^3+n^2\\right)\\Delta^3 y_0 + \\cdots\\right]$.',
+          m: '1 mark',
+        },
+        {
+          t: 'Put $n = 3$ and neglect the fourth and higher differences: $I_1 = \\int_{x_0}^{x_0+3h} f(x)\\,dx = h\\left[3y_0 + \\frac{9}{2}\\Delta y_0 + \\frac{9}{4}\\Delta^2 y_0 + \\frac{3}{8}\\Delta^3 y_0\\right]$.',
+          m: '1 mark',
+        },
+        {
+          t: 'Substitute $\\Delta y_0 = y_1 - y_0$, $\\Delta^2 y_0 = y_2 - 2y_1 + y_0$, $\\Delta^3 y_0 = y_3 - 3y_2 + 3y_1 - y_0$ and collect: $y_0$: $3 - \\frac{9}{2} + \\frac{9}{4} - \\frac{3}{8} = \\frac{3}{8}$; $y_1$: $\\frac{9}{2} - \\frac{9}{2} + \\frac{9}{8} = \\frac{9}{8}$; $y_2$: $\\frac{9}{4} - \\frac{9}{8} = \\frac{9}{8}$; $y_3$: $\\frac{3}{8}$. So $I_1 = \\frac{3h}{8}(y_0 + 3y_1 + 3y_2 + y_3)$.',
+          m: '1 mark',
+        },
+        {
+          t: 'Similarly $I_2 = \\frac{3h}{8}(y_3 + 3y_4 + 3y_5 + y_6)$, …, $I_{n/3} = \\frac{3h}{8}(y_{n-3} + 3y_{n-2} + 3y_{n-1} + y_n)$. Adding, $y_3, y_6, \\dots$ appear twice: $\\boxed{I \\approx \\frac{3h}{8}\\left[y_0 + y_n + 3(y_1 + y_2 + y_4 + y_5 + \\cdots + y_{n-1}) + 2(y_3 + y_6 + \\cdots + y_{n-3})\\right]}$.',
+          m: '1 mark',
+        },
+      ],
+      answer:
+        '$\\boxed{I \\approx \\frac{3h}{8}\\left[y_0 + y_n + 3(y_1 + y_2 + y_4 + y_5 + \\cdots + y_{n-1}) + 2(y_3 + y_6 + \\cdots + y_{n-3})\\right]}$, for $n$ a multiple of 3.',
+      note: 'Trap: writing $3(y_1 + y_2 + \\cdots + y_{n-1})$. The ordinates where two groups of three meet ($y_3, y_6, \\dots$) are counted once by each group, so they carry 2, not 3.',
+      explanation: [
+        'With $n = 3$ the interpolating polynomial is a cubic through four ordinates, so each application of the rule covers three strips. That is why the number of subintervals must be a multiple of three.',
+        'The collecting step is pure arithmetic; write each coefficient out as above so the examiner can follow it. The check is that the four weights $\\frac{3}{8}, \\frac{9}{8}, \\frac{9}{8}, \\frac{3}{8}$ add to $3$, the width of the panel in units of $h$.',
+      ],
+    },
+
+    {
+      title: 'Deriving Weddle’s rule from the general quadrature formula',
+      type: 'Theory — Derive',
+      question:
+        'Deduce Weddle’s rule from the general quadrature formula for equidistant ordinates.',
+      source: 'Shanker Rao §9.6',
+      marks: 5,
+      steps: [
+        {
+          t: 'Assume that within any six consecutive subintervals the interpolating polynomial has degree 6. Put $n = 6$ in the general quadrature formula and neglect all differences above $\\Delta^6$: $I_1 = \\int_{x_0}^{x_0+6h} f(x)\\,dx = h\\left[6y_0 + 18\\Delta y_0 + 27\\Delta^2 y_0 + 24\\Delta^3 y_0 + \\frac{123}{10}\\Delta^4 y_0 + \\frac{33}{10}\\Delta^5 y_0 + \\frac{41}{140}\\Delta^6 y_0\\right]$.',
+          m: '1 mark',
+        },
+        {
+          t: 'Since $\\frac{3}{10} - \\frac{41}{140} = \\frac{1}{140}$, replace the coefficient $\\frac{41}{140}$ by $\\frac{3}{10}$. This changes the result only by $\\frac{h}{140}\\Delta^6 y_0$, which is the error committed (and it is zero for any polynomial of degree 5 or less).',
+          m: '1 mark',
+        },
+        {
+          t: 'Write every difference in ordinates, $\\Delta^k y_0 = \\sum_{j=0}^{k} (-1)^{k-j}\\binom{k}{j} y_j$ (for example $\\Delta^3 y_0 = y_3 - 3y_2 + 3y_1 - y_0$), substitute and collect the coefficient of each $y_j$.',
+          m: '1 mark',
+        },
+        {
+          t: 'The coefficients come out as $\\frac{3}{10}, \\frac{15}{10}, \\frac{3}{10}, \\frac{18}{10}, \\frac{3}{10}, \\frac{15}{10}, \\frac{3}{10}$, so $I_1 = \\frac{3h}{10}\\left(y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + y_6\\right)$.',
+          m: '1 mark',
+        },
+        {
+          t: 'Similarly $I_2 = \\frac{3h}{10}(y_6 + 5y_7 + y_8 + 6y_9 + y_{10} + 5y_{11} + y_{12})$, and so on. Adding, $y_6, y_{12}, \\dots$ appear twice: $\\boxed{I \\approx \\frac{3h}{10}\\left[y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + 2y_6 + 5y_7 + y_8 + \\cdots + y_n\\right]}$.',
+          m: '1 mark',
+        },
+      ],
+      answer:
+        '$\\boxed{I \\approx \\frac{3h}{10}\\left[y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + y_6\\right]}$ for six subintervals; for a multiple of six, the ordinates $y_6, y_{12}, \\dots$ where panels meet carry 2. Error $\\approx -\\frac{h^7}{140}f^{(6)}(\\xi)$.',
+      note: 'Trap: keeping $\\frac{41}{140}$, which gives untidy weights. The whole point of Weddle’s rule is the swap to $\\frac{3}{10}$; say so in one line, with the error $\\frac{h}{140}\\Delta^6 y_0$ it costs.',
+      explanation: [
+        'Weddle’s rule is the general formula with $n = 6$ plus one deliberate approximation: rounding the last coefficient up from $\\frac{41}{140}$ to $\\frac{3}{10} = \\frac{42}{140}$. That single change makes the weights the easy pattern $1, 5, 1, 6, 1, 5, 1$.',
+        'You do not need to expand all six differences on paper in the exam: state the substitution rule, show one difference expanded, and give the collected coefficients. The check is that $\\frac{3}{10}(1 + 5 + 1 + 6 + 1 + 5 + 1) = 6$, the width of the panel in units of $h$.',
+      ],
+    },
   ],
 
   flashcards: [
@@ -864,7 +986,7 @@ export default {
     },
     {
       front: "Simpson's three-eighths rule and its error",
-      back: "$I \\approx \\frac{3h}{8}[y_0 + 3(y_1+\\cdots+y_{n-1}) + y_n]$, error $E \\approx -\\frac{3(b-a)h^4}{80}f^{(4)}(\\xi)$. It needs a **multiple of three** subintervals; the end ordinates have weight 1.",
+      back: "$I \approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + y_2 + y_4 + y_5 + \\cdots + y_{n-1}) + 2(y_3 + y_6 + \\cdots + y_{n-3}) + y_n\\right]$, error $E \\approx -\\frac{3(b-a)h^4}{80}f^{(4)}(\\xi)$. It needs a **multiple of three** subintervals; the end ordinates have weight 1 and $y_3, y_6, \\dots$ weight 2.",
     },
     {
       front: "Weddle's rule and its error",
@@ -937,7 +1059,7 @@ export default {
       options: ['1', '2', '3', '4'],
       answer: 0,
       explain:
-        '$I \\approx \\frac{3h}{8}[y_0 + 3(y_1+\\cdots+y_{n-1}) + y_n]$ — the ends have weight 1; only the interior ordinates carry the 3.',
+        '$I \approx \\frac{3h}{8}\\left[y_0 + 3(y_1 + y_2 + y_4 + y_5 + \\cdots + y_{n-1}) + 2(y_3 + y_6 + \\cdots + y_{n-3}) + y_n\\right]$ — the ends have weight 1, the shared ordinates $y_3, y_6, \dots$ weight 2, the rest 3.',
     },
     {
       q: 'Putting $n = 3$ in the general quadrature formula gives …',

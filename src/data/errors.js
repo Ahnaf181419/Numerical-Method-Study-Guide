@@ -128,6 +128,7 @@ export default {
   wave: 'error',
   sources: ['Shanker Rao Ch 1', 'Balagurusamy Ch 4'],
   flagged: true,
+  offSyllabus: true,
   sections: [
     {
       heading: "Start here: the problem this chapter solves",

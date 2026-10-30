@@ -117,6 +117,7 @@ export default {
   wave: 'root',
   sources: ['Shanker Rao Ch 2', 'Past papers'],
   flagged: true,
+  offSyllabus: true,
   sections: [
     {
       heading: "Start here: the problem this chapter solves",

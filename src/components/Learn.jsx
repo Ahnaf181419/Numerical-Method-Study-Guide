@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Block, Rich } from './NotesView.jsx';
 import NotesView from './NotesView.jsx';
 import checks from '../data/checks.js';
+import { videosFor } from '../data/syllabusTopics.js';
 
 export function Choice({ item, onAnswer }) {
   const [picked, setPicked] = useState(null);
@@ -51,6 +52,7 @@ export default function Learn({ module, index, learned, onIndex, onLearned, onDo
   const i = Math.min(index, total - 1);
   const s = module.sections[i];
   const check = checks[module.id]?.[s.heading];
+  const videos = videosFor(module.id, s.heading);
   const isLearned = learned.includes(i);
   const go = (to) => {
     setDir(to > i ? 'enter-next' : 'enter-prev');
@@ -111,6 +113,17 @@ export default function Learn({ module, index, learned, onIndex, onLearned, onDo
                 <Block key={k} b={b} />
               ))}
             </div>
+
+            {videos.length > 0 && (
+              <p className="mt-8 flex flex-wrap gap-x-4 gap-y-2 font-sans text-[0.95rem]">
+                <span className="text-ash">Teacher’s video:</span>
+                {videos.map((v) => (
+                  <a key={v.url} href={v.url} target="_blank" rel="noreferrer" className="press inline-flex min-h-11 items-center text-gold underline decoration-gold/40 underline-offset-2">
+                    {v.name}
+                  </a>
+                ))}
+              </p>
+            )}
 
             {check && (
               <section aria-label="Check yourself" className="mt-10 rounded-2xl border border-line bg-panel p-5 sm:p-6">
