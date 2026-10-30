@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BlockMath } from 'react-katex';
 import { SOLVERS } from '../lib/solverConfigs.js';
+import { mathError } from './NotesView.jsx';
 
 const numbers = (text, label) => {
   const nums = text.split(/[\s,;]+/).filter(Boolean).map(Number);
@@ -101,7 +102,7 @@ function Solver({ cfg }) {
         ) : (
           <div className="math-block">
             {out.steps.map((t, i) => (
-              <BlockMath key={i} math={t} />
+              <BlockMath key={i} math={t} renderError={mathError} />
             ))}
           </div>
         )}

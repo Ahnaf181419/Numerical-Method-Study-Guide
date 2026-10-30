@@ -202,17 +202,11 @@ export const SOLVERS = {
         ['ys', 'y values', 'nums', '0,32,58,78,92,100'],
       ],
       run: (v) => {
-        const h = v.xs[1] - v.xs[0];
-        const cols = [v.ys];
-        let cur = v.ys;
-        while (cur.length > 1) {
-          cur = cur.slice(1).map((val, i) => val - cur[i]);
-          cols.push(cur);
-        }
+        const cols = s.diffTable(v.ys);
         return {
           result: { cols },
           steps: [
-            `h = ${h}`,
+            `h = ${s.spacing(v.xs)}`,
             '\\begin{array}{c|' + 'c'.repeat(cols.length) + '} \\hline ' +
               cols.map((_, k) => `\\Delta^{${k}}`).join(' & ') + ' \\\\ \\hline ' +
               cols.map((c) => c.map((val) => String(val)).join(' & ')).join(' \\\\ ') + ' \\end{array}',

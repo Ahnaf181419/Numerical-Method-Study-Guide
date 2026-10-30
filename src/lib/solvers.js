@@ -7,7 +7,7 @@
 //   * Gauss-Jordan ends in reduced row echelon form (identity for a square matrix) — no back substitution;
 //   * iterative methods check diagonal dominance before they start.
 
-import { compile, poly } from './expr.js';
+import { compile } from './expr.js';
 
 const fmt = (x, d = 4) => {
   if (typeof x !== 'number' || !Number.isFinite(x)) return String(x);
@@ -22,6 +22,17 @@ const augTex = (rows, digits = 4) =>
 const mul = (A, B) => A.map((r) => B[0].map((_, j) => r.reduce((s, v, k) => s + v * B[k][j], 0)));
 const mv = (A, v) => A.map((r) => r.reduce((s, x, k) => s + x * v[k], 0));
 const transpose = (A) => A[0].map((_, j) => A.map((r) => r[j]));
+const boxedX = (x) => `\\boxed{${x.map((v, i) => `x_{${i + 1}} = ${fmt(v)}`).join(',\\quad ')}}`;
+
+// The equal-interval rules all take h from the first gap — refuse a table whose gaps differ.
+export const spacing = (xs) => {
+  if (xs.length < 2) throw new Error('give at least two x values.');
+  const h = xs[1] - xs[0];
+  if (!xs.every((v, i) => i === 0 || Math.abs(v - xs[i - 1] - h) < 1e-9)) {
+    throw new Error('the x values must be equally spaced for this rule.');
+  }
+  return h;
+};
 
 // ---------------------------------------------------------------- linear systems
 
@@ -53,9 +64,11 @@ export function gaussEliminate({ A, b, pivot = 'auto' }) {
       let r = k;
       for (let i = k + 1; i < n; i++) if (Math.abs(M[i][k]) > Math.abs(M[r][k])) r = i;
       if (r !== k) {
+        // quote the live matrix, not A — earlier columns may have swapped or changed these entries
+        const pk = Math.abs(M[k][k]), pr = Math.abs(M[r][k]);
         [M[k], M[r]] = [M[r], M[k]];
         usedPivoting = true;
-        steps.push(`\\text{Partial pivoting: } |a_{${r + 1}${k + 1}}| = ${fmt(Math.abs(A[r][k]))} > |a_{${k + 1}${k + 1}}| = ${fmt(Math.abs(A[k][k]))}, \\text{ so swap } R_{${k + 1}} \\text{ and } R_{${r + 1}}:`);
+        steps.push(`\\text{Partial pivoting: } |a_{${r + 1}${k + 1}}| = ${fmt(pr)} > |a_{${k + 1}${k + 1}}| = ${fmt(pk)}, \\text{ so swap } R_{${k + 1}} \\text{ and } R_{${r + 1}}:`);
         steps.push(`${augTex(M)}`);
       }
     }
@@ -97,7 +110,7 @@ export function gaussEliminate({ A, b, pivot = 'auto' }) {
       `x_{${i + 1}} = \\frac{${fmt(M[i][n])}${terms.length ? ' ' + terms.join(' ') : ''}}{${fmt(M[i][i])}} = ${fmt(x[i])}`,
     );
   }
-  steps.push(`\\boxed{x_1 = ${fmt(x[0])},\\quad x_2 = ${fmt(x[1])},\\quad x_3 = ${fmt(x[2])}}`);
+  steps.push(boxedX(x));
   return { result: { x, matrix: M, pivoted: usedPivoting }, steps };
 }
 
@@ -131,7 +144,7 @@ export function gaussJordan({ A, b }) {
   }
   steps.push(`\\text{Reduced row echelon form: } ${augTex(M)}`);
   const x = M.map((r) => r[n]);
-  steps.push(`\\boxed{x_1 = ${fmt(x[0])},\\quad x_2 = ${fmt(x[1])},\\quad x_3 = ${fmt(x[2])}}`);
+  steps.push(boxedX(x));
   return { result: { x, matrix: M }, steps };
 }
 
@@ -146,15 +159,11 @@ export function luDecompose({ A }) {
   for (let j = 0; j < n; j++) {
     U[0][j] = A[0][j];
   }
-  steps.push(`u_{11} = a_{11} = ${fmt(A[0][0])}, \\quad u_{12} = a_{12} = ${fmt(A[0][1])}, \\quad u_{13} = a_{13} = ${fmt(A[0][2])}`);
+  steps.push(A[0].map((v, j) => `u_{1${j + 1}} = a_{1${j + 1}} = ${fmt(v)}`).join(', \\quad '));
 
-  if (n > 1) {
-    L[1][0] = A[1][0] / U[0][0];
-    steps.push(`l_{21} = \\frac{a_{21}}{u_{11}} = \\frac{${fmt(A[1][0])}}{${fmt(U[0][0])}} = ${fmt(L[1][0])}`);
-  }
-  if (n > 2) {
-    L[2][0] = A[2][0] / U[0][0];
-    steps.push(`l_{31} = \\frac{a_{31}}{u_{11}} = \\frac{${fmt(A[2][0])}}{${fmt(U[0][0])}} = ${fmt(L[2][0])}`);
+  for (let i = 1; i < n; i++) {
+    L[i][0] = A[i][0] / U[0][0];
+    steps.push(`l_{${i + 1}1} = \\frac{a_{${i + 1}1}}{u_{11}} = \\frac{${fmt(A[i][0])}}{${fmt(U[0][0])}} = ${fmt(L[i][0])}`);
   }
   for (let i = 1; i < n; i++) {
     for (let j = i; j < n; j++) {
@@ -224,7 +233,7 @@ export function luSolve({ A, b }) {
     x[i] = s / U[i][i];
     steps.push(`x_{${i + 1}} = \\frac{${fmt(d[i])}${terms.length ? ' ' + terms.join(' ') : ''}}{${fmt(U[i][i])}} = ${fmt(x[i])}`);
   }
-  steps.push(`\\boxed{x_1 = ${fmt(x[0])},\\quad x_2 = ${fmt(x[1])},\\quad x_3 = ${fmt(x[2])}}`);
+  steps.push(boxedX(x));
   return { result: { x, L, U, d }, steps };
 }
 
@@ -290,7 +299,6 @@ function iterate({ A, b, x0, tol, maxIter, mode }) {
       `${names.map((nm, i) => `${nm}^{(${it})} = ${fmt(x[i])}`).join(', \\quad ')}`,
     );
     if (Math.max(...x.map((v, i) => Math.abs(v - prev[i]))) < tol) {
-      steps.push(`\\text{Iteration } ${it}: ${lines[lines.length - 1]}`);
       steps.push(`\\text{Change} < ${tol} \\Rightarrow \\text{stop.} `);
       break;
     }
@@ -388,7 +396,7 @@ export function horner({ coeffs, r }) {
 
 // ---------------------------------------------------------------- interpolation
 
-const diffTable = (ys) => {
+export const diffTable = (ys) => {
   const cols = [ys];
   let cur = ys;
   while (cur.length > 1) {
@@ -400,7 +408,7 @@ const diffTable = (ys) => {
 
 // Newton's forward (Gregory) formula for equally spaced points.
 export function newtonForward({ xs, ys, x }) {
-  const h = xs[1] - xs[0];
+  const h = spacing(xs);
   const cols = diffTable(ys);
   const u = (x - xs[0]) / h;
   const steps = [`\\textbf{Difference table}`];
@@ -439,8 +447,8 @@ export function lagrange({ xs, ys, x }) {
     }
     const v = (ys[i] * num) / den;
     sum += v;
-    const numT = Array.from({ length: n - 1 }, (_, j) => j === i ? '' : `(x - ${fmt(xs[j])})`).filter(Boolean).join('');
-    const denT = Array.from({ length: n - 1 }, (_, j) => j === i ? '' : `(${fmt(xs[i])} - ${fmt(xs[j])})`).filter(Boolean).join('');
+    const numT = Array.from({ length: n }, (_, j) => j === i ? '' : `(x - ${fmt(xs[j])})`).filter(Boolean).join('');
+    const denT = Array.from({ length: n }, (_, j) => j === i ? '' : `(${fmt(xs[i])} - ${fmt(xs[j])})`).filter(Boolean).join('');
     parts.push(`${fmt(ys[i])}\\frac{${numT}}{${denT}}`);
   }
   const steps = [`y(x) = \\sum_{i=0}^{${n - 1}} y_i \\prod_{j \\ne i} \\frac{x - x_j}{x_i - x_j}`];
@@ -486,7 +494,7 @@ export function dividedDifference({ xs, ys, x }) {
 // C(u + ⌊k/2⌋, k) Δ^k y_{-⌈k/2⌉}; Stirling is their mean. The series stops at the first
 // difference the table does not have.
 export function gaussInterp({ xs, ys, x, formula = 'forward' }) {
-  const h = xs[1] - xs[0];
+  const h = spacing(xs);
   const cols = diffTable(ys);
   const p = (x - xs[0]) / h;
   // origin: 0 < u < 1 for forward, -1 < u < 0 for backward, nearest point for Stirling
@@ -532,7 +540,8 @@ export function gaussInterp({ xs, ys, x, formula = 'forward' }) {
 // method: 'forward2' | 'forward3' | 'backward2' | 'backward3' | 'central2' | 'central3'
 export function differentiate({ xs, ys, x, method = 'central2' }) {
   const i = xs.indexOf(x);
-  const h = xs[1] - xs[0];
+  if (i === -1) throw new Error(`x = ${x} is not one of the table's x values.`);
+  const h = spacing(xs);
   const at = (k) => (k >= 0 && k < xs.length ? ys[k] : NaN);
   const steps = [];
   let f = null, order = '';
@@ -588,7 +597,7 @@ export function richardson({ expr, x, h }) {
 export function integrate({ xs, ys, method = 'trapezoid' }) {
   const n = xs.length;
   const N = n - 1; // number of subintervals
-  const h = xs[1] - xs[0];
+  const h = spacing(xs);
   const steps = [`h = x_1 - x_0 = ${fmt(h)}, \\quad n = ${N} \\text{ subintervals}`];
   let value = 0;
   if (method === 'trapezoid') {
@@ -618,11 +627,13 @@ export function integrate({ xs, ys, method = 'trapezoid' }) {
   } else if (method === 'weddle') {
     if (N % 6 !== 0) throw new Error("Weddle's rule needs a multiple of six subintervals.");
     const pattern = [1, 5, 1, 6, 1, 5];
+    // an ordinate shared by two six-strip panels (every sixth, interior) carries weight 1 + 1
+    const weight = (i) => pattern[i % 6] + (i % 6 === 0 && i > 0 && i < n - 1 ? 1 : 0);
     let s = 0;
-    for (let i = 0; i < n; i++) s += pattern[i % 6] * ys[i];
+    for (let i = 0; i < n; i++) s += weight(i) * ys[i];
     value = (3 * h / 10) * s;
     steps.push("\\textbf{Weddle's rule: } I \\approx \\frac{3h}{10}\\left[y_0 + 5y_1 + y_2 + 6y_3 + y_4 + 5y_5 + y_6 + \\cdots + y_n\\right]");
-    steps.push(`I \\approx \\frac{3(${fmt(h)})}{10}\\left[${fmt(ys[0])} + 5(${fmt(ys[1])}) + ${fmt(ys[2])} + 6(${fmt(ys[3])}) + ${fmt(ys[4])} + 5(${fmt(ys[5])}) + ${fmt(ys[6])}\\right] = ${fmt(value)}`);
+    steps.push(`I \\approx \\frac{3(${fmt(h)})}{10}\\left[${ys.map((v, i) => `${weight(i) === 1 ? '' : weight(i)}(${fmt(v)})`).join(' + ')}\\right] = ${fmt(value)}`);
     steps.push('\\text{Error: } -\\frac{h^7}{140}f^{(6)}(\\xi)');
   } else if (method === 'compositeTrapezoid') {
     value = h * ((ys[0] + ys[n - 1]) / 2 + ys.slice(1, n - 1).reduce((a, b) => a + b, 0));
@@ -648,6 +659,7 @@ const oddOrEven = (ys, n, odd) =>
 // I = (4·I_fine − I_coarse)/3 at every level. rule 'standard' (Chapra): 1, 2, … n strips and
 // R_kj = R_k,j-1 + (R_k,j-1 − R_k-1,j-1)/(4^j − 1).
 export function romberg({ expr, a, b, n = 8, rule = 'shanker' }) {
+  if (n < 2 || !Number.isInteger(Math.log2(n))) throw new Error('n must be a power of 2 (2, 4, 8, …).');
   const f = compile(expr);
   const steps = [];
   const table = [];
@@ -765,6 +777,7 @@ export function multipleRegression({ xs, zs, ys }) {
 // Gradient descent on a polynomial regression: mode 'batch' or 'single'.
 export function gradientDescent({ xs, ys, degree = 1, theta0 = [0, 0], alpha = 0.01, epochs = 5, mode = 'batch' }) {
   const d = degree + 1;
+  if (theta0.length !== d) throw new Error(`the starting parameters need ${d} values (degree ${degree} + 1).`);
   let theta = [...theta0];
   const names = ['\\theta_0', '\\theta_1', '\\theta_2'];
   const basis = (x) => Array.from({ length: d }, (_, k) => x ** k);

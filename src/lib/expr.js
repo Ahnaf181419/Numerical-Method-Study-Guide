@@ -23,7 +23,9 @@ const tokenize = (src) => {
     if (/[0-9.]/.test(c)) {
       let j = i;
       while (j < src.length && /[0-9.]/.test(src[j])) j++;
-      t.push({ t: 'num', v: parseFloat(src.slice(i, j)) });
+      const num = src.slice(i, j);
+      if ((num.match(/\./g) ?? []).length > 1) throw new Error(`Cannot read "${num}" — a number has one dot.`);
+      t.push({ t: 'num', v: parseFloat(num) });
       i = j;
       continue;
     }
@@ -133,8 +135,3 @@ export function compile(src) {
   return fn;
 }
 
-// y = a0 + a1*x + a2*x^2 + ... from a polynomial written high power first.
-export const poly = (coeffs) => {
-  const c = coeffs.map(Number);
-  return (x) => c.reduce((acc, k) => acc * x + k, 0);
-};

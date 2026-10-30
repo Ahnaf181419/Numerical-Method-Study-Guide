@@ -288,3 +288,88 @@ test('PCA keeps two components at 98%', () => {
   const { result } = s.pca({ points: PCA_DATA, threshold: 98 });
   assert.equal(result.keep, 2);
 });
+
+// ---- audit fixes: solver output on non-default input ------------------------
+test('lagrange shows every factor of every term', () => {
+  const { steps } = s.lagrange({ xs: [5, 7, 11, 13, 17], ys: [150, 392, 1452, 2366, 5202], x: 9 });
+  const firstTerm = steps[1].split(' + ')[0];
+  assert.match(firstTerm, /\(x - 7\)\(x - 11\)\(x - 13\)\(x - 17\)/);
+  assert.match(firstTerm, /\(5 - 7\)\(5 - 11\)\(5 - 13\)\(5 - 17\)/);
+  const four = s.lagrange({ xs: [0, 1, 2, 3], ys: [-1, 1, 1, -2], x: 1.5 }).steps[1];
+  four.split(' + ').forEach((term, i) => assert.equal((term.match(/\(x - /g) || []).length, 3, `term ${i}`));
+});
+
+test('boxed answers list exactly the unknowns (2x2, 4x4) and no step says undefined', () => {
+  const g2 = s.gaussEliminate({ A: [[2, 1], [1, 3]], b: [5, 10] });
+  assert.equal(g2.steps.at(-1), '\\boxed{x_{1} = 1,\\quad x_{2} = 3}');
+  const four = [
+    [s.gaussEliminate({ A: [[1, 1, 1, 1], [2, 1, 2, 1], [1, 2, 0, 1], [3, 1, 1, 2]], b: [10, 12, 8, 14] }), /x_\{4\}/],
+    [s.gaussJordan({ A: [[2, 1], [1, 3]], b: [5, 10] }), /x_\{2\} = 3/],
+    [s.luSolve({ A: [[2, 1], [1, 3]], b: [5, 10] }), /x_\{2\} = 3/],
+  ];
+  four.forEach(([out, re]) => {
+    assert.match(out.steps.at(-1), re);
+    assert.ok(out.steps.every((t) => !t.includes('undefined')));
+  });
+});
+
+test('Do-Little works for 2x2 and 4x4: no undefined steps and L·U = A', () => {
+  const two = s.luDecompose({ A: [[2, 1], [1, 3]] });
+  assert.ok(two.steps.every((t) => !t.includes('undefined')));
+  close(two.result.L[1][0], 0.5);
+  const A4 = [[2, 1, 1, 3], [4, 3, 2, 7], [6, 5, 7, 15], [2, 1, 2, 5]];
+  const four = s.luDecompose({ A: A4 });
+  assert.ok(four.steps.every((t) => !t.includes('undefined')));
+  const { L, U } = four.result;
+  L.forEach((row, i) => row.forEach((_, j) => close(
+    row.reduce((acc, v, k) => acc + v * U[k][j], 0),
+    A4[i][j],
+    1e-9,
+  )));
+});
+
+test('partial-pivoting justification quotes the current matrix, not the original', () => {
+  const { steps } = s.gaussEliminate({ A: [[1, 1, 1], [2, 1, 5], [3, 1, 2]], b: [6, 15, 18], pivot: 'on' });
+  const msg = steps.filter((t) => t.includes('Partial pivoting')).at(-1);
+  // after eliminating column 1 the live values are |a_32| = 0.6667 > |a_22| = 0.3333 — never "1 > 1"
+  assert.match(msg, /0\.6667 > \|a_\{22\}\| = 0\.3333/);
+});
+
+test('differentiation rejects an x that is not in the table', () => {
+  assert.throws(() => s.differentiate({ xs: [1, 2, 3], ys: [1, 4, 9], x: 2.5, method: 'central2' }), /not one of the table/);
+});
+
+test('equal-interval rules refuse unequal x values', () => {
+  const bad = { xs: [0, 1, 3], ys: [0, 1, 9] };
+  assert.throws(() => s.newtonForward({ ...bad, x: 2 }), /equally spaced/);
+  assert.throws(() => s.gaussInterp({ ...bad, x: 2 }), /equally spaced/);
+  assert.throws(() => s.integrate({ ...bad, method: 'trapezoid' }), /equally spaced/);
+  assert.throws(() => s.differentiate({ ...bad, x: 1 }), /equally spaced/);
+});
+
+test('a converged iteration is not printed twice', () => {
+  const { steps } = s.jacobi({ A: [[5, 2, 1], [1, 4, 2], [1, 2, 5]], b: [12, 15, 20], x0: [0, 0, 0], tol: 0.01, maxIter: 20 });
+  const its = steps.filter((t) => t.includes('Iteration'));
+  assert.equal(its.length, new Set(its).size);
+});
+
+test('romberg rejects n < 2 and non-powers of two', () => {
+  assert.throws(() => s.romberg({ expr: 'x^2', a: 0, b: 1, n: 1 }), /power of 2/);
+  assert.throws(() => s.romberg({ expr: 'x^2', a: 0, b: 1, n: 5 }), /power of 2/);
+});
+
+test('gradient descent refuses a wrong-length starting vector', () => {
+  assert.throws(
+    () => s.gradientDescent({ xs: [1, 2, 3], ys: [1, 2, 3], degree: 2, theta0: [0, 0], alpha: 0.01, epochs: 1 }),
+    /starting/i,
+  );
+});
+
+test('composite weddle weights shared ordinates by 2 and shows them', () => {
+  const xs = Array.from({ length: 13 }, (_, i) => i);
+  const { result, steps } = s.integrate({ xs, ys: xs, method: 'weddle' });
+  close(result.value, 72, 1e-9); // exact integral of y = x over [0, 12]
+  const subst = steps.find((t) => t.includes('\\frac{3('));
+  assert.match(subst, /2\(6\)/); // y6 is shared by both six-strip panels: 1 + 1
+  assert.ok(!subst.includes('undefined'));
+});

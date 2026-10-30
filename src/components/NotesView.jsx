@@ -1,12 +1,15 @@
 import { BlockMath, InlineMath } from 'react-katex';
 
+// A bad TeX span renders as red text instead of throwing and taking the page down.
+export const mathError = (e) => <span className="text-red">{String(e?.message ?? e)}</span>;
+
 // Renders text with $inline math$ and **bold**.
 export function Rich({ text }) {
   if (!text) return null;
   return text.split(/(\*\*[^*]+\*\*|\$[^$]+\$|\*[^*\s$][^*$]*\*)/g).map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) return <strong key={i} className="font-semibold text-text"><Rich text={part.slice(2, -2)} /></strong>;
     if (part.length > 2 && part.startsWith('*') && part.endsWith('*')) return <em key={i}>{part.slice(1, -1)}</em>;
-    if (part.length > 1 && part.startsWith('$') && part.endsWith('$')) return <InlineMath key={i} math={part.slice(1, -1)} />;
+    if (part.length > 1 && part.startsWith('$') && part.endsWith('$')) return <InlineMath key={i} math={part.slice(1, -1)} renderError={mathError} />;
     return part;
   });
 }
@@ -14,7 +17,7 @@ export function Rich({ text }) {
 export function MathBlock({ tex }) {
   return (
     <div className="math-block my-4">
-      <BlockMath math={tex} />
+      <BlockMath math={tex} renderError={mathError} />
     </div>
   );
 }
